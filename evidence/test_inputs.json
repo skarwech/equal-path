@@ -1,7 +1,7 @@
 {
  "files": {
   ".streamlit/config.toml": "a2cb806470cf5545fc11e11ef14d2ff056e3b5ae7491df411fd169fbdba54b24",
-  "app/pathway_view.py": "08bdbf332a2e11fb5c3caa4628211f2b5448335bbf98492593cc38d6735fdaac",
+  "app/pathway_view.py": "bbc8fe7d4077bbd42c1f7d0f80141ea41ea423b7528f09c3c82a8de6b364acbb",
   "app/static/topojson/world_110m.json": "e1bf51740ad28396265e52123ea7315d692f112664ab2cb0f1ea76a96fe1bb0a",
   "app/streamlit_app.py": "7e4c92580d09ae5ad72089c12f2c97db83c4e261d32aa69f97a421e2ae5ff2c4",
   "config/anchors.yaml": "85c07b9c6b501b692e945eb13f202ca60b691bd1a59f09af5f0df3bb4c4e8155",
@@ -53,7 +53,8 @@
   "data/reference/units.csv": "fa3cc7abb40544173fa3a25e8f62dba8cdf549bb448f3b27451ad94e979cb5c1",
   "data/reference/units.geojson": "984d75171ad86a0fcc176c8b41d185757fc5b78a8b47268e748340bd33033b94",
   "equal_path/__init__.py": "a0b813e5059a9b5b41e4b2916111f373daba14b4ee6546cf95d0042cdcf76336",
-  "equal_path/actions.py": "221dfb697ff8374d70d767eb28afb0a3cfc59cbe14ce0737e2ea1f208adf4ca5",
+  "equal_path/actions.py": "ab70b06018f50066521c7e9705ee154774f05b03d24284ff707091930d2ff722",
+  "equal_path/analyst.py": "92ec563e4bcacb997301eb2ef9931129eaec1a779b0b17a3b48bd5131e42a147",
   "equal_path/card.py": "b4247cc4e11be3835ed83cf95a06e59decd7acfbcea172389e0edd1aa8678453",
   "equal_path/confidence.py": "88c4425f16f507b2e41f2ef234f77d241efc8d6f9ade02f4913b52fbc1250c79",
   "equal_path/config.py": "2e7948086314d87c665f01e992a3fe3ee0b65329a5da9e2ad5e17726c1a89513",
@@ -98,7 +99,8 @@
   "scripts/spot_check_sample.py": "e351c9e19154f72bf539826e4be6eef9bec1504a160e430886e7fcdbfba872c5",
   "tests/conftest.py": "d1891e0c195afe000ca270200ec377707f1c28b402c5f24b2d7fc7ed3f900ac7",
   "tests/test_actions.py": "30d42993c574949a7d1cf549d2e9927c8c728951edf2e6c66ab53bb6244459e3",
-  "tests/test_app_smoke.py": "2b9dd26b752b9d683630303e1cabe484e512262cb742841efb96e438d4c147e4",
+  "tests/test_analyst.py": "701ad0499fa8bb969618b387222159aaaa8eeceaf26cffd2e11583c5ec95838c",
+  "tests/test_app_smoke.py": "5780eeeec960ce8545d3944f403425f6d51620afc17423fd04bc5a6877c76722",
   "tests/test_card.py": "6e8b1456897fa5541b2f9375403be70d6fe017010e444d212e4b85e73bb70304",
   "tests/test_confidence.py": "4d26f9443f2cbb7742983bcfb908e81d63d7ad0ce18490fc12a5fe757606b47c",
   "tests/test_config_loading.py": "6607b03bfb3e7d12bdf7e70e38690b5c547d697903b49a35a43ba2f0c15e09d4",
@@ -131,6 +133,6 @@
   "tests/test_visibility.py": "2d8ef1758add7ac7f3665af639df82b2dd52db214a1f6196022033ca1e711a71",
   "tests/test_viz_and_trust.py": "80206efa9411544d672eb9899fd56438d3731195df2b4a0eb967cb796b85cb27"
  },
- "full_run": true,
+ "full_run": false,
  "report_sha256": "34b531aa8734d6beb3573b4a6755d64426ae9ec1248d744dc4580eb4f0b19ca8"
 }

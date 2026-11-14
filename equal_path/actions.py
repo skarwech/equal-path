@@ -18,7 +18,7 @@ from __future__ import annotations
 import operator
 import re
 import statistics
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 import pandas as pd
 
@@ -263,6 +263,7 @@ class ActionRun:
     primary: dict
     names: dict
     coop_area: dict
+    confidence: dict = field(default_factory=dict)   # code -> stage -> 'high' | 'medium' | 'low'
 
 
 def run_actions(store: pd.DataFrame | None = None, result=None) -> ActionRun:
@@ -277,5 +278,8 @@ def run_actions(store: pd.DataFrame | None = None, result=None) -> ActionRun:
     units, thresholds, rules = load_units(), load_thresholds(), load_rules()
     facts = {code: county_facts(code, result, store, catalog, units, thresholds) for code in result.stages.index}
     plans = {code: county_plan(f, thresholds, rules) for code, f in facts.items()}
+    from equal_path.confidence import county_confidence
+
+    confidence = {code: {s: c.level for s, c in county_confidence(result, code, thresholds).items()} for code in facts}
     return ActionRun(plans, facts, dict(result.primary_leak), dict(zip(units.code, units.short_fi)),
-                     dict(zip(units.code, units.coop_area_fi)))
+                     dict(zip(units.code, units.coop_area_fi)), confidence)

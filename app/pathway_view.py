@@ -113,6 +113,35 @@ def _glidepath(data: dict, code: str) -> None:
                "projections are shown capped at 100 %.")
 
 
+@st.cache_data(max_entries=64, show_spinner="Writing the briefing...")
+def _cached_briefing(facts_json: str):
+    """One generation per county and data state (a live Claude call costs money and time)."""
+    import json
+
+    from equal_path.analyst import generate_briefing
+
+    return generate_briefing(json.loads(facts_json))
+
+
+def _briefing(data: dict, code: str) -> None:
+    """F7: a validated briefing of at most 120 words; every number carries its source tag."""
+    import json
+
+    from equal_path.analyst import answer_access_time, briefing_facts, validate
+
+    facts = briefing_facts(code, data["actions"])
+    briefing = _cached_briefing(json.dumps(facts, sort_keys=True))
+    st.markdown("#### Analyst briefing")
+    for line in briefing.text.splitlines():
+        st.markdown(line)
+    checked = validate(briefing.text, facts)
+    origin = ("Claude (claude-opus-5-5)" if briefing.source == "claude"
+              else f"deterministic template ({briefing.note or 'fallback'})")
+    status = "passed the number validator" if checked.ok else "FAILED the number validator: " + "; ".join(checked.problems)
+    st.caption(f"Written by {origin}; {status}: every number matches a computed figure and carries its source id.")
+    st.caption(answer_access_time(facts))
+
+
 RULE_STATUS = {"fires": "fires", "not triggered": "not triggered", "needs data": "needs data", "blocked": "blocked (visibility)"}
 
 
@@ -198,6 +227,7 @@ def pathway_section(data: dict) -> None:
         st.caption("Early warning (F4) not built: the frozen targets (≥ 90 % detection of a 1 SD step within 6 months at "
                    "≤ 5 % false alarms a year) cannot both be met; the best one-sided CUSUM reaches 51 % detection at 5 % false "
                    "alarms, and no test can exceed 79 %. See evidence/step4/early_warning_feasibility.txt.")
+        _briefing(data, code)
         card = _action_card(data, code)
         with st.expander("Sources drawer: every figure on this page, with its source and locator", expanded=False):
             st.dataframe(county_figures(code, result, data["store"], catalog, data["glidepaths"], data["calibration"],

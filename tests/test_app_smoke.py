@@ -369,3 +369,19 @@ def test_downloaded_pdf_is_the_selected_countys_card(monkeypatch):
     assert seen["file_name"] == "equal-path-action-card-10.pdf" and lines[0] == "Equal Path Action Card: Kymenlaakso (10)"
     shown = [str(m.value).removeprefix("#### ") for m in at.markdown]
     assert lines[0] in shown and any("Hub-and-spoke" in line for line in lines)
+
+
+def test_county_page_shows_the_validated_briefing():
+    """F7 on the page: the briefing (template here: no API key in tests) with its validator status."""
+    from equal_path.actions import run_actions
+    from equal_path.analyst import briefing_facts, template_briefing
+
+    at = AppTest.from_file(str(APP), default_timeout=60)
+    at.session_state["county"] = "10 Kymenlaakso"
+    at.run()
+    shown = [str(m.value) for m in at.markdown]
+    for line in template_briefing(briefing_facts("10", run_actions())).splitlines():
+        assert line in shown, line
+    captions = " ".join(str(c.value) for c in at.caption)
+    assert "passed the number validator" in captions and "deterministic template" in captions
+    assert "Access times for Kymenlaakso are not available here" in captions
