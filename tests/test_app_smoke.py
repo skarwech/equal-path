@@ -18,10 +18,11 @@ APP = Path(__file__).resolve().parents[1] / "app" / "streamlit_app.py"
 PATHWAY_TABS = ["County pathway", "All counties"]
 SPINE_TABS = ["Coverage", "Reconciliation", "Indicator catalog"]
 CONFIG_TABS = ["Scope & Goal 3", "Threshold register", "Action library", "Sources", "Anchors", "Reference times"]
-EXPECTED_TABS = PATHWAY_TABS + SPINE_TABS + CONFIG_TABS
+GAP_TABS = ["Data gaps", "Limitations"]  # Step 8
+EXPECTED_TABS = PATHWAY_TABS + GAP_TABS + SPINE_TABS + CONFIG_TABS
 # unit table + county indicators + twins + all-counties + coverage + reconciliation + catalog
 # + Goal 3 + related + thresholds + rules + sources + anchors + times
-EXPECTED_DATAFRAMES = 17  # + glidepath table + sources drawer (F8) + county rule table (F5)
+EXPECTED_DATAFRAMES = 18  # + glidepath, sources drawer (F8), county rule table (F5), data gaps (Step 8)
 
 
 def _run():

@@ -98,7 +98,8 @@ def briefing_facts(code: str, run) -> dict:
     if f.get("stage_coverage") is not None:
         figures.append({"id": "stage_coverage", "label": f"stage-recording coverage, {f['stage_coverage_level']} figure",
                         "value": round(f["stage_coverage"] * 100, 1), "unit": "%", "source": f["stage_coverage_source"]})
-    leaks = [s for s in STAGES if f.get(f"stage_{s}") == "leak"]
+    # a Leak stage always has a deciding indicator; guard anyway so the page never crashes on inconsistent input
+    leaks = [s for s in STAGES if f.get(f"stage_{s}") == "leak" and f.get(f"gap_indicator_{s}")]
     for stage in leaks:
         figures.append({"id": f"gap_{stage}", "label": f"verified gap in {stage}", "value": round(f[f"gap_{stage}"] * 100, 1),
                         "unit": "pp", "source": f[f"gap_source_{stage}"]})

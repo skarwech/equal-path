@@ -132,9 +132,14 @@ def _briefing(data: dict, code: str) -> None:
 
     from equal_path.analyst import Briefing, answer_access_time, briefing_facts, make_client, template_briefing, validate
 
+    from equal_path.hardening import cached_briefing, load_cache
+
     facts = briefing_facts(code, data["actions"])
     briefing = Briefing(template_briefing(facts), "template", 0, note="no Claude client (SDK or credentials missing)")
-    if make_client() is not None:
+    cached = cached_briefing(facts, load_cache(), code)   # offline mode: current, validated cache entry first
+    if cached is not None and (cached.source == "claude" or make_client() is None):
+        briefing = cached
+    elif make_client() is not None:
         try:
             briefing = _cached_claude_briefing(json.dumps(facts, sort_keys=True))
         except RuntimeError as exc:

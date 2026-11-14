@@ -27,6 +27,7 @@ from app.pathway_view import pathway_section  # noqa: E402
 from equal_path.coverage import LEGEND, coverage_matrix  # noqa: E402
 from equal_path.glidepath import calibration, run_glidepaths  # noqa: E402
 from equal_path.actions import run_actions  # noqa: E402
+from equal_path.hardening import data_gaps, limitations, trust_figures  # noqa: E402
 from equal_path.pathway import run_pathway  # noqa: E402
 from equal_path.observations import indicator_counts, load_observations, reconcile_anchors  # noqa: E402
 from equal_path.paths import APP_INPUTS, ROOT, STALENESS_WATCHED, TEST_FINGERPRINT, TEST_REPORT  # noqa: E402
@@ -98,7 +99,7 @@ def metrics_row(data: dict) -> None:
     # Computed on every run (not cached) so an edit to thresholds or lock shows at once.
     frozen = thresholds_are_frozen()
     summary = read_test_summary(TEST_REPORT)
-    cols = st.columns(5)
+    cols = st.columns(6)
     drawn = {f["properties"]["code"] for f in data["geojson"]["features"]} & set(data["units"]["code"])
     cols[0].metric("Units on map", f"{len(drawn)} / {data['scope'].unit_count}")
     cols[1].metric("Cooperation areas", data["units"]["coop_area_fi"].nunique())
@@ -119,6 +120,11 @@ def metrics_row(data: dict) -> None:
         current = fingerprint_is_current(TEST_FINGERPRINT, STALENESS_WATCHED, root=ROOT, report=TEST_REPORT)
         stale = "" if current else " · :orange[stale: not a full run, or code/data changed since]"
         cols[4].caption(f"{status} · run {summary.timestamp[:16].replace('T', ' ')}{stale}")
+    trust = trust_figures(data["reconciliation"], data["actions"], summary)
+    cols[5].metric("Trust", f"{trust['briefings_passed']}/{trust['briefings']} briefings")
+    cols[5].caption(f"anchors reconciled {trust['anchors_passed']}/{trust['anchors_checked']} · tests "
+                    f"{trust['tests_passed']}/{trust['tests_total']} · unsupported numbers shown "
+                    f"{trust['unsupported_numbers_shown']} (all computed live)")
 
 
 def map_and_units(data: dict) -> None:
@@ -240,6 +246,17 @@ def rules_tab(data: dict) -> None:
     st.dataframe(pd.DataFrame(rows), hide_index=True, width="stretch")
 
 
+def gaps_and_limitations(data: dict) -> None:
+    st.subheader("Data gaps and limitations")
+    tabs = st.tabs(["Data gaps", "Limitations"])
+    with tabs[0]:
+        st.caption("Every catalogued indicator that is not available for all 22 units, and why. Gaps are shown, never filled.")
+        st.dataframe(data_gaps(data["catalog"], data["store"]), hide_index=True, width="stretch")
+    with tabs[1]:
+        for text, source in limitations(data["actions"], data["pathway"]):
+            st.markdown(f"- {text} ({source})")
+
+
 def config_tabs(data: dict) -> None:
     tabs = st.tabs(["Scope & Goal 3", "Threshold register", "Action library", "Sources", "Anchors", "Reference times"])
     with tabs[0]:
@@ -288,6 +305,8 @@ def main() -> None:
     map_and_units(data)
     st.divider()
     pathway_section(data)
+    st.divider()
+    gaps_and_limitations(data)
     st.divider()
     data_spine(data)
     st.divider()

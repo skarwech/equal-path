@@ -436,3 +436,10 @@ def test_a_low_visibility_watch_stage_is_named_as_unjudgeable():
     """Review T-3, end to end: a Watch stage below the visibility gate counts as low visibility."""
     run = _run_with("01", stage_treatment="watch", visibility_treatment=0.4)
     assert "treatment" in briefing_facts("01", run)["low_visibility_stages"]
+
+
+def test_inconsistent_leak_without_a_deciding_indicator_does_not_crash():
+    """Found in Step 8: a forced Leak with no leaking rows must not break the page."""
+    run = _run_with("90", stage_referral="leak")
+    facts = briefing_facts("90", run)
+    assert validate(template_briefing(facts), facts).ok

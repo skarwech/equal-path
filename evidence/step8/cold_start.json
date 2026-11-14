@@ -1,0 +1,5 @@
+{
+ "cold_start_seconds_offline": 4.07,
+ "exceptions": 0,
+ "method": "fresh Python process, network blocked (socket connect/DNS raise), Streamlit AppTest full render incl. data load"
+}
