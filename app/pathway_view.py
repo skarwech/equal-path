@@ -113,6 +113,144 @@ def _glidepath(data: dict, code: str) -> None:
                "projections are shown capped at 100 %.")
 
 
+def _screening_simulator(data: dict, code: str) -> None:
+    """F6: a visible, source-linked sensitivity scenario from observed 2024 screening counts."""
+    from equal_path.simulator import PROGRAMMES, screening_baseline, simulate_screening
+
+    with st.expander("Screening impact simulator (F6 · scenario, not forecast)", expanded=False):
+        programme = st.selectbox("Screening programme", list(PROGRAMMES), key=f"sim_programme_{code}")
+        baseline, problem = screening_baseline(data["store"], code, programme)
+        if baseline is None:
+            st.info(problem)
+            return
+
+        target_default = max(baseline.participation, 0.80)
+        st.caption(
+            f"2024 baseline: {baseline.attended:,} attended of {baseline.eligible:,} {baseline.eligible_label}; "
+            f"this county recorded {baseline.county_detections:,} detections. The pooled yield uses "
+            f"{baseline.pooled_detections:,} detections among {baseline.pooled_attended:,} attendees."
+        )
+        if baseline.participation >= 1:
+            target_percent = 100.0
+            st.caption("Participation is already 100%; there is no higher target to simulate.")
+        else:
+            target_percent = st.slider(
+                "Target participation (%)",
+                min_value=baseline.participation * 100,
+                max_value=100.0,
+                value=target_default * 100,
+                step=1.0,
+                key=f"sim_target_{code}_{programme}",
+                help="The national goal is 80%; values above it are optional sensitivity scenarios.",
+            )
+            # Streamlit quantizes slider values relative to its minimum. Clamp any
+            # sub-ulp rounding below the observed baseline before calling the model.
+            target_percent = max(baseline.participation * 100, min(100.0, target_percent))
+        target_participation = max(baseline.participation, min(1.0, target_percent / 100))
+        stage_percent = st.slider(
+            "Assumed share of additional detected cancers that are early-stage (%)",
+            min_value=0,
+            max_value=100,
+            value=0,
+            step=5,
+            key=f"sim_stage_share_{code}_{programme}",
+            help="This is a user-set scenario input, not a measured county value. Stage I–II distribution is not published by county.",
+        )
+        result = simulate_screening(
+            baseline,
+            target_participation,
+            stage_percent / 100,
+            draws=data["threshold_model"].monte_carlo_draws,
+            interval=data["threshold_model"].simulator_interval,
+        )
+        low_pct = (1 - result.interval) / 2 * 100
+        high_pct = 100 - low_pct
+        metric_cols = st.columns(4)
+        metric_cols[0].metric("Additional people screened", f"{result.additional_attendees:,}")
+        metric_cols[1].metric(
+            "Expected additional cancers found",
+            f"{result.additional_detections_median:,.1f}",
+            help=f"{low_pct:.0f}–{high_pct:.0f}% interval over detection-yield uncertainty: "
+                 f"{result.additional_detections_low:,.1f}–{result.additional_detections_high:,.1f}",
+        )
+        metric_cols[2].metric(
+            "Expected early-stage scenario",
+            f"{result.early_stage_median:,.1f}",
+            help=f"{low_pct:.0f}–{high_pct:.0f}% interval over yield uncertainty under the selected {stage_percent}% stage-mix assumption: "
+                 f"{result.early_stage_low:,.1f}–{result.early_stage_high:,.1f}",
+        )
+        metric_cols[3].metric("2024 county participation", f"{baseline.participation:.1%}")
+
+        yield_values = (result.detection_yield_low, result.detection_yield_median, result.detection_yield_high)
+        assumption_rows = [
+            {"Parameter": "Participation target", "Low": f"{baseline.participation:.1%}",
+             "Base": f"{target_percent:.1f}%", "High": "100.0%", "Source": "S_STRATEGY; S_CR_SCREENING_STATS"},
+            {"Parameter": "Cancer yield per attendee", "Low": f"{yield_values[0]:.3%}",
+             "Base": f"{yield_values[1]:.3%}", "High": f"{yield_values[2]:.3%}", "Source": baseline.detection_source},
+            {"Parameter": "Early-stage share of extra detections", "Low": "0.0%",
+             "Base": f"{stage_percent:.0f}%", "High": "100.0%", "Source": "S_EQUAL_PATH_SPEC (user-set scenario)"},
+        ]
+        st.markdown("**Low / base / high assumptions**")
+        st.dataframe(pd.DataFrame(assumption_rows), hide_index=True, width="stretch")
+
+        output_rows = [
+            {"Output": "Additional people screened", "Low": f"{result.additional_attendees:,}",
+             "Base": f"{result.additional_attendees:,}", "High": f"{result.additional_attendees:,}",
+             "Source": "S_CR_SCREENING_STATS; S_STRATEGY"},
+            {"Output": f"Additional cancers found ({result.interval:.0%} interval)",
+             "Low": f"{result.additional_detections_low:,.1f}", "Base": f"{result.additional_detections_median:,.1f}",
+             "High": f"{result.additional_detections_high:,.1f}", "Source": baseline.detection_source},
+            {"Output": f"Early-stage scenario ({result.interval:.0%} interval)",
+             "Low": f"{result.early_stage_low:,.1f}", "Base": f"{result.early_stage_median:,.1f}",
+             "High": f"{result.early_stage_high:,.1f}",
+             "Source": f"{baseline.detection_source}; S_EQUAL_PATH_SPEC (user-set stage share)"},
+        ]
+        st.markdown("**Scenario outputs**")
+        st.dataframe(pd.DataFrame(output_rows), hide_index=True, width="stretch")
+
+        yield_uncertainty = result.additional_attendees * (result.detection_yield_high - result.detection_yield_low)
+        stage_uncertainty = result.additional_detections_median
+        sensitivity = [
+            {"Rank": 1, "Parameter": "Assumed early-stage share", "Scenario range": "0–100%",
+             "Change in early-stage count": f"0–{result.additional_detections_median:,.0f}",
+             "Source": "S_EQUAL_PATH_SPEC (scenario only)"},
+            {"Rank": 2, "Parameter": "Cancer yield uncertainty", "Scenario range": f"{low_pct:.0f}–{high_pct:.0f}% posterior interval",
+             "Change in early-stage count": f"about {yield_uncertainty * stage_percent / 100:,.1f}",
+             "Source": baseline.detection_source},
+        ]
+        if stage_uncertainty < yield_uncertainty * stage_percent / 100:
+            sensitivity[0]["Rank"], sensitivity[1]["Rank"] = 2, 1
+        sensitivity.sort(key=lambda row: row["Rank"])
+        st.markdown("**Sensitivity ranking**")
+        st.dataframe(pd.DataFrame(sensitivity), hide_index=True, width="stretch")
+
+        observed = baseline.pooled_detections
+        reproduced = baseline.pooled_attended * baseline.yield_per_attendee
+        st.caption(
+            f"Baseline arithmetic check: {observed:,} observed detections vs {reproduced:,.0f} reproduced "
+            "across the 22 county rows (an input consistency check, not independent validation). "
+            f"The model uses {result.draws:,} seeded Beta-posterior draws and an {result.interval:.0%} interval over yield uncertainty. "
+            "That interval does not include future count variation. Additional attendees are assumed to have the pooled 2024 yield. "
+            "The early-stage share is user-set because "
+            "county stage distribution is not published. It does not estimate stage migration, prevented deaths, or a causal effect."
+        )
+        st.markdown("**Sources and derivations**")
+        sources = pd.DataFrame([
+            {"Figure": "2024 county participation and eligible population", "Source": baseline.participation_source,
+             "Locator": baseline.participation_locator},
+            {"Figure": "2024 county detection count (context only)", "Source": baseline.detection_source,
+             "Locator": baseline.detection_locator},
+            {"Figure": "2024 pooled cancer detections and attended counts", "Source": baseline.detection_source,
+             "Locator": baseline.detection_locator},
+            {"Figure": "80% participation goal", "Source": "S_STRATEGY",
+             "Locator": "Related national target in config/scope.yaml"},
+            {"Figure": "Stage-mix scenario input and model method", "Source": "S_EQUAL_PATH_SPEC",
+             "Locator": "Impact-simulator method in equal_path_junction_astrazeneca.md; user-set stage share is not observed data"},
+        ])
+        st.dataframe(sources, hide_index=True, width="stretch")
+        return result
+
+
 @st.cache_data(max_entries=64, show_spinner="Writing the briefing...")
 def _cached_claude_briefing(facts_json: str):
     """Claude briefings only: a template caused by a transient error is never cached (review G-3)."""
@@ -232,6 +370,7 @@ def pathway_section(data: dict) -> None:
                    "share, log distance to a university hospital); outcomes never enter the distance. Twin plausibility "
                    "still needs a human review (spec F3: 18/22 by the team, 3 pairs by a mentor).")
         _glidepath(data, code)
+        simulation = _screening_simulator(data, code)
         st.caption("Tipping point (§7.4) not computable: the stage I–II distribution is published nationally only, "
                    "not by county or cooperation area.")
         st.caption("Early warning (F4) not built: the frozen targets (≥ 90 % detection of a 1 SD step within 6 months at "
@@ -241,6 +380,6 @@ def pathway_section(data: dict) -> None:
         card = _action_card(data, code)
         with st.expander("Sources drawer: every figure on this page, with its source and locator", expanded=False):
             st.dataframe(county_figures(code, result, data["store"], catalog, data["glidepaths"], data["calibration"],
-                                        thresholds, card=card), hide_index=True, width="stretch")
+                                        thresholds, card=card, simulation=simulation), hide_index=True, width="stretch")
     with tabs[1]:
         st.dataframe(_overview(result, names), hide_index=True, width="stretch", height=35 * 23 + 3)

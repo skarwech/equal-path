@@ -1,9 +1,9 @@
 {
  "files": {
   ".streamlit/config.toml": "a2cb806470cf5545fc11e11ef14d2ff056e3b5ae7491df411fd169fbdba54b24",
-  "app/pathway_view.py": "ea6c0727ea0c11e1da797e0fbb4b2a030d1506bb45cf97494a4bba62c9000744",
+  "app/pathway_view.py": "db42ca594e550307cec17b2ac4e23585ddd2316854751c24fa7d1299f0af1a91",
   "app/static/topojson/world_110m.json": "e1bf51740ad28396265e52123ea7315d692f112664ab2cb0f1ea76a96fe1bb0a",
-  "app/streamlit_app.py": "cddf8b71cd6fc0376fad5f094133a06209646f106d28bf369d4316694fc685eb",
+  "app/streamlit_app.py": "4f655987229206869284409a6e150fa397df299b2adabc6f0fb7729beeebc3cd",
   "config/anchors.yaml": "85c07b9c6b501b692e945eb13f202ca60b691bd1a59f09af5f0df3bb4c4e8155",
   "config/downloads.yaml": "3e67471018c482d5fda5e25420bc4403651a77fb59ed86c35621a1b70fe1357a",
   "config/indicators.yaml": "282cf32ccc1cfd8fd7a73a2a40105d330d38e283c0cfe753b18377f0d308ed68",
@@ -61,7 +61,7 @@
   "equal_path/config.py": "2e7948086314d87c665f01e992a3fe3ee0b65329a5da9e2ad5e17726c1a89513",
   "equal_path/coverage.py": "3a5dc06b87811d3243584d0934e15cd888764ef70cdc40ecafdbcbc3e2551cc3",
   "equal_path/display.py": "56006fd432f85333a6b18c799eaaa34ea9f3d05f3c7189d8a764fc47aeadc092",
-  "equal_path/drawer.py": "9feb5523fa3cd00dcfd4bfbdbbda87ce6b91286ac8f45e5b05ebb034efff15a7",
+  "equal_path/drawer.py": "2c95b8652248925523ab68c366e4f8e2d9f6e8e6387203111e618fdb6e820fa3",
   "equal_path/fetch.py": "52e49ff36508ac20a43e6dcb71dff6c4be84dd4af5e55d560c8be9205b30a91f",
   "equal_path/gaps.py": "2f520e3fbcbccdb3dbdbb8d5b4b03077368a1089e6875d17d54200a835463df0",
   "equal_path/geography.py": "10c4ef25b2b34a7e39fb0a7b0868af608fdd33c9e1a15283eeedcfcc337a29a3",
@@ -83,6 +83,7 @@
   "equal_path/observations.py": "76c5160072175d7f347256221aac45c44fc4cd8d7f1e9d70ce43c8f521b8059e",
   "equal_path/paths.py": "201c294d7ad274d2ebb0b54070719d5e7c697e86c1f9651d71f0cc43b112f0c8",
   "equal_path/pathway.py": "7f904daa1ddc75d607af3aa76222a67e044a772eb7fdba0aa6849d00ab1db7d9",
+  "equal_path/simulator.py": "44aa211f81cc39306a42cde2e2ac01ba23ebf9ebde3ae808335e040dc462fe44",
   "equal_path/sources.py": "244f7a22db8534835d86cd973dd53146c87234b88aa9d73a8f01675bb76c4c94",
   "equal_path/spine.py": "c21adeda16f794ffc2a46866ad6675ffeec10f8f75561f365824d93974839712",
   "equal_path/tipping.py": "a6c9132fdd7606164b9097ce25186ccfbd139735435be841bd0e21485972de77",
@@ -105,13 +106,13 @@
   "tests/conftest.py": "d1891e0c195afe000ca270200ec377707f1c28b402c5f24b2d7fc7ed3f900ac7",
   "tests/test_actions.py": "30d42993c574949a7d1cf549d2e9927c8c728951edf2e6c66ab53bb6244459e3",
   "tests/test_analyst.py": "7d0b288c060787331139d53527a3ac8b57458638e30e1a86858d2b5b8451b932",
-  "tests/test_app_smoke.py": "f899f1b8e367664e2c9b29c1806a2b606de7529d8ed539c641495e9a3de11777",
+  "tests/test_app_smoke.py": "9db3296c320301391abb9726b7c5894d5a4f220b0f9e0ba56465dab5294b69ed",
   "tests/test_card.py": "6e8b1456897fa5541b2f9375403be70d6fe017010e444d212e4b85e73bb70304",
   "tests/test_confidence.py": "4d26f9443f2cbb7742983bcfb908e81d63d7ad0ce18490fc12a5fe757606b47c",
   "tests/test_config_loading.py": "6607b03bfb3e7d12bdf7e70e38690b5c547d697903b49a35a43ba2f0c15e09d4",
   "tests/test_coverage.py": "d42c66a0137502fd46078c6e87b393ebbe9a8cdb8a0704af016f47b48469f95a",
   "tests/test_distance.py": "b158aef91095df9e7484ea193643999204e230d09e3b31f70cda1e2d6459ed60",
-  "tests/test_drawer.py": "00d46589a78604c501f7071facf6a69cae2d61d247503163dafcfa5ed0ca1ad7",
+  "tests/test_drawer.py": "cf8f4e879260f14bb462d60e5c500551372994550bcba855a345fbb22b348ae1",
   "tests/test_fetch.py": "1b3fb770f2ca38b26c01b39994b086f7056116087d214447720cd96595a1bd04",
   "tests/test_gaps.py": "d5f50f25d7530a2544b42efa775959333ad7e201331aa5ff7fd9c981b46c75be",
   "tests/test_geography.py": "a7b086a854f97bc4a23625942e464e671e83d728ac14352084cfefa57c9c10a0",
@@ -130,6 +131,7 @@
   "tests/test_pathway_real.py": "23ca588145ae82fa52a9b111bf3511d22d12f78b186d6afee9acc39d691bf0b5",
   "tests/test_pathway_view.py": "791e7934e0df31fe5b25bb75286161ed6d359064dd324a7eccbb0136797a2faf",
   "tests/test_rules.py": "8c2c522eeec3dbd4ae55098617cfecc77d019f02ba20bc77330f9cf5859b7eb9",
+  "tests/test_simulator.py": "f69a7f8c53bb568deeb1f00fdcd48cbf416164a8db69f90d71a693c832a790ee",
   "tests/test_sources_and_scope.py": "b263fe421e358795c9a1bb678159bd6bddab2e916e66ab9b4232389fcc296de3",
   "tests/test_spine.py": "160882b5d942475899b066f5f85f77ffc2bc5bc74359f9d04548f47d38bf0dd2",
   "tests/test_spotcheck.py": "d35b7fc79f720cd0e3f709a93a1159bc798ba25a6af19d70370a6b439a07ba82",
@@ -140,5 +142,5 @@
   "tests/test_viz_and_trust.py": "80206efa9411544d672eb9899fd56438d3731195df2b4a0eb967cb796b85cb27"
  },
  "full_run": true,
- "report_sha256": "27022182ffd1bc99fdfb90468975999985c4c4529b840ae678c3668016ab236b"
+ "report_sha256": "7fbafa0507ad93155dd0f10a534e156b3517589e8cbfae309e0f00cbb7b16d22"
 }

@@ -77,7 +77,7 @@ def load_everything(stamp: tuple) -> dict:
 
 def header(data: dict) -> None:
     st.title("Equal Path")
-    st.caption("Equitable and effective cancer care in Finland · Step 8: hardened, offline-ready (all features through F8)")
+    st.caption("Equitable and effective cancer care in Finland · hardened and offline-ready · F6 scenario simulator")
     counts = data["counts"]
     if not counts:
         st.info(
@@ -90,43 +90,44 @@ def header(data: dict) -> None:
     st.info(
         f"**Data spine: {loaded} of {len(data['catalog'])} catalogued indicators have public values; "
         f"{len(counts)} of 22 units have at least one.** Gaps are shown, never filled. "
-        "Scope: lung anchor, second cancer pending. Nothing on this page is synthetic.",
+        "Scope: lung anchor, second cancer pending. Observations are not imputed; simulator outputs are labeled scenarios.",
         icon="ℹ️",
     )
 
 
 def metrics_row(data: dict) -> None:
-    # Computed on every run (not cached) so an edit to thresholds or lock shows at once.
-    frozen = thresholds_are_frozen()
-    summary = read_test_summary(TEST_REPORT)
-    cols = st.columns(6)
-    drawn = {f["properties"]["code"] for f in data["geojson"]["features"]} & set(data["units"]["code"])
-    cols[0].metric("Units on map", f"{len(drawn)} / {data['scope'].unit_count}")
-    cols[1].metric("Cooperation areas", data["units"]["coop_area_fi"].nunique())
-    cols[2].metric("Thresholds", "Frozen" if frozen else "NOT FROZEN")
-    cols[2].caption(f"sha256 `{thresholds_digest()[:12]}`" if frozen else ":red[edited after freeze, draft, or lock missing]")
-    cols[3].metric("Action rules", len(data["rules"]))
-    if summary is None:
-        cols[4].metric("Tests", "not run")
-        cols[4].caption("Run pytest with --junitxml=evidence/test_report.xml")
-    else:
-        cols[4].metric("Tests passing", f"{summary.passed} / {summary.total}")
-        if summary.total == 0:
-            status = ":orange[no tests ran]"
-        elif summary.all_green:
-            status = ":green[all green]"
+    with st.expander("Project status and trust", expanded=False):
+        # Computed on every run (not cached) so an edit to thresholds or lock shows at once.
+        frozen = thresholds_are_frozen()
+        summary = read_test_summary(TEST_REPORT)
+        cols = st.columns(6)
+        drawn = {f["properties"]["code"] for f in data["geojson"]["features"]} & set(data["units"]["code"])
+        cols[0].metric("Units on map", f"{len(drawn)} / {data['scope'].unit_count}")
+        cols[1].metric("Cooperation areas", data["units"]["coop_area_fi"].nunique())
+        cols[2].metric("Thresholds", "Frozen" if frozen else "NOT FROZEN")
+        cols[2].caption(f"sha256 `{thresholds_digest()[:12]}`" if frozen else ":red[edited after freeze, draft, or lock missing]")
+        cols[3].metric("Action rules", len(data["rules"]))
+        if summary is None:
+            cols[4].metric("Tests", "not run")
+            cols[4].caption("Run pytest with --junitxml=evidence/test_report.xml")
         else:
-            status = f":red[{summary.failed} failing]"
-        current = fingerprint_is_current(TEST_FINGERPRINT, STALENESS_WATCHED, root=ROOT, report=TEST_REPORT)
-        stale = "" if current else " · :orange[stale: not a full run, or code/data changed since]"
-        cols[4].caption(f"{status} · run {summary.timestamp[:16].replace('T', ' ')}{stale}")
-    trust = trust_figures(data["reconciliation"], data["actions"], summary)
-    cols[5].metric("Trust", f"{trust['briefings_passed']}/{trust['briefings']} briefings")
-    cols[5].caption(f"anchors: {trust['anchors_passed']} pass, {trust['anchors_failed']} fail, "
-                    f"{trust['anchors_not_checked']} not checked of {trust['anchors_total']} · tests "
-                    f"{trust['tests_passed']}/{trust['tests_total']} · briefings validated {trust['briefings_passed']}/"
-                    f"{trust['briefings']} ({trust['briefings_from_cache']} from the offline cache) · unsupported "
-                    f"numbers shown {trust['unsupported_numbers_shown']} (all computed live)")
+            cols[4].metric("Tests passing", f"{summary.passed} / {summary.total}")
+            if summary.total == 0:
+                status = ":orange[no tests ran]"
+            elif summary.all_green:
+                status = ":green[all green]"
+            else:
+                status = f":red[{summary.failed} failing]"
+            current = fingerprint_is_current(TEST_FINGERPRINT, STALENESS_WATCHED, root=ROOT, report=TEST_REPORT)
+            stale = "" if current else " · :orange[stale: not a full run, or code/data changed since]"
+            cols[4].caption(f"{status} · run {summary.timestamp[:16].replace('T', ' ')}{stale}")
+        trust = trust_figures(data["reconciliation"], data["actions"], summary)
+        cols[5].metric("Trust", f"{trust['briefings_passed']}/{trust['briefings']} briefings")
+        cols[5].caption(f"anchors: {trust['anchors_passed']} pass, {trust['anchors_failed']} fail, "
+                        f"{trust['anchors_not_checked']} not checked of {trust['anchors_total']} · tests "
+                        f"{trust['tests_passed']}/{trust['tests_total']} · briefings validated {trust['briefings_passed']}/"
+                        f"{trust['briefings']} ({trust['briefings_from_cache']} from the offline cache) · unsupported "
+                        f"numbers shown {trust['unsupported_numbers_shown']} (all computed live)")
 
 
 def map_and_units(data: dict) -> None:

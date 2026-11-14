@@ -22,7 +22,7 @@ GAP_TABS = ["Data gaps", "Limitations"]  # Step 8
 EXPECTED_TABS = PATHWAY_TABS + GAP_TABS + SPINE_TABS + CONFIG_TABS
 # unit table + county indicators + twins + all-counties + coverage + reconciliation + catalog
 # + Goal 3 + related + thresholds + rules + sources + anchors + times
-EXPECTED_DATAFRAMES = 18  # + glidepath, sources drawer (F8), county rule table (F5), data gaps (Step 8)
+EXPECTED_DATAFRAMES = 22  # + F6 assumptions, outputs, sensitivity and sources tables
 
 
 def _run():

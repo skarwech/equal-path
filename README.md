@@ -7,9 +7,9 @@ care. The design and acceptance spec is `equal_path_junction_astrazeneca.md` (re
 
 Three principles run through everything:
 
-- **Gaps are shown, never filled.** Nothing on screen is synthetic; missing data is a finding in itself.
-- **Every number has a source.** Each figure on a county page appears in its sources drawer with a source id and
-  a locator or derivation.
+- **Gaps are shown, never filled.** Observations are not imputed; scenario outputs are labeled, and missing data is a finding in itself.
+- **Every number has a source.** Each county figure appears in the sources drawer or the simulator's source table,
+  with a source id and a locator or derivation.
 - **Claims match the evidence.** A leak needs statistical significance, a practical gap and enough visibility;
   hypothesis-graded actions are only ever offered as a test.
 
@@ -39,10 +39,7 @@ python3 scripts/cold_start.py      # cold start with the network blocked; must s
 
 The page reads top to bottom:
 
-1. **Header.** Data spine summary and six badges: units on the map, cooperation areas, frozen thresholds (with the
-   lock's SHA-256), action rules, tests passing (from the last full test run; marked stale if code or data changed
-   since) and **Trust** (anchors reconciled, tests, briefings validated, unsupported numbers shown, all computed
-   live).
+1. **Header.** Data spine summary. The detailed project status and six badges are inside the collapsed **Project status and trust** panel, so the demo opens on the county map and findings.
 2. **Map.** Choose a layer: visibility score or the state of one pathway stage (detection, referral, diagnosis,
    treatment). Each county shows a colour, a symbol (▲ Leak, ◆ Watch, ✓ OK, ○ Unknown) and a word in the tooltip;
    hatching means less than half of that stage is observable. Keski-Uusimaa, Vantaa-Kerava and Helsinki are also
@@ -54,12 +51,13 @@ The page reads top to bottom:
    - **Indicator table:** value, test interval, national value, twin median, gaps and the reason for each state.
    - **Structural twins:** the three most similar counties on structural covariates, with stability.
    - **Glidepath:** screening participation trend towards the 80 % goal by 2035.
+   - **Screening impact simulator:** scenario sliders estimate additional attendees and detections from the observed 2024 screening yield, with a Monte Carlo interval. Early-stage share is an explicit user assumption because county stage distributions are not published. Outputs are scenarios, not forecasts.
    - **Analyst briefing:** at most 120 words, every number tagged with its source and checked by the number
      validator; the caption says who wrote it and that it passed.
    - **Action Card:** finding, top 3 actions (owner, KPI, cost reference, evidence), a 90-day pilot and
      limitations; **Download Action Card** gives the same text as a one-page PDF.
    - **All rules for this county:** the status of each of the 12 rules (fires, not triggered, needs data, blocked).
-   - **Sources drawer:** every figure on the page with its source and locator.
+   - **Sources drawer:** every measured figure on the page with its source and locator; the simulator has its own source and derivation table.
 4. **All counties:** one row per county with visibility, stage states, twin stability and primary finding.
 5. **Data gaps and limitations:** every indicator that is not published for all 22 units (and why), and the
    main limitations, each computed from the data.
@@ -79,6 +77,7 @@ oncology and lung peer review), **Pohjois-Karjala** (detection leak) and **Helsi
   (R-DET-01) is shown as "needs data" where detection leaks.
 - Glidepaths are **indicative**: held-out-year calibration covered 25 of 44 series (57 %, target 65-95 %).
 - Twin sets are unstable in 10 of 22 counties (Jaccard below 0.6, mostly driven by income).
+- The screening simulator extrapolates pooled 2024 detections per attendee; its stage-mix slider is user-set and does not estimate prevented deaths or a causal effect.
 - Early warning (spec F4) is not built: the frozen targets cannot be met with the public monthly series
   (`evidence/step4/early_warning_feasibility.txt`).
 - The second (screened) cancer has not been chosen; lung cancer is the anchor.
@@ -142,14 +141,16 @@ Each step also had an independent review (findings re-checked by a second review
 | 6 | Action engine (F5) and the one-page Action Card | approved |
 | 7 | AI analyst and number validator (F7) | approved |
 | 8 | Hardening: offline mode, trust panel, data gaps and limitations, rehearsal | approved |
+| 9 | Screening impact simulator (F6): 2024 observed yield, seeded uncertainty interval, explicit stage-mix scenario | implemented; independent per-program backcast review remains open |
 
-Development is complete. Open items need people, not code:
+Core implementation is complete. Remaining validation, review and team decisions are:
 
 - Clinical review of the 12 action rules (`evidence/step6/clinical_review_sheet.csv`).
 - Plausibility check of the twin lists (`evidence/step4/twin_review_sheet.csv`).
 - Choosing the second (screened) cancer.
 - Analyst faithfulness review of 5 counties and the clarity test (2 of 3 outside readers name the leak and the
   action within 2 minutes).
+- Simulator backcast review against each screening programme's published 2024 totals.
 - Backup demo video and up to three slides.
 
 ## Rebuilding the data
@@ -179,7 +180,7 @@ data/raw/          every raw download + manifest.json (URL, time, sha256): the o
 data/processed/    observations.parquet (long format) and briefings.json (offline analyst cache)
 data/reference/    sources.csv (source registry), units.csv, units.geojson
 equal_path/        library: data spine, visibility (F1), gaps (F2), twins (F3), glidepath (F4), pathway, map layers,
-                   confidence, sources drawer, actions (F5), Action Card + PDF, analyst (F7), hardening
+                   confidence, sources drawer, actions (F5), scenario simulator (F6), Action Card + PDF, analyst (F7), hardening
 equal_path/loaders one parser per source family
 scripts/           run, fetch, build, freeze, cache, rehearse, cold start
 tests/             pytest suite (unit, real data, app smoke and page gates)

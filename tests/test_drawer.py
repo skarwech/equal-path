@@ -20,7 +20,7 @@ IDENTIFIER_COLUMNS = {"Twin", "Code", "Rule"}   # unit codes and rule ids are id
 CODES = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11",
          "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "90"]
 PAGE_ELEMENT_TYPES = {"tab", "markdown", "caption", "arrow_data_frame", "selectbox", "expander", "flex_container", "column",
-                      "download_button"}   # the button carries a label only, no figures
+                      "download_button", "slider", "metric"}   # F6 controls and outputs are source-gated below
 
 
 @pytest.fixture(scope="module")
@@ -83,6 +83,10 @@ def test_data_rows_cite_their_own_sources_not_the_rule_register(drawers, inputs)
     for code, frame in drawers.items():
         for section, figure, sources in zip(frame.Section, frame.Figure, frame.Sources):
             if section == "Method" or figure.endswith("· confidence"):
+                continue
+            if section == "F6 simulator":
+                if figure in {"County attendance baseline", "County detections (context)", "Pooled yield baseline"}:
+                    assert SPEC not in _ids(sources), (code, figure)
                 continue
             assert SPEC not in _ids(sources), (code, figure)
             match = re.match(r"(\w+) · (state|visibility|why grey)$", figure)
@@ -274,7 +278,7 @@ def test_county_page_gates(code, inputs, actions):
     assert list(rules["Needs data"]) == ["; ".join(o.missing) for o in outcomes], code   # review W-4
 
     page = _page_numbers(at)
-    assert len(page) >= 50 and len(tab.dataframe) == 5  # non-trivial harvest: 3 page tables + rules + the drawer
+    assert len(page) >= 50 and len(tab.dataframe) == 9  # F6 adds assumptions, outputs, sensitivity and source tables
     missing = page - _drawer_numbers(at)
     assert not missing, sorted(missing)
 

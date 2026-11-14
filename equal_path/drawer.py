@@ -206,10 +206,83 @@ def _card_rows(card) -> list[tuple]:
     return rows
 
 
+def _simulator_rows(simulation) -> list[tuple]:
+    """F6: figures rendered by the county scenario panel, with inputs and assumptions."""
+    if simulation is None:
+        return []
+    b = simulation.baseline
+    src_part = b.participation_source
+    src_detect = b.detection_source
+    src_method = SPEC
+    period = "2024"
+    loc_part = b.participation_locator
+    loc_detect = b.detection_locator
+    rows = [
+        ("F6 simulator", "County attendance baseline", f"{b.attended:,} attended / {b.eligible:,} {b.eligible_label}",
+         period, src_part, loc_part),
+        ("F6 simulator", "County detections (context)", f"{b.county_detections:,}", period, src_detect, loc_detect),
+        ("F6 simulator", "Pooled yield baseline", f"{b.pooled_detections:,} detections / {b.pooled_attended:,} attendees",
+         period, src_detect, loc_detect),
+        ("F6 simulator", "Target participation (low / base / high)",
+         f"{b.participation:.1%} / {simulation.target_participation:.1%} / 100.0%", period,
+         f"{src_part}; S_STRATEGY; {src_method}",
+         "Low = observed 2024 county participation; base = selected target; high = 100% scenario cap"),
+        ("F6 simulator", "Detection yield (low / base / high)",
+         f"{simulation.detection_yield_low:.3%} / {simulation.detection_yield_median:.3%} / "
+         f"{simulation.detection_yield_high:.3%}", period, src_detect,
+         "80% interval: 10th / 50th / 90th percentiles of Jeffreys Beta(0.5, 0.5) posterior draws"),
+        ("F6 simulator", "Assumed early-stage share (low / base / high)",
+         f"0.0% / {simulation.assumed_early_stage_share:.1%} / 100.0%", period, src_method,
+         "Scenario boundaries; base is user-set because county stage distribution is not published"),
+        ("F6 simulator", "Additional people screened", f"{simulation.additional_attendees:,}", period,
+         f"{src_part}; S_STRATEGY; {src_method}",
+         "eligible × (target participation − observed participation), rounded to a whole person"),
+        ("F6 simulator", "Additional detections (low / base / high)",
+         f"{simulation.additional_detections_low:,.1f} / {simulation.additional_detections_median:,.1f} / "
+         f"{simulation.additional_detections_high:,.1f} ({simulation.interval:.0%} interval)", period, src_detect,
+         "extra attendees × 10th / 50th / 90th posterior yield"),
+        ("F6 simulator", "Early-stage scenario (low / base / high)",
+         f"{simulation.early_stage_low:,.1f} / {simulation.early_stage_median:,.1f} / "
+         f"{simulation.early_stage_high:,.1f} ({simulation.interval:.0%} interval)", period,
+         f"{src_detect}; {src_method}", "additional detections × user-set early-stage share"),
+        ("F6 simulator", "Model draws and interval", f"{simulation.draws:,} draws; {simulation.interval:.0%}",
+         period, src_method, "seeded Beta-posterior Monte Carlo; interval reflects yield uncertainty only"),
+        ("F6 simulator", "Sensitivity: early-stage share", f"0–100%; 0–{simulation.additional_detections_median:,.0f}",
+         period, src_method, "full scenario range and corresponding median-yield output"),
+    ]
+    yield_uncertainty = simulation.additional_attendees * (simulation.detection_yield_high - simulation.detection_yield_low)
+    stage_uncertainty = simulation.additional_detections_median
+    yield_effect = yield_uncertainty * simulation.assumed_early_stage_share
+    stage_rank, yield_rank = (1, 2) if stage_uncertainty >= yield_effect else (2, 1)
+    rows.append(("F6 simulator", "Sensitivity rank: early-stage share", f"{stage_rank}", period, src_method,
+                 "ranked by change in early-stage output"))
+    rows.append(("F6 simulator", "Sensitivity rank: detection yield", f"{yield_rank}", period, src_detect,
+                 "ranked by change in early-stage output"))
+    rows.append(("F6 simulator", "Sensitivity: cancer yield uncertainty",
+                 f"{(1 - simulation.interval) / 2 * 100:.0f}–{(1 + simulation.interval) / 2 * 100:.0f}% posterior interval; "
+                 f"about {yield_effect:,.1f} early-stage cases",
+                 period, f"{src_detect}; {src_method}", "yield interval × selected early-stage share"))
+    reproduced = b.pooled_attended * b.yield_per_attendee
+    rows.append(("F6 simulator", "Baseline arithmetic check",
+                 f"{b.pooled_detections:,} observed; {reproduced:,.0f} reproduced across 22 units", period,
+                 src_detect, "input consistency check; not independent validation"))
+    return rows
+
+
 def county_figures(code: str, result, store: pd.DataFrame, catalog: dict, glidepaths: pd.DataFrame, calib,
-                   thresholds, card=None) -> pd.DataFrame:
+                   thresholds, card=None, simulation=None) -> pd.DataFrame:
+    if simulation is None:
+        from equal_path.simulator import screening_baseline, simulate_screening
+
+        baseline, _ = screening_baseline(store, code, "Breast")
+        if baseline is not None:
+            simulation = simulate_screening(
+                baseline, max(baseline.participation, 0.80), 0.0,
+                draws=thresholds.monte_carlo_draws, interval=thresholds.simulator_interval,
+            )
     rows = (_header_and_funnel(code, result, store, catalog, thresholds)
             + _indicators(code, result, store, catalog, thresholds.min_denominator)
             + _twins(code, result) + _glidepaths(code, store, glidepaths) + _method(result, calib, thresholds)
+            + _simulator_rows(simulation)
             + (_card_rows(card) if card is not None else []))
     return pd.DataFrame(rows, columns=list(DRAWER_COLUMNS))
