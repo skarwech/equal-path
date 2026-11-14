@@ -42,8 +42,14 @@ def test_confidence_rule(visibility, rows, good, stability, level):
 
 def test_confidence_reasons_name_the_cause():
     reasons = stage_confidence(0.86, _rows(("ok", None)), True, 0.59, **KW).reasons
-    assert any("no published n or CI" in r for r in reasons)
+    assert any("no usable n or CI" in r for r in reasons)
     assert any("0.59" in r and "0.6" in r for r in reasons)
+
+
+def test_stability_reason_never_rounds_up_to_the_bar():
+    """Review P-9: 0.5996 must not print as '0.60 < 0.6'."""
+    reasons = stage_confidence(0.86, _rows(("ok", (0.1, 0.2))), True, 0.5996, **KW).reasons
+    assert any("0.599" in r for r in reasons) and not any("0.60 " in r or "0.600" in r for r in reasons)
 
 
 @pytest.fixture(scope="module")
@@ -88,8 +94,27 @@ def test_pirkanmaa_diagnosis_is_grey_despite_one_observed_indicator(result, cata
 
 
 def test_timing_reason_says_it_is_a_separate_row(result, catalog, store):
+    """Review P-10: the gap locator never judges timing, so the reason must not imply 50 % would let it."""
     reason = stage_reason(result, store, catalog, "90", "timing", 0.5)
-    assert "separate row" in reason and "0 of 3" in reason
+    assert "separate row" in reason and "0 of 3" in reason and "not judged by the gap locator" in reason
+    assert "needed to judge" not in reason
+
+
+def test_observable_stage_that_cannot_be_judged_names_each_series_reason(catalog, store):
+    """Review G-6: the branch where enough is observable but every series is Unknown (e.g. n < 30)."""
+    from types import SimpleNamespace
+
+    codes, stage = ["90"], "referral"
+    result = SimpleNamespace(
+        stages=pd.DataFrame({stage: ["unknown"]}, index=codes),
+        visibility=pd.DataFrame({stage: [1.0]}, index=codes),
+        observable=pd.DataFrame({"primary_care_access": [True]}, index=codes),
+        assessments=pd.DataFrame([{"code": "90", "stage": stage, "indicator_id": "primary_care_access",
+                                   "state": "unknown", "reason": "denominator 12 < 30"}]),
+    )
+    reason = stage_reason(result, store, catalog, "90", stage, 0.5)
+    assert "none could be judged" in reason
+    assert catalog["primary_care_access"].label in reason and "denominator 12 < 30" in reason
 
 
 def test_diagnosis_confidence_is_low_everywhere_on_real_data(result):

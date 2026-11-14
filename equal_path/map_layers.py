@@ -23,6 +23,7 @@ STATUS_LABEL = {"leak": "▲ Leak", "watch": "◆ Watch", "ok": "✓ OK", "unkno
 BLUE_RAMP = ("#cde2fb", "#b7d3f6", "#9ec5f4", "#86b6ef", "#6da7ec", "#5598e7", "#3987e5",
              "#2a78d6", "#256abf", "#1c5cab", "#184f95", "#104281", "#0d366b")   # steps 100..700
 HATCH_SPACING = 0.007   # radians between hatch lines in the Mercator plane (~8 px at the app's map size)
+INSET_HATCH_SPACING = 0.0025   # the inset is zoomed, so lines sit closer in map units
 DENSIFY_STEP = 0.002    # radians between points along a hatch line (Scattergeo draws great-circle arcs)
 
 
@@ -70,14 +71,26 @@ def selected_county(event, valid_codes: Iterable[str]) -> str | None:
     return location if location in set(valid_codes) else None
 
 
-def apply_map_pick(state, pick: str | None, labels: dict) -> None:
-    """Open the clicked county. A Plotly selection persists across reruns, so act only when it changes:
-    otherwise the County selector could never move away from the last clicked county."""
+def apply_map_pick(state, pick: str | None, labels: dict) -> bool:
+    """Open the clicked county; True if it navigated. A Plotly selection persists across reruns, so act
+    only when it changes: otherwise the County selector could never move away from the last clicked county."""
     if pick == state.get("_map_pick"):
-        return
+        return False
     state["_map_pick"] = pick
-    if pick is not None:
-        state["county"] = labels[pick]
+    if pick is None:
+        return False
+    state["county"] = labels[pick]
+    return True
+
+
+def handle_map_event(state, event, labels: dict) -> bool:
+    """Apply a map click. After a navigating click the chart gets a new key (an empty selection), so the
+    next click is always a fresh selection, even on the county already open (review M-1)."""
+    navigated = apply_map_pick(state, selected_county(event, set(labels)), labels)
+    if navigated:
+        state["_map_nonce"] = state.get("_map_nonce", 0) + 1
+        state["_map_pick"] = None   # the re-keyed chart starts with nothing selected
+    return navigated
 
 
 # --- hatching geometry -------------------------------------------------------------------------

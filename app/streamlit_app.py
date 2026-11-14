@@ -22,7 +22,7 @@ from equal_path.config import (  # noqa: E402
     thresholds_digest,
 )
 from equal_path.geography import load_unit_geojson, load_units  # noqa: E402
-from equal_path.map_layers import LAYERS, apply_map_pick, layer_frame, layer_table, selected_county  # noqa: E402
+from equal_path.map_layers import LAYERS, handle_map_event, layer_frame, layer_table  # noqa: E402
 from app.pathway_view import pathway_section  # noqa: E402
 from equal_path.coverage import LEGEND, coverage_matrix  # noqa: E402
 from equal_path.glidepath import calibration, run_glidepaths  # noqa: E402
@@ -136,18 +136,25 @@ def map_and_units(data: dict) -> None:
         st.caption(LAYER_LEGEND[layer == "Visibility score"])
         st.caption("Source: Statistics Finland classifications and boundaries 2026 (see Sources tab).")
     with left:
+        nonce = st.session_state.setdefault("_map_nonce", 0)
         event = st.plotly_chart(
             unit_map_figure(units, data["geojson"], highlight_area=highlight, layer=frame, layer_name=layer),
-            width="stretch", config=MAP_CONFIG, on_select="rerun", selection_mode="points", key="map",
+            width="stretch", config=MAP_CONFIG, on_select="rerun", selection_mode="points", key=f"map_{nonce}",
         )
         labels = {code: f"{code} {name}" for code, name in zip(units["code"], units["short_fi"])}
-        apply_map_pick(st.session_state, selected_county(event, set(labels)), labels)
-        st.caption("Click a county to open its pathway below.")
+        if handle_map_event(st.session_state, event, labels):
+            st.rerun()  # re-draw with a fresh chart, so the next click is a new selection
+        st.caption("Click a county to open its pathway below. Dragging pans the map; the view resets when a county "
+                   "opens, or with the button.")
+        if st.button("Reset map view"):
+            st.session_state["_map_nonce"] = nonce + 1
+            st.rerun()
 
 
 LAYER_LEGEND = {
-    False: "Colours: ▲ Leak (red) · ◆ Watch (amber) · ✓ OK (green) · ○ Unknown (grey); ▲ and ◆ are also marked on "
-           "the map. Hatched: less than half of the stage is observable, so it cannot be judged.",
+    False: "Colours and map symbols: ▲ Leak (red) · ◆ Watch (amber) · ✓ OK (green) · ○ Unknown (grey); Keski-Uusimaa, "
+           "Vantaa-Kerava and Helsinki are marked in the inset. Hatched: less than half of the stage is observable, so it "
+           "cannot be judged.",
     True: "Colour: visibility score, light (low) to dark blue (high). Hatched: score below 50.",
 }
 

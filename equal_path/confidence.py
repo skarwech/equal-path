@@ -10,6 +10,7 @@ before any county result was loaded, so no number was chosen after seeing result
 
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass
 from typing import Mapping
 
@@ -50,12 +51,13 @@ def stage_confidence(visibility: float, rows: pd.DataFrame, twins_good: bool, st
     else:
         untestable = sum(not _has_interval(i) for i in judged.interval)
         if untestable:
-            reasons.append(f"{untestable} of {len(judged)} judged series have no published n or CI, "
-                           "so significance cannot be tested")
+            reasons.append(f"{untestable} of {len(judged)} judged series have no usable n or CI (none published, "
+                           "or a CI inconsistent with the value), so significance cannot be tested")
     if not twins_good:
         reasons.append("no good twin: national reference only")
     elif stability < min_stability:
-        reasons.append(f"twin set unstable (stability {stability:.2f} < {min_stability:g})")
+        shown = math.floor(stability * 1000) / 1000   # never round up to the bar (0.5996 -> 0.599)
+        reasons.append(f"twin set unstable (stability {shown:.3f} < {min_stability:g})")
     return Confidence("medium" if reasons else "high", tuple(reasons))
 
 
@@ -80,14 +82,16 @@ def stage_reason(result, store: pd.DataFrame, catalog: Mapping, code: str, stage
     members = stage_members(catalog)[stage]
     observed = [m for m in members if m in result.observable.columns and bool(result.observable.loc[code, m])]
     visibility = float(result.visibility.loc[code, stage])
-    lead = "Unknown: timing is a separate row (not in the score); " if stage in SEPARATE_STAGES else "Unknown: "
-    if low_visibility(visibility, min_stage_visibility):
-        text = (f"{lead}only {len(observed)} of {len(members)} indicators are observable ({visibility:.0%}, "
+    if stage in SEPARATE_STAGES:
+        text = (f"Unknown: timing is a separate row, not in the score and not judged by the gap locator; "
+                f"{len(observed)} of {len(members)} access-time indicators are published by county.")
+    elif low_visibility(visibility, min_stage_visibility):
+        text = (f"Unknown: only {len(observed)} of {len(members)} indicators are observable ({visibility:.0%}, "
                 f"below the {min_stage_visibility:.0%} needed to judge a stage).")
     else:
         rows = result.assessments[(result.assessments.code == code) & (result.assessments.stage == stage)]
         why = "; ".join(f"{catalog[i].label}: {r}" for i, r in zip(rows.indicator_id, rows.reason)) or "no assessable series"
-        text = f"{lead}{len(observed)} of {len(members)} indicators observable, but none could be judged ({why})."
+        text = f"Unknown: {len(observed)} of {len(members)} indicators observable, but none could be judged ({why})."
     if observed:
         text += " Observed: " + ", ".join(catalog[m].label for m in observed) + "."
     missing = [m for m in members if m not in observed]

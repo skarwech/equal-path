@@ -26,3 +26,18 @@ Second pass after the new tests: all killed.
   KILLED drawer rounds values to 0 dp           test_raw_values_match_the_store_with_locator
   KILLED drawer drops method constants          test_every_displayed_figure_appears_in_the_sources_drawer[90]
   KILLED funnel shows OK everywhere             test_every_displayed_figure_appears_in_the_sources_drawer[01] (funnel = gap locator)
+
+Review-fix pass (after the independent review, 2026-11-14 ~19:45 EET), in a scratch copy with evidence/ included:
+  KILLED P-1 national ignores subgroup         test_national_stage_recording_coverage_is_all_sites
+  KILLED P-2 typical = upper-middle            test_typical_twin_distance_is_the_median
+  KILLED P-4 twin median names all twins       test_twin_median_derivation_excludes_twins_that_did_not_count (equivalent on real data: every real twin median uses all 3 twins)
+  KILLED P-7 national always pooled            test_derived_indicator_rows_state_how_they_were_made
+  KILLED G-5 funnel cites observed only        test_data_rows_cite_their_own_sources_not_the_rule_register
+  KILLED P-11 latest cites all years           test_glidepath_rows_cite_the_goal_and_the_latest_year
+  KILLED M-5 symbols on main for inset units   test_hatching_and_symbols_are_placed_per_polygon[Detection]
+  KILLED M-1 no re-key after navigating        test_every_click_opens_its_county_even_the_one_already_open
+  KILLED G-1 map shows Treatment for any layer test_rendered_map_tooltips_equal_the_rendered_table[Visibility score]
+  KILLED G-1 labels swapped                    test_layer_values_come_from_the_pathway_result[Detection]
+  KILLED G-4 card shows wrong confidence       test_county_page_gates[08]
+  KILLED G-4 grey reasons not shown            test_county_page_gates[90]
+  KILLED M-2 reset button does nothing         test_reset_map_view_rekeys_the_chart

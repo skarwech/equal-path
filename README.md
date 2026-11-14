@@ -11,7 +11,7 @@ Design and acceptance spec: `equal_path_junction_astrazeneca.md` (rev 2).
 | 2. Data spine (F0): 18 public indicators for 22 units, catalog of all 27 incl. gaps, 9 of 11 anchors reconciled (2 shown as not checked), 10/10 spot-check | Step 2 | approved |
 | 3. Visibility score (F1) + gap locator (F2) + twin core + tipping point (synthetic only: no regional stage data) | Step 3 | approved |
 | 4. Twins final (F3: + distance to university hospital, stability, better twins) + glidepath (F4); early warning shown infeasible | Step 3 | approved |
-| 5. Interface (F8): map layers with low-visibility hatching, 22/22 clickable map (Helsinki-area inset), funnel with confidence badges and grey-stage reasons, sources drawer | Step 4 | **built and verified, awaiting validation** |
+| 5. Interface (F8): map layers with low-visibility hatching, 22/22 clickable map (Helsinki-area inset), funnel with confidence badges and grey-stage reasons, sources drawer | Step 4 | **built, independently reviewed (24 findings, all fixed), awaiting validation** |
 | 6. Action engine (F5) + Action Card | Step 5 | |
 | 7. AI analyst + number validator (F7) | Step 6 | |
 | 8. Hardening: offline cold start, trust panel, rehearsal | Steps 6-7 | |

@@ -1,5 +1,7 @@
 """F8 map: layers, low-visibility hatching, tooltip = table, and click-through to a county."""
 
+from pathlib import Path
+
 import pytest
 
 from equal_path.gaps import low_visibility
@@ -36,11 +38,18 @@ def geojson():
     return load_unit_geojson()
 
 
+LITERAL_LABEL = {"leak": "▲ Leak", "watch": "◆ Watch", "ok": "✓ OK", "unknown": "○ Unknown"}  # not imported (review G-1)
+LITERAL_COLOUR = {"leak": "#d03b3b", "watch": "#fab219", "ok": "#0ca30c", "unknown": "#c9c8c2"}
+LITERAL_SYMBOL = {"leak": "▲", "watch": "◆", "ok": "✓", "unknown": "○"}
+LITERAL_RAMP = ["#cde2fb", "#b7d3f6", "#9ec5f4", "#86b6ef", "#6da7ec", "#5598e7", "#3987e5",
+                "#2a78d6", "#256abf", "#1c5cab", "#184f95", "#104281", "#0d366b"]
+
+
 def _expected_display(result, layer, code):
     if layer == "Visibility score":
         return f"{result.visibility.loc[code, 'score']:.1f} / 100"
     stage = layer.lower()
-    return f"{STATUS_LABEL[result.stages.loc[code, stage]]} · visibility {result.visibility.loc[code, stage]:.0%}"
+    return f"{LITERAL_LABEL[result.stages.loc[code, stage]]} · visibility {result.visibility.loc[code, stage]:.0%}"
 
 
 @pytest.mark.parametrize("layer", LAYERS)
@@ -69,11 +78,87 @@ def test_tooltip_values_equal_the_table_values(result, units, geojson, layer):
 
 
 def test_stage_layers_use_the_status_palette_with_symbols(result):
+    assert STATUS_COLOURS == LITERAL_COLOUR and STATUS_LABEL == LITERAL_LABEL
     frame = layer_frame(result, "Treatment", 0.5)
     for code in frame.index:
         state = result.stages.loc[code, "treatment"]
-        assert frame.loc[code, "color"] == STATUS_COLOURS[state]
-        assert frame.loc[code, "display"].startswith(STATUS_LABEL[state])  # never colour alone
+        assert frame.loc[code, "color"] == LITERAL_COLOUR[state]
+        assert frame.loc[code, "display"].startswith(LITERAL_LABEL[state])  # never colour alone
+
+
+def test_score_layer_is_drawn_on_the_blue_ramp_from_0_to_100(result, units, geojson):
+    """Review G-3: the score layer's z, range and colour stops, checked against literals."""
+    from equal_path.viz import unit_map_figure
+
+    frame = layer_frame(result, "Visibility score", 0.5)
+    for trace in (t for t in unit_map_figure(units, geojson, layer=frame, layer_name="Visibility score").data
+                  if t.type == "choropleth"):
+        assert (trace.zmin, trace.zmax) == (0, 100)
+        assert [c for _, c in trace.colorscale] == LITERAL_RAMP
+        assert list(trace.z) == [pytest.approx(result.visibility.loc[c, "score"]) for c in trace.locations]
+
+
+def _geo_traces(figure, geo):
+    return {t.name: t for t in figure.data if t.type == "scattergeo" and (t.geo or "geo") == geo}
+
+
+@pytest.mark.parametrize("layer", LAYERS)
+def test_hatching_and_symbols_are_placed_per_polygon(result, units, geojson, layer):
+    """Review G-2: hatching covers exactly the low-visibility units of each map, and every unit carries
+    its own state symbol, on the inset for the three tiny units (review M-5) and for every state (M-6)."""
+    from equal_path.map_layers import HATCH_SPACING, INSET_HATCH_SPACING
+    from equal_path.viz import unit_map_figure
+
+    frame = layer_frame(result, layer, 0.5)
+    figure = unit_map_figure(units, geojson, layer=frame, layer_name=layer)
+    features = {f["properties"]["code"]: f["geometry"] for f in geojson["features"]}
+    for geo, codes, spacing in (("geo", [c for c in frame.index if c not in INSET_UNITS], HATCH_SPACING),
+                                ("geo2", list(INSET_UNITS), INSET_HATCH_SPACING)):
+        traces = _geo_traces(figure, geo)
+        hatched = [c for c in codes if frame.loc[c, "hatched"]] + ([c for c in INSET_UNITS if frame.loc[c, "hatched"]]
+                                                                    if geo == "geo" else [])
+        expected = sum(len(hatch_segments(features[c], spacing)) for c in hatched)
+        assert (traces["hatching"].lon.count(None) if "hatching" in traces else 0) == expected, (layer, geo)
+        if layer == "Visibility score":
+            assert "symbols" not in traces
+            continue
+        symbols = dict(zip(traces["symbols"].customdata, traces["symbols"].text))
+        assert symbols == {c: LITERAL_SYMBOL[result.stages.loc[c, layer.lower()]] for c in codes}, (layer, geo)
+
+
+def test_hatch_note_fits_the_layer(units, geojson, result):
+    """Review M-7: on the score layer, hatching means 'score below 50', not 'stage below half observable'."""
+    from equal_path.viz import unit_map_figure
+
+    for layer, wording in (("Visibility score", "visibility score below 50"), ("Detection", "less than half of this stage")):
+        frame = layer_frame(result, layer, 0.5).copy()
+        frame.loc["21", "hatched"] = True
+        trace = unit_map_figure(units, geojson, layer=frame, layer_name=layer).data[0]
+        notes = dict(zip(trace.locations, (c[2] for c in trace.customdata)))
+        assert wording in notes["21"] and notes["20"] == ""
+
+
+@pytest.mark.parametrize("layer", LAYERS)
+def test_rendered_map_tooltips_equal_the_rendered_table(layer):
+    """Review G-1, the F8 gate end to end: choose the layer in the running app, then compare every
+    tooltip in the rendered Plotly spec (main map and inset) with the rendered table, 22 of 22."""
+    import json
+
+    from streamlit.testing.v1 import AppTest
+
+    app_file = Path(__file__).resolve().parents[1] / "app" / "streamlit_app.py"
+    at = AppTest.from_file(str(app_file), default_timeout=60).run()
+    next(sb for sb in at.selectbox if sb.label == "Map layer").select(layer).run()
+    assert not at.exception, [e.value for e in at.exception]
+    table = next(d.value for d in at.dataframe if {"Code", "Municipalities", layer} <= set(d.value.columns))
+    shown = dict(zip(table.Code, table[layer]))
+    spec = json.loads(at.get("plotly_chart")[0].proto.spec)
+    choropleths = [t for t in spec["data"] if t["type"] == "choropleth"]
+    assert [len(t["locations"]) for t in choropleths] == [22, len(INSET_UNITS)]
+    for trace in choropleths:
+        assert f"{layer}: %{{customdata[3]}}" in trace["hovertemplate"]
+        for code, custom in zip(trace["locations"], trace["customdata"]):
+            assert custom[3] == shown[code], (layer, code)
 
 
 def test_score_layer_is_a_single_hue_ramp_light_to_dark():
@@ -182,6 +267,21 @@ def test_each_polygon_is_drawn_in_its_own_layer_colour(result, units, geojson, l
 
 
 LABELS = {"08": "08 Pirkanmaa", "21": "21 Lappi", "90": "90 Helsinki"}
+
+
+def test_every_click_opens_its_county_even_the_one_already_open():
+    """Review M-1: after a click navigates, the chart is re-keyed (fresh, empty selection), so clicking the
+    same polygon again is a new selection rather than a toggle-off that would do nothing."""
+    from equal_path.map_layers import handle_map_event
+
+    def click(code):
+        return {"selection": {"points": [{"location": code}]}}
+
+    state = {"county": "90 Helsinki"}
+    assert handle_map_event(state, click("21"), LABELS) and state["county"] == "21 Lappi" and state["_map_nonce"] == 1
+    assert not handle_map_event(state, {"selection": {"points": []}}, LABELS)   # the re-keyed chart starts empty
+    state["county"] = "08 Pirkanmaa"
+    assert handle_map_event(state, click("21"), LABELS) and state["county"] == "21 Lappi" and state["_map_nonce"] == 2
 
 
 def test_a_map_click_opens_the_county_and_stale_selections_do_not():

@@ -17,7 +17,7 @@ MAP_CONFIG: dict = {"displayModeBar": False, "scrollZoom": False, "topojsonURL":
 
 HATCH_INK = "#2c2c2a"
 OUTLINE = "#0b0b0b"
-SYMBOL_STATES = {"leak": "▲", "watch": "◆"}   # marked on the map itself, so state never rests on hue alone
+SYMBOL_STATES = {"leak": "▲", "watch": "◆", "ok": "✓", "unknown": "○"}   # on the map itself: never hue alone
 
 
 def highlight_codes(units: pd.DataFrame, highlight_area: str | None) -> set[str]:
@@ -41,7 +41,9 @@ def _choropleth(codes, units, geojson, frame, layer_name, hatched, geo: str) -> 
     from equal_path.map_layers import BLUE_RAMP
 
     info = units.set_index("code")
-    note = {c: "<br>hatched: less than half of this stage is observable" if c in hatched else "" for c in codes}
+    meaning = ("visibility score below 50" if layer_name == "Visibility score"
+               else "less than half of this stage is observable")
+    note = {c: f"<br>hatched: {meaning}" if c in hatched else "" for c in codes}
     custom = [[info.loc[c, "short_fi"], info.loc[c, "coop_area_fi"], note[c], frame.loc[c, "display"]] for c in codes]
     common = dict(geojson=geojson, featureidkey="properties.code", locations=list(codes), customdata=custom, geo=geo,
                   marker_line_color=BORDER, marker_line_width=1.2,
@@ -62,19 +64,21 @@ def _choropleth(codes, units, geojson, frame, layer_name, hatched, geo: str) -> 
 
 def _overlays(codes, features, frame, hatched, outline, geo: str) -> list[go.Scattergeo]:
     from equal_path.loaders.distance import centroid
-    from equal_path.map_layers import hatch_segments
+    from equal_path.map_layers import HATCH_SPACING, INSET_HATCH_SPACING, INSET_UNITS, hatch_segments
 
     traces = []
     to_hatch = [c for c in codes if c in hatched]
     if to_hatch:
-        spacing = 0.007 if geo == "geo" else 0.0025   # the inset is zoomed, so lines sit closer in map units
+        spacing = HATCH_SPACING if geo == "geo" else INSET_HATCH_SPACING
         traces.append(_lines_trace([s for c in to_hatch for s in hatch_segments(features[c], spacing)], "hatching",
                                    HATCH_INK, 0.8, geo))
-    marked = [c for c in codes if frame.loc[c, "value"] in SYMBOL_STATES]
+    # the three tiny units are marked in the inset only: on the main map their symbol would sit on a neighbour
+    marked = [c for c in codes if frame.loc[c, "value"] in SYMBOL_STATES and (geo == "geo2" or c not in INSET_UNITS)]
     if marked:
         points = [centroid(features[c]) for c in marked]
         traces.append(go.Scattergeo(lat=[p[0] for p in points], lon=[p[1] for p in points], mode="text", geo=geo,
                                     text=[SYMBOL_STATES[frame.loc[c, "value"]] for c in marked], name="symbols",
+                                    customdata=marked,
                                     textfont={"color": OUTLINE, "size": 14}, hoverinfo="skip", showlegend=False,
                                     selected={"textfont": {"color": OUTLINE}}, unselected={"textfont": {"color": OUTLINE}}))
     ringed = [c for c in codes if c in outline]
@@ -151,7 +155,7 @@ def _layout(figure: go.Figure) -> go.Figure:
     figure.update_geos(fitbounds="locations", visible=False, projection_type="mercator")  # every geo, inset included
     figure.update_layout(
         height=700,
-        dragmode=False,  # no accidental pan/zoom during a live demo
+        dragmode=False,  # no pan/zoom; note: Streamlit switches to pan when map clicks are on (see Reset map view)
         margin={"l": 0, "r": 0, "t": 0, "b": 0},
         paper_bgcolor="rgba(0,0,0,0)",
         geo_bgcolor="rgba(0,0,0,0)",

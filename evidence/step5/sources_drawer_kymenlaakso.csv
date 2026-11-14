@@ -1,0 +1,112 @@
+Section,Figure,Shown,Period,Sources,Locator or derivation
+Header,Visibility score,58.9/100,,S_CIF2024_REPORT; S_CR_SCREENING_STATS; S_LUNG_REPORT_2019_2023; S_ROADMAP; S_SCREENING2024_PRESS; S_SOTKANET,"F1: mean of the four stage shares (weights 0.25) of observable indicators; observable = latest period, headline series, n >= 30, registered source"
+Header,Primary finding,treatment: lung_curative_route_share (all) 5.2 pp worse,,S_CR_SCREENING_STATS; S_LUNG_REPORT_2019_2023,F2: largest verified gap (the smaller of the national and twin gaps) among Leak stages
+Funnel,Detection · state,▲ Leak,,S_CR_SCREENING_STATS; S_SCREENING2024_PRESS; S_SOTKANET,F2 stage rule over this stage's indicator states (gap locator output)
+Funnel,Detection · visibility,86%,,S_CR_SCREENING_STATS; S_SCREENING2024_PRESS; S_SOTKANET,6 of 7 indicators observable
+Funnel,Detection · confidence,"medium: 1 of 4 judged series have no usable n or CI (none published, or a CI inconsistent with the value), so significance cannot be tested",,S_EQUAL_PATH_SPEC,"confidence rule (frozen thresholds: min_stage_visibility 0.5, twin_stability_jaccard 0.6)"
+Funnel,Referral · state,◆ Watch,,S_SOTKANET,F2 stage rule over this stage's indicator states (gap locator output)
+Funnel,Referral · visibility,100%,,S_SOTKANET,1 of 1 indicators observable
+Funnel,Referral · confidence,"medium: 1 of 1 judged series have no usable n or CI (none published, or a CI inconsistent with the value), so significance cannot be tested",,S_EQUAL_PATH_SPEC,"confidence rule (frozen thresholds: min_stage_visibility 0.5, twin_stability_jaccard 0.6)"
+Funnel,Diagnosis · state,○ Unknown,,S_CIF2024_REPORT; S_LUNG_REPORT_2019_2023,F2 stage rule over this stage's indicator states (gap locator output)
+Funnel,Diagnosis · visibility,0%,,S_CIF2024_REPORT; S_LUNG_REPORT_2019_2023,0 of 3 indicators observable
+Funnel,Diagnosis · confidence,low: only 0% of the stage is observable (below 50%),,S_EQUAL_PATH_SPEC,"confidence rule (frozen thresholds: min_stage_visibility 0.5, twin_stability_jaccard 0.6)"
+Funnel,Diagnosis · why grey,"Unknown: only 0 of 3 indicators are observable (0%, below the 50% needed to judge a stage). Missing: Stage-recording coverage (area or national level only); Stage I-II share (known stage) (not published by county); Lung cancer cell type recorded (not published by county).",,S_CIF2024_REPORT; S_LUNG_REPORT_2019_2023,catalog status and unit-level coverage of each indicator
+Funnel,Treatment · state,▲ Leak,,S_CIF2024_REPORT; S_LUNG_REPORT_2019_2023; S_ROADMAP,F2 stage rule over this stage's indicator states (gap locator output)
+Funnel,Treatment · visibility,50%,,S_CIF2024_REPORT; S_LUNG_REPORT_2019_2023; S_ROADMAP,2 of 4 indicators observable
+Funnel,Treatment · confidence,high,,S_EQUAL_PATH_SPEC,"confidence rule (frozen thresholds: min_stage_visibility 0.5, twin_stability_jaccard 0.6)"
+Funnel,Timing · state,○ Unknown,,S_THL_OHJAUS_21_2016,F2 stage rule over this stage's indicator states (gap locator output)
+Funnel,Timing · visibility,0%,,S_THL_OHJAUS_21_2016,0 of 3 indicators observable
+Funnel,Timing · confidence,low: only 0% of the stage is observable (below 50%),,S_EQUAL_PATH_SPEC,"confidence rule (frozen thresholds: min_stage_visibility 0.5, twin_stability_jaccard 0.6)"
+Funnel,Timing · why grey,"Unknown: timing is a separate row, not in the score and not judged by the gap locator; 0 of 3 access-time indicators are published by county. Missing: Referral to first treatment (not published by county); Referral to first physician visit (not published by county); Treatment queue to first treatment (not published by county).",,S_THL_OHJAUS_21_2016,catalog status and unit-level coverage of each indicator
+Funnel,National stage-recording coverage,41.9 %,2024,S_CIF2024_REPORT,cancer_in_finland_2024.html > TAULUKKO 5.1 > All sites together
+Indicators,screening_participation_breast (all) · value,82.0,2024,S_CR_SCREENING_STATS,breast.html > Wellbeing services counties > Screening process > 2024
+Indicators,screening_participation_breast (all) · n,11143,2024,S_CR_SCREENING_STATS,breast.html > Wellbeing services counties > Screening process > 2024
+Indicators,screening_participation_breast (all) · test interval,81.1–82.9,2024,S_CR_SCREENING_STATS,Wilson interval from n at the stage z
+Indicators,screening_participation_breast (all) · national,81.6,2024,S_CR_SCREENING_STATS,breast.html > Wellbeing services counties > Screening process > 2024
+Indicators,screening_participation_breast (all) · twin median,83.2,2024,S_CR_SCREENING_STATS,"median of the twins' values (units 09, 06, 11) with n >= 30"
+Indicators,screening_participation_breast (all) · gap vs national,-0.4,2024,S_CR_SCREENING_STATS,"difference in percentage points, signed so positive = worse"
+Indicators,screening_participation_breast (all) · gap vs twins,1.2,2024,S_CR_SCREENING_STATS,"difference in percentage points, signed so positive = worse"
+Indicators,screening_participation_cervical (all) · value,77.0,2024,S_CR_SCREENING_STATS,cervix.html > Wellbeing services counties > Screening process > 2024 [Age group]
+Indicators,screening_participation_cervical (all) · n,7751,2024,S_CR_SCREENING_STATS,cervix.html > Wellbeing services counties > Screening process > 2024 [Age group]
+Indicators,screening_participation_cervical (all) · test interval,75.8–78.1,2024,S_CR_SCREENING_STATS,Wilson interval from n at the stage z
+Indicators,screening_participation_cervical (all) · national,73.5,2024,S_CR_SCREENING_STATS,cervix.html > Wellbeing services counties > Screening process > 2024 [Age group]
+Indicators,screening_participation_cervical (all) · twin median,71.5,2024,S_CR_SCREENING_STATS,"median of the twins' values (units 09, 06, 11) with n >= 30"
+Indicators,screening_participation_cervical (all) · gap vs national,-3.5,2024,S_CR_SCREENING_STATS,"difference in percentage points, signed so positive = worse"
+Indicators,screening_participation_cervical (all) · gap vs twins,-5.5,2024,S_CR_SCREENING_STATS,"difference in percentage points, signed so positive = worse"
+Indicators,screening_participation_colorectal (all) · value,70.0,2024,S_CR_SCREENING_STATS,colorectal.html > Wellbeing services counties > Screening process > 2024
+Indicators,screening_participation_colorectal (all) · n,14431,2024,S_CR_SCREENING_STATS,colorectal.html > Wellbeing services counties > Screening process > 2024
+Indicators,screening_participation_colorectal (all) · test interval,69.1–70.9,2024,S_CR_SCREENING_STATS,Wilson interval from n at the stage z
+Indicators,screening_participation_colorectal (all) · national,73.5,2024,S_CR_SCREENING_STATS,colorectal.html > Wellbeing services counties > Screening process > 2024
+Indicators,screening_participation_colorectal (all) · twin median,74.0,2024,S_CR_SCREENING_STATS,"median of the twins' values (units 09, 06, 11) with n >= 30"
+Indicators,screening_participation_colorectal (all) · gap vs national,3.5,2024,S_CR_SCREENING_STATS,"difference in percentage points, signed so positive = worse"
+Indicators,screening_participation_colorectal (all) · gap vs twins,4.0,2024,S_CR_SCREENING_STATS,"difference in percentage points, signed so positive = worse"
+Indicators,hpv_vaccination_coverage (all) · value,63.3,2026,S_SOTKANET,sotkanet indicator 3869 region 967 2026
+Indicators,hpv_vaccination_coverage (all) · national,65.1,2026,S_SOTKANET,sotkanet indicator 3869 region 658 2026
+Indicators,hpv_vaccination_coverage (all) · twin median,58.1,2026,S_SOTKANET,"median of the twins' values (units 09, 06, 11)"
+Indicators,hpv_vaccination_coverage (all) · gap vs national,1.8,2026,S_SOTKANET,"difference in percentage points, signed so positive = worse"
+Indicators,hpv_vaccination_coverage (all) · gap vs twins,-5.2,2026,S_SOTKANET,"difference in percentage points, signed so positive = worse"
+Indicators,primary_care_access (all) · value,61.8,2025,S_SOTKANET,sotkanet indicator 6411 region 967 2025
+Indicators,primary_care_access (all) · national,54.7,2025,S_SOTKANET,sotkanet indicator 6411 region 658 2025
+Indicators,primary_care_access (all) · twin median,56.6,2025,S_SOTKANET,"median of the twins' values (units 09, 06, 11)"
+Indicators,primary_care_access (all) · gap vs national,7.1,2025,S_SOTKANET,"difference in percentage points, signed so positive = worse"
+Indicators,primary_care_access (all) · gap vs twins,5.2,2025,S_SOTKANET,"difference in percentage points, signed so positive = worse"
+Indicators,lung_curative_route_share (all) · value,19.3,2019-2023,S_LUNG_REPORT_2019_2023,keuhkosyoparaportti_2019_2023.html > Taulukko 11 > Parantava > Kymenlaakson hyvinvointialue
+Indicators,lung_curative_route_share (all) · n,591,2019-2023,S_LUNG_REPORT_2019_2023,keuhkosyoparaportti_2019_2023.html > Taulukko 11 > Parantava > Kymenlaakson hyvinvointialue
+Indicators,lung_curative_route_share (all) · test interval,15.5–23.8,2019-2023,S_LUNG_REPORT_2019_2023,Wilson interval from n at the stage z
+Indicators,lung_curative_route_share (all) · national,27.0,2019-2023,S_LUNG_REPORT_2019_2023,"pooled over all unit rows, weighted by n"
+Indicators,lung_curative_route_share (all) · twin median,24.5,2019-2023,S_LUNG_REPORT_2019_2023,"median of the twins' values (units 09, 06, 11) with n >= 30"
+Indicators,lung_curative_route_share (all) · gap vs national,7.7,2019-2023,S_LUNG_REPORT_2019_2023,"difference in percentage points, signed so positive = worse"
+Indicators,lung_curative_route_share (all) · gap vs twins,5.2,2019-2023,S_LUNG_REPORT_2019_2023,"difference in percentage points, signed so positive = worse"
+Indicators,survival_5y_relative (site:breast|sex:female) · value,91.3,2020-2024,S_CIF2024_REPORT,cancer_in_finland_2024.html > TAULUKKO 15.10 > Kymenlaakso > 5-year
+Indicators,survival_5y_relative (site:breast|sex:female) · test interval,85.8–97.0,2020-2024,S_CIF2024_REPORT,published 95 % CI widened to the stage z
+Indicators,survival_5y_relative (site:breast|sex:female) · national,92.3,2020-2024,S_CIF2024_REPORT,cancer_in_finland_2024.html > TAULUKKO 15.10 > Whole Finland > 5-year
+Indicators,survival_5y_relative (site:breast|sex:female) · twin median,91.2,2020-2024,S_CIF2024_REPORT,"median of the twins' values (units 09, 06, 11)"
+Indicators,survival_5y_relative (site:breast|sex:female) · gap vs national,1.0,2020-2024,S_CIF2024_REPORT,"difference in percentage points, signed so positive = worse"
+Indicators,survival_5y_relative (site:breast|sex:female) · gap vs twins,-0.1,2020-2024,S_CIF2024_REPORT,"difference in percentage points, signed so positive = worse"
+Indicators,survival_5y_relative (site:colorectal|sex:all) · value,75.3,2020-2024,S_CIF2024_REPORT,cancer_in_finland_2024.html > TAULUKKO 15.11 > Kymenlaakso > 5-year
+Indicators,survival_5y_relative (site:colorectal|sex:all) · test interval,67.8–83.4,2020-2024,S_CIF2024_REPORT,published 95 % CI widened to the stage z
+Indicators,survival_5y_relative (site:colorectal|sex:all) · national,70.0,2020-2024,S_CIF2024_REPORT,cancer_in_finland_2024.html > TAULUKKO 15.11 > Whole Finland > 5-year
+Indicators,survival_5y_relative (site:colorectal|sex:all) · twin median,70.5,2020-2024,S_CIF2024_REPORT,"median of the twins' values (units 09, 06, 11)"
+Indicators,survival_5y_relative (site:colorectal|sex:all) · gap vs national,-5.3,2020-2024,S_CIF2024_REPORT,"difference in percentage points, signed so positive = worse"
+Indicators,survival_5y_relative (site:colorectal|sex:all) · gap vs twins,-4.8,2020-2024,S_CIF2024_REPORT,"difference in percentage points, signed so positive = worse"
+Indicators,survival_5y_relative (site:lung|sex:female) · value,20.4,2020-2024,S_CIF2024_REPORT,cancer_in_finland_2024.html > TAULUKKO 15.12 > Kymenlaakso > 5-year
+Indicators,survival_5y_relative (site:lung|sex:female) · test interval,12.1–32.4,2020-2024,S_CIF2024_REPORT,published 95 % CI widened to the stage z
+Indicators,survival_5y_relative (site:lung|sex:female) · national,27.1,2020-2024,S_CIF2024_REPORT,cancer_in_finland_2024.html > TAULUKKO 15.12 > Whole Finland > 5-year
+Indicators,survival_5y_relative (site:lung|sex:female) · twin median,24.8,2020-2024,S_CIF2024_REPORT,"median of the twins' values (units 09, 06, 11)"
+Indicators,survival_5y_relative (site:lung|sex:female) · gap vs national,6.7,2020-2024,S_CIF2024_REPORT,"difference in percentage points, signed so positive = worse"
+Indicators,survival_5y_relative (site:lung|sex:female) · gap vs twins,4.4,2020-2024,S_CIF2024_REPORT,"difference in percentage points, signed so positive = worse"
+Indicators,survival_5y_relative (site:lung|sex:male) · value,16.4,2020-2024,S_CIF2024_REPORT,cancer_in_finland_2024.html > TAULUKKO 15.13 > Kymenlaakso > 5-year
+Indicators,survival_5y_relative (site:lung|sex:male) · test interval,9.7–26.1,2020-2024,S_CIF2024_REPORT,published 95 % CI widened to the stage z
+Indicators,survival_5y_relative (site:lung|sex:male) · national,16.7,2020-2024,S_CIF2024_REPORT,cancer_in_finland_2024.html > TAULUKKO 15.13 > Whole Finland > 5-year
+Indicators,survival_5y_relative (site:lung|sex:male) · twin median,16.4,2020-2024,S_CIF2024_REPORT,"median of the twins' values (units 09, 06, 11)"
+Indicators,survival_5y_relative (site:lung|sex:male) · gap vs national,0.3,2020-2024,S_CIF2024_REPORT,"difference in percentage points, signed so positive = worse"
+Indicators,survival_5y_relative (site:lung|sex:male) · gap vs twins,0.0,2020-2024,S_CIF2024_REPORT,"difference in percentage points, signed so positive = worse"
+Twins,Nearest twin distance,0.61,,S_SOTKANET; S_STATFIN; S_WIKIDATA_UNIV_HOSPITALS,"z-scored Euclidean distance on 6 structural covariates (log density, log1p distance)"
+Twins,Typical nearest-twin distance,1.04,,S_SOTKANET; S_STATFIN; S_WIKIDATA_UNIV_HOSPITALS,median over the 22 units of each unit's nearest-twin distance
+Twins,Twin stability,0.71,,S_SOTKANET; S_STATFIN; S_WIKIDATA_UNIV_HOSPITALS,"mean Jaccard overlap of twin sets under ±5 % covariate noise (200 draws, fixed seed)"
+Twins,Twin 09 · distance,0.61,,S_SOTKANET; S_STATFIN; S_WIKIDATA_UNIV_HOSPITALS,"z-scored Euclidean distance on 6 structural covariates (log density, log1p distance)"
+Twins,Twin 06 · distance,0.63,,S_SOTKANET; S_STATFIN; S_WIKIDATA_UNIV_HOSPITALS,"z-scored Euclidean distance on 6 structural covariates (log density, log1p distance)"
+Twins,Twin 11 · distance,0.82,,S_SOTKANET; S_STATFIN; S_WIKIDATA_UNIV_HOSPITALS,"z-scored Euclidean distance on 6 structural covariates (log density, log1p distance)"
+Glidepath,breast · latest,82.0,2020-2024,S_CR_SCREENING_STATS,breast.html > Wellbeing services counties > Screening process > 2024
+Glidepath,breast · trend (pp/yr),-0.1,2020-2024,S_CR_SCREENING_STATS,breast.html > Wellbeing services counties > Screening process > 2020 | breast.html > Wellbeing services counties > Screening process > 2021 | breast.html > Wellbeing services counties > Screening process > 2022 | breast.html > Wellbeing services counties > Screening process > 2023 | breast.html > Wellbeing services counties > Screening process > 2024
+Glidepath,breast · trend line 2035,81.9,2020-2024,S_CR_SCREENING_STATS,"Theil-Sen over the published years; bootstrap 2,000 draws, fixed seed, 80 % interval"
+Glidepath,breast · bootstrap median 2035,81.9,2020-2024,S_CR_SCREENING_STATS,"Theil-Sen over the published years; bootstrap 2,000 draws, fixed seed, 80 % interval"
+Glidepath,breast · 80 % interval,76.1–87.3,2020-2024,S_CR_SCREENING_STATS,"Theil-Sen over the published years; bootstrap 2,000 draws, fixed seed, 80 % interval"
+Glidepath,cervical · latest,77.0,2020-2024,S_CR_SCREENING_STATS,cervix.html > Wellbeing services counties > Screening process > 2024 [Age group]
+Glidepath,cervical · trend (pp/yr),0.6,2020-2024,S_CR_SCREENING_STATS,cervix.html > Wellbeing services counties > Screening process > 2020 [Age group] | cervix.html > Wellbeing services counties > Screening process > 2021 [Age group] | cervix.html > Wellbeing services counties > Screening process > 2022 [Age group] | cervix.html > Wellbeing services counties > Screening process > 2023 [Age group] | cervix.html > Wellbeing services counties > Screening process > 2024 [Age group]
+Glidepath,cervical · needed (pp/yr),0.3,2020-2024,S_CR_SCREENING_STATS; S_STRATEGY,(80 % goal - latest) / (2035 - latest year)
+Glidepath,cervical · trend line 2035,83.2,2020-2024,S_CR_SCREENING_STATS,"Theil-Sen over the published years; bootstrap 2,000 draws, fixed seed, 80 % interval"
+Glidepath,cervical · bootstrap median 2035,83.3,2020-2024,S_CR_SCREENING_STATS,"Theil-Sen over the published years; bootstrap 2,000 draws, fixed seed, 80 % interval"
+Glidepath,cervical · 80 % interval,78.7–87.7,2020-2024,S_CR_SCREENING_STATS,"Theil-Sen over the published years; bootstrap 2,000 draws, fixed seed, 80 % interval"
+Glidepath,colorectal · latest,70.0,2022-2024,S_CR_SCREENING_STATS,colorectal.html > Wellbeing services counties > Screening process > 2024
+Method,Leak rule,"significant at the stage's Bonferroni z (Wilson interval from n, or the published 95 % CI widened) and ≥ 3 pp worse; false-alarm rate ≤ 5% per stage",,S_EQUAL_PATH_SPEC,F2 thresholds (frozen) and equal_path/gaps.py
+Method,Stage z (Bonferroni),"detection 2.39, treatment 2.58",,S_EQUAL_PATH_SPEC,within-stage Bonferroni on the 1.96 base
+Method,Visibility gate,0.5 (50%),,S_EQUAL_PATH_SPEC,below this a stage can never leak
+Method,References,twin median needs ≥ 2 twins with values; n ≥ 30,,S_EQUAL_PATH_SPEC,min_denominator: frozen register; minimum twins: method constant MIN_TWIN_VALUES in equal_path/gaps.py
+Method,Twins,"3 nearest on 6 structural covariates (aged 75+, education, income, density, foreign-language share, distance to a university hospital)",,S_SOTKANET; S_STATFIN; S_WIKIDATA_UNIV_HOSPITALS,F3
+Method,Twin stability bar,±5% noise; stable at ≥ 0.6,,S_EQUAL_PATH_SPEC,F3 (frozen)
+Method,Twin review still open,"18/22 by the team, 3 pairs by a mentor",,S_EQUAL_PATH_SPEC,spec F3 acceptance
+Method,Glidepath target,80 % participation by 2035; projections capped at 100 %; 2020 is a pandemic year,,S_STRATEGY; S_EQUAL_PATH_SPEC,national goal of at least 80 % participation in every county (config/scope.yaml)
+Method,Glidepath calibration,25/44 series (57%); target 65–95 %,2020-2024,S_CR_SCREENING_STATS,"held-out last year, 80 % interval"
+Method,Tipping point,spec §7.4; stage I–II not published by county,,S_EQUAL_PATH_SPEC,not computable
+Method,Early warning,target ≥ 90 % detection of a 1 SD step within 6 months at ≤ 5 % false alarms a year; best CUSUM 51 % at 5 %; no test above 79 %,,S_EQUAL_PATH_SPEC,evidence/step4/early_warning_feasibility.txt

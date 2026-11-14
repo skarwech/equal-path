@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import statistics
+
 import pandas as pd
 
 BADGE = {  # status colours always paired with a symbol and a word (never colour alone)
@@ -34,9 +36,23 @@ def interval_text(interval) -> str:
 
 
 def typical_twin_distance(twins: dict) -> float:
-    return sorted(t.distances[0] for t in twins.values())[len(twins) // 2]
+    """Median over all units of each unit's nearest-twin distance."""
+    return statistics.median(t.distances[0] for t in twins.values())
 
 
-def national_value(store: pd.DataFrame, indicator_id: str) -> float | None:
-    rows = store[(store.indicator_id == indicator_id) & (store.geo_level == "national") & store.value.notna()]
-    return float(rows.sort_values("period").value.iloc[-1]) if len(rows) else None
+def national_row(store: pd.DataFrame, indicator_id: str, subgroup: str = "all"):
+    """The published national row for the latest period of one series; None if there is none.
+    More than one candidate row is an error, never resolved by row order (review P-1)."""
+    rows = store[(store.indicator_id == indicator_id) & (store.geo_level == "national") & (store.subgroup == subgroup)
+                 & store.value.notna()]
+    if rows.empty:
+        return None
+    latest = rows[rows.period == max(rows.period)]
+    if len(latest) != 1:
+        raise ValueError(f"{len(latest)} national rows for {indicator_id} ({subgroup}), period {latest.period.iloc[0]}")
+    return latest.iloc[0]
+
+
+def national_value(store: pd.DataFrame, indicator_id: str, subgroup: str = "all") -> float | None:
+    row = national_row(store, indicator_id, subgroup)
+    return None if row is None else float(row.value)

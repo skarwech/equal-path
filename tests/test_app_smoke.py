@@ -316,3 +316,20 @@ def test_every_county_page_renders(app):
     for option in _pathway_county(app).options:
         _pathway_county(app).select(option).run()
         assert not app.exception, (option, [e.value for e in app.exception])
+
+
+def test_overview_stage_columns_equal_the_gap_locator(app):
+    """Review G-8: the All counties overview shows exactly the gap locator's states."""
+    from equal_path.pathway import run_pathway
+
+    stages = run_pathway().stages
+    table = _table(app, "Visibility score").set_index("Code")
+    for stage in stages.columns:
+        assert table[stage.capitalize()].to_dict() == stages[stage].to_dict(), stage
+
+
+def test_reset_map_view_rekeys_the_chart(app):
+    """Review M-2: Streamlit turns on panning when map clicks are enabled; a reset re-draws the map."""
+    before = app.session_state["_map_nonce"] if "_map_nonce" in app.session_state else 0
+    next(b for b in app.button if b.label == "Reset map view").click().run()
+    assert app.session_state["_map_nonce"] == before + 1
