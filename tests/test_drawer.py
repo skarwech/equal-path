@@ -16,10 +16,11 @@ from streamlit.testing.v1 import AppTest
 from equal_path.drawer import DRAWER_COLUMNS, SPEC, county_figures, numbers_in
 
 APP = Path(__file__).resolve().parents[1] / "app" / "streamlit_app.py"
-IDENTIFIER_COLUMNS = {"Twin", "Code"}   # unit codes are identifiers, not figures
+IDENTIFIER_COLUMNS = {"Twin", "Code", "Rule"}   # unit codes and rule ids are identifiers, not figures
 CODES = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11",
          "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "90"]
-PAGE_ELEMENT_TYPES = {"tab", "markdown", "caption", "arrow_data_frame", "selectbox", "expander", "flex_container", "column"}
+PAGE_ELEMENT_TYPES = {"tab", "markdown", "caption", "arrow_data_frame", "selectbox", "expander", "flex_container", "column",
+                      "download_button"}   # the button carries a label only, no figures
 
 
 @pytest.fixture(scope="module")
@@ -32,6 +33,13 @@ def inputs():
     store = load_observations()
     return dict(result=run_pathway(store), store=store, catalog={i.id: i for i in load_indicator_catalog()},
                 glidepaths=run_glidepaths(store), calib=calibration(store), thresholds=load_thresholds())
+
+
+@pytest.fixture(scope="module")
+def actions(inputs):
+    from equal_path.actions import run_actions
+
+    return run_actions(inputs["store"], inputs["result"])
 
 
 @pytest.fixture(scope="module")
@@ -209,7 +217,7 @@ def _element_types(node) -> set[str]:
 
 
 @pytest.mark.parametrize("code", CODES)
-def test_county_page_gates(code, inputs):
+def test_county_page_gates(code, inputs, actions):
     """Spec F8 gates, for 22 of 22 county pages: each funnel stage shows the gap locator's state and its
     confidence level, every grey stage shows its reason, and every displayed figure is in the drawer."""
     from equal_path.confidence import county_confidence, stage_reason
@@ -238,8 +246,16 @@ def test_county_page_gates(code, inputs):
             reason = stage_reason(result, inputs["store"], inputs["catalog"], code, stage, t.min_stage_visibility)
             assert f"○ {stage.capitalize()}: {reason}" in captions, (code, stage)
 
+    # the Action Card on screen shows exactly the PDF's lines (spec F8: sampled text equals on-screen content)
+    from equal_path.card import build_card, card_text_lines
+
+    shown = [str(e.value) for e in (*tab.markdown, *tab.caption)]
+    card = build_card(code, actions, __import__("datetime").date.today().isoformat())
+    for line in card_text_lines(card):
+        assert any(line in text for text in shown), (code, line)
+
     page = _page_numbers(at)
-    assert len(page) >= 50 and len(tab.dataframe) == 4  # non-trivial harvest: 3 page tables + the drawer
+    assert len(page) >= 50 and len(tab.dataframe) == 5  # non-trivial harvest: 3 page tables + rules + the drawer
     missing = page - _drawer_numbers(at)
     assert not missing, sorted(missing)
 

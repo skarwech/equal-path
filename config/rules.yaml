@@ -1,5 +1,7 @@
 # Action library (Equal Path rev 2, section 6). Rule-based and transparent.
-# Triggers are prose here; machine-evaluable conditions are added in Step 5 (F5).
+# 'trigger' is the spec's prose; 'when' / 'when_any' are the machine conditions F5 evaluates
+# (equal_path/actions.py). Gap rules require a verified gap (Leak) in their own stage; a fact with no
+# public county data is unknown, so the rule reports 'needs data' instead of firing.
 # F5: every rule except the data-capture rules (R-DAT-01, R-DET-02) is guarded on its
 # own stage's visibility. Note: R-AUD-01 (timing) therefore stays dormant until a real
 # THL access series exists (F1) - an open spec question for the team.
@@ -11,6 +13,7 @@
 - id: R-DET-01
   stage: detection
   trigger: "Screening participation below 80% with the largest gap by mother tongue or education (gap >= subgroup_gap_trigger_pp)"
+  when: ["stage_detection == leak", "leaking_participation_below_target == 1", "max_subgroup_gap_pp >= subgroup_gap_trigger_pp"]
   action: "Community-based multilingual screening outreach with local NGOs"
   owner: "Wellbeing county; Cancer Registry; NGOs"
   owner_level: joint
@@ -25,6 +28,7 @@
 - id: R-DET-02
   stage: detection
   trigger: "Screening statistics arrive late or only annually"
+  when: ["screening_stats_annual == 1"]
   action: "Monthly reporting of screening data to the registers, a near-real-time county situation picture and an annual screening quality day"
   owner: "Cancer Registry; wellbeing counties"
   owner_level: joint
@@ -39,6 +43,7 @@
 - id: R-DAT-01
   stage: diagnosis
   trigger: "Stage-recording coverage below the 70% target"
+  when: ["stage_coverage < stage_coverage_target"]
   action: "Structured cancer recording template and automated reporting, with part-time recording leads in each county (30% of cancers structured in 2 years, 60% in 5, 100% in 10; clinical notifications 90% automated by 2030)"
   owner: "Wellbeing county; Cancer Registry"
   owner_level: joint
@@ -54,6 +59,8 @@
 - id: R-REF-01
   stage: referral
   trigger: "Stage I-II share below twin median, or a slow symptom route"
+  when: ["stage_referral == leak"]
+  when_any: ["stage12_below_twin == 1", "slow_symptom_route == 1"]
   action: "Standardised referral criteria and symptom-based pathways with direct investigation routes, built on the Nordic models (Danish Kræftpakkeforløb, Swedish SVF, Norwegian Pakkeforløp); at least the five most common cancers 2026-2028 with county pilots, all major cancers 2029-2031"
   owner: "FICAN with wellbeing counties"
   owner_level: joint
@@ -68,6 +75,7 @@
 - id: R-REF-02
   stage: referral
   trigger: "Primary-care access deteriorating"
+  when: ["stage_referral == leak", "primary_care_trend_worse == 1"]
   action: "Strengthen the own-doctor / own-nurse continuity model and track continuity effects on diagnostic delay"
   owner: "STM (national lead); wellbeing counties"
   owner_level: national
@@ -82,6 +90,7 @@
 - id: R-REF-03
   stage: referral
   trigger: "Named care coordinator not in use"
+  when: ["stage_referral == leak", "coordinator_in_use == 0"]
   action: "Named coordinator model for cancer care"
   owner: "Wellbeing county; FICAN"
   owner_level: joint
@@ -96,6 +105,7 @@
 - id: R-SYM-01
   stage: diagnosis
   trigger: "Late-stage pattern with low symptom awareness"
+  when: ["stage_diagnosis == leak", "late_stage_pattern == 1", "low_symptom_awareness == 1"]
   action: "Symptom-awareness communication in groups with known delays, modelled on the UK Be Clear on Cancer campaigns"
   owner: "FICAN; Cancer Society; wellbeing counties"
   owner_level: joint
@@ -110,6 +120,7 @@
 - id: R-TRT-01
   stage: treatment
   trigger: "Long distance to treatment and low curative-intent share"
+  when: ["stage_treatment == leak", "distance_above_median == 1", "lung_curative_leak == 1"]
   action: "Hub-and-spoke remote oncology with university-hospital tumour-board links"
   owner: "Wellbeing county; university hospital"
   owner_level: county
@@ -124,6 +135,8 @@
 - id: R-TRT-02
   stage: treatment
   trigger: "Lung treatment mix or curative-route share deviates from the national pattern"
+  when: ["stage_treatment == leak"]
+  when_any: ["lung_curative_leak == 1", "treatment_mix_deviates == 1"]
   action: "Annual national peer review and a response mechanism for deviations"
   owner: "FICAN; Cancer Registry; wellbeing county"
   owner_level: joint
@@ -138,6 +151,7 @@
 - id: R-GER-01
   stage: referral
   trigger: "High share aged 75+ (population)"
+  when: ["stage_referral == leak", "share_75_above_national == 1"]
   action: "G8 frailty screening and geriatric-oncology assessment at referral"
   owner: "Wellbeing county"
   owner_level: county
@@ -152,6 +166,7 @@
 - id: R-DIG-01
   stage: referral
   trigger: "Low access and no digital pathway in use"
+  when: ["stage_referral == leak", "primary_care_worse_than_national == 1", "digital_pathway_in_use == 0"]
   action: "Digital care pathways and AI-based tools, starting with limited pilots in some counties for prioritised cancers"
   owner: "FICAN; wellbeing counties"
   owner_level: joint
@@ -166,6 +181,7 @@
 - id: R-AUD-01
   stage: timing
   trigger: "Suspected public-private diagnostic delay"
+  when: ["stage_timing == leak", "public_private_delay_suspected == 1"]
   action: "Timestamp audit of the pathway using the THL access dates extended back to the first primary-care contact; tests an unpublished lymphoma finding (Hilmo covers public providers and only part of private care)"
   owner: "Wellbeing county"
   owner_level: county

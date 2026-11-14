@@ -197,9 +197,19 @@ def _method(result, calib, thresholds) -> list[tuple]:
     ]
 
 
+def _card_rows(card) -> list[tuple]:
+    rows = [("Action Card", "Card title", card.title, "", SPEC, "equal_path/card.py"),
+            ("Action Card", "Card date", card.subtitle, "", SPEC, "generation date")]
+    for title, lines in card.sections:
+        rows += [("Action Card", f"{title} · line {i}", line.text, "", line.sources, line.locator)
+                 for i, line in enumerate(lines, start=1)]
+    return rows
+
+
 def county_figures(code: str, result, store: pd.DataFrame, catalog: dict, glidepaths: pd.DataFrame, calib,
-                   thresholds) -> pd.DataFrame:
+                   thresholds, card=None) -> pd.DataFrame:
     rows = (_header_and_funnel(code, result, store, catalog, thresholds)
             + _indicators(code, result, store, catalog, thresholds.min_denominator)
-            + _twins(code, result) + _glidepaths(code, store, glidepaths) + _method(result, calib, thresholds))
+            + _twins(code, result) + _glidepaths(code, store, glidepaths) + _method(result, calib, thresholds)
+            + (_card_rows(card) if card is not None else []))
     return pd.DataFrame(rows, columns=list(DRAWER_COLUMNS))

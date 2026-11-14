@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import sys
+from datetime import date
 from pathlib import Path
 
 import pandas as pd
@@ -26,6 +27,7 @@ from equal_path.map_layers import LAYERS, handle_map_event, layer_frame, layer_t
 from app.pathway_view import pathway_section  # noqa: E402
 from equal_path.coverage import LEGEND, coverage_matrix  # noqa: E402
 from equal_path.glidepath import calibration, run_glidepaths  # noqa: E402
+from equal_path.actions import run_actions  # noqa: E402
 from equal_path.pathway import run_pathway  # noqa: E402
 from equal_path.observations import indicator_counts, load_observations, reconcile_anchors  # noqa: E402
 from equal_path.paths import APP_INPUTS, ROOT, STALENESS_WATCHED, TEST_FINGERPRINT, TEST_REPORT  # noqa: E402
@@ -53,7 +55,9 @@ def load_everything(stamp: tuple) -> dict:
     thresholds = load_thresholds()
     anchors = load_anchors()
     return {
-        "pathway": run_pathway(store),
+        "pathway": (pathway := run_pathway(store)),
+        "actions": run_actions(store, pathway),
+        "today": date.today().isoformat(),
         "glidepaths": run_glidepaths(store),
         "calibration": calibration(store),
         "store": store,
@@ -227,12 +231,14 @@ def rules_tab(data: dict) -> None:
             "Evidence": r.evidence_grade,
             "Mode": r.mode,
             "Sources": "; ".join(f"{c.id} {c.locator}" for c in r.sources),
+            "Machine condition": " AND ".join(r.when) + (f" AND ({' OR '.join(r.when_any)})" if r.when_any else ""),
             "Do not fire if": "; ".join(r.do_not_fire_if) or "(data-capture rule: always eligible)",
             "Note": r.note,
         }
         for r in data["rules"]
     ]
-    st.caption("Rule triggers become machine-evaluable with the action engine (F5). Hypothesis-graded actions are shown only as 'test'.")
+    st.caption("The action engine (F5) evaluates each rule's machine condition per county; a fact with no public county "
+               "data makes the rule 'needs data', never 'fires'. Hypothesis-graded actions are shown only as 'test'.")
     st.dataframe(pd.DataFrame(rows), hide_index=True, width="stretch")
 
 

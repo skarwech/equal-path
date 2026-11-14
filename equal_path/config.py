@@ -119,6 +119,8 @@ class Rule(_Frozen):
     mode: Literal["implement", "test"]
     data_capture: bool
     sources: tuple[Citation, ...]
+    when: tuple[str, ...] = ()        # F5 machine trigger: all must hold (see equal_path/actions.py)
+    when_any: tuple[str, ...] = ()    # ... and, if given, at least one of these
     do_not_fire_if: tuple[str, ...] = ()
     note: str = ""
 

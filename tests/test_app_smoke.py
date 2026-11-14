@@ -21,7 +21,7 @@ CONFIG_TABS = ["Scope & Goal 3", "Threshold register", "Action library", "Source
 EXPECTED_TABS = PATHWAY_TABS + SPINE_TABS + CONFIG_TABS
 # unit table + county indicators + twins + all-counties + coverage + reconciliation + catalog
 # + Goal 3 + related + thresholds + rules + sources + anchors + times
-EXPECTED_DATAFRAMES = 16  # + glidepath table + sources drawer (F8)
+EXPECTED_DATAFRAMES = 17  # + glidepath table + sources drawer (F8) + county rule table (F5)
 
 
 def _run():
@@ -333,3 +333,15 @@ def test_reset_map_view_rekeys_the_chart(app):
     before = app.session_state["_map_nonce"] if "_map_nonce" in app.session_state else 0
     next(b for b in app.button if b.label == "Reset map view").click().run()
     assert app.session_state["_map_nonce"] == before + 1
+
+
+def test_action_library_shows_each_rules_machine_condition(app):
+    from equal_path.config import load_rules
+
+    table = _table(app, "Machine condition").set_index("ID")
+    for rule in load_rules():
+        assert all(c in table.loc[rule.id, "Machine condition"] for c in (*rule.when, *rule.when_any)), rule.id
+
+
+def test_county_page_offers_the_action_card_pdf(app):
+    assert any(b.label.startswith("Download Action Card") for b in app.get("download_button"))

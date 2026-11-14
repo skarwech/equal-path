@@ -113,6 +113,35 @@ def _glidepath(data: dict, code: str) -> None:
                "projections are shown capped at 100 %.")
 
 
+RULE_STATUS = {"fires": "fires", "not triggered": "not triggered", "needs data": "needs data", "blocked": "blocked (visibility)"}
+
+
+def _action_card(data: dict, code: str):
+    """F5 top actions as the printable Action Card: the screen shows exactly the PDF's lines."""
+    from equal_path.card import build_card, render_pdf
+
+    run = data["actions"]
+    card = build_card(code, run, data["today"])
+    st.markdown(f"#### {card.title}")
+    st.caption(card.subtitle)
+    for title, lines in card.sections:
+        st.markdown(f"**{title}**")
+        for line in lines:
+            st.markdown(line.text)
+    st.caption(card.footer)
+    st.download_button("Download Action Card (PDF, one page)", data=render_pdf(card), mime="application/pdf",
+                       file_name=f"equal-path-action-card-{code}.pdf")
+    with st.expander("All rules for this county (F5)", expanded=False):
+        rules = {r.id: r for r in data["rules"]}
+        st.dataframe(pd.DataFrame({
+            "Rule": [o.rule_id for o in run.plans[code].outcomes],
+            "Stage": [rules[o.rule_id].stage for o in run.plans[code].outcomes],
+            "Status": [RULE_STATUS[o.status] for o in run.plans[code].outcomes],
+            "Needs data": ["; ".join(o.missing) for o in run.plans[code].outcomes],
+        }), hide_index=True, width="stretch")
+    return card
+
+
 def pathway_section(data: dict) -> None:
     from equal_path.confidence import county_confidence, stage_reason
     from equal_path.display import national_value, typical_twin_distance
@@ -166,8 +195,9 @@ def pathway_section(data: dict) -> None:
         st.caption("Early warning (F4) not built: the frozen targets (≥ 90 % detection of a 1 SD step within 6 months at "
                    "≤ 5 % false alarms a year) cannot both be met; the best one-sided CUSUM reaches 51 % detection at 5 % false "
                    "alarms, and no test can exceed 79 %. See evidence/step4/early_warning_feasibility.txt.")
+        card = _action_card(data, code)
         with st.expander("Sources drawer: every figure on this page, with its source and locator", expanded=False):
             st.dataframe(county_figures(code, result, data["store"], catalog, data["glidepaths"], data["calibration"],
-                                        thresholds), hide_index=True, width="stretch")
+                                        thresholds, card=card), hide_index=True, width="stretch")
     with tabs[1]:
         st.dataframe(_overview(result, names), hide_index=True, width="stretch", height=35 * 23 + 3)
