@@ -114,31 +114,40 @@ def _glidepath(data: dict, code: str) -> None:
 
 
 @st.cache_data(max_entries=64, show_spinner="Writing the briefing...")
-def _cached_briefing(facts_json: str):
-    """One generation per county and data state (a live Claude call costs money and time)."""
+def _cached_claude_briefing(facts_json: str):
+    """Claude briefings only: a template caused by a transient error is never cached (review G-3)."""
     import json
 
     from equal_path.analyst import generate_briefing
 
-    return generate_briefing(json.loads(facts_json))
+    briefing = generate_briefing(json.loads(facts_json))
+    if briefing.source != "claude":
+        raise RuntimeError(briefing.note)   # st.cache_data does not cache a raised call
+    return briefing
 
 
 def _briefing(data: dict, code: str) -> None:
     """F7: a validated briefing of at most 120 words; every number carries its source tag."""
     import json
 
-    from equal_path.analyst import answer_access_time, briefing_facts, validate
+    from equal_path.analyst import Briefing, answer_access_time, briefing_facts, make_client, template_briefing, validate
 
     facts = briefing_facts(code, data["actions"])
-    briefing = _cached_briefing(json.dumps(facts, sort_keys=True))
+    briefing = Briefing(template_briefing(facts), "template", 0, note="no Claude client (SDK or credentials missing)")
+    if make_client() is not None:
+        try:
+            briefing = _cached_claude_briefing(json.dumps(facts, sort_keys=True))
+        except RuntimeError as exc:
+            briefing = Briefing(template_briefing(facts), "template", 0, note=str(exc))
     st.markdown("#### Analyst briefing")
     for line in briefing.text.splitlines():
         st.markdown(line)
     checked = validate(briefing.text, facts)
-    origin = ("Claude (claude-opus-5-5)" if briefing.source == "claude"
-              else f"deterministic template ({briefing.note or 'fallback'})")
-    status = "passed the number validator" if checked.ok else "FAILED the number validator: " + "; ".join(checked.problems)
-    st.caption(f"Written by {origin}; {status}: every number matches a computed figure and carries its source id.")
+    origin = (f"Claude ({briefing.model})" if briefing.source == "claude"
+              else f"the deterministic template ({briefing.note or 'fallback'})")
+    status = ("passed the number validator: every number matches a computed figure and carries its source id"
+              if checked.ok else "FAILED the number validator: " + "; ".join(checked.problems))
+    st.caption(f"Written by {origin}; {status}.")
     st.caption(answer_access_time(facts))
 
 

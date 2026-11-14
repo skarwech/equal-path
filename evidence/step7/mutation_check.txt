@@ -1,0 +1,12 @@
+Step 7 (F7 AI analyst) mutation check, 2026-11-14 ~20:25 EET. Scratch copy, named tests, reverted.
+First pass: 13 of 15 killed.
+  SURVIVED rounding to tens accepted (41.9 written as 40)  -> test_rounding_to_tens_is_not_rounding_tolerance
+  SURVIVED refusal text used                              -> test_a_refusal_is_never_used_even_if_it_carries_valid_text
+Second pass: both killed. Killed throughout: source tag not checked, any number accepted, untagged numbers
+allowed, word limit off, sections not checked, causal check off, access-time check off, limitation check off,
+no prompt escaping, one regeneration only, no server-side fallbacks, template gap tagged with the wrong source,
+page caption without the validator status.
+
+Review-fix pass (~20:55 EET): 17 mutants of the fixes; 13 killed first, then all real ones killed after
+3 targeted tests (T-1 deciding source end to end, T-3 low-visibility Watch stage, G-6 FAILED caption).
+V-12 'unknown tags allowed' is equivalent: an unknown tag is still rejected as unattached or unmatched.

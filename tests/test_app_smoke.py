@@ -385,3 +385,40 @@ def test_county_page_shows_the_validated_briefing():
     captions = " ".join(str(c.value) for c in at.caption)
     assert "passed the number validator" in captions and "deterministic template" in captions
     assert "Access times for Kymenlaakso are not available here" in captions
+
+
+def test_claude_written_briefing_on_the_page_passes_the_drawer_gate(monkeypatch):
+    """Review G-1/G-6: with a (fake) Claude client the caption names Claude, and every number the briefing puts
+    on the page is in the sources drawer."""
+    import sys
+
+    import equal_path.analyst as analyst
+    from equal_path.actions import run_actions
+
+    sys.path.insert(0, str(Path(__file__).parent))
+    from test_analyst import FakeClient, _Response
+    from test_drawer import _drawer_numbers, _page_numbers
+
+    text = analyst.template_briefing(analyst.briefing_facts("10", run_actions())).replace("Top finding:", "Top finding: (Claude)")
+    reply = _Response(text)
+    reply.model = "claude-opus-5-5"
+    monkeypatch.setattr(analyst, "make_client", lambda: FakeClient([reply] * 3))
+    _fresh_cache(monkeypatch)
+    at = AppTest.from_file(str(APP), default_timeout=60)
+    at.session_state["county"] = "10 Kymenlaakso"
+    at.run()
+    captions = " ".join(str(c.value) for c in at.caption)
+    assert "Written by Claude (claude-opus-5-5); passed the number validator" in captions
+    assert any("(Claude)" in str(m.value) for m in at.markdown)
+    assert not (_page_numbers(at) - _drawer_numbers(at))
+
+
+def test_page_reports_a_validator_failure(monkeypatch):
+    """Review G-6: the caption must say FAILED when the shown briefing does not pass."""
+    import equal_path.analyst as analyst
+
+    from equal_path.analyst import Validation
+
+    monkeypatch.setattr(analyst, "validate", lambda text, facts: Validation(False, ("number 9 has no source tag",)))
+    at = AppTest.from_file(str(APP), default_timeout=60).run()
+    assert any("FAILED the number validator: number 9 has no source tag" in str(c.value) for c in at.caption)

@@ -237,6 +237,12 @@ def county_facts(code, result, store, catalog, units, thresholds=None) -> dict:
         leaks = a[(a.code == code) & (a.stage == stage) & (a.state == "leak")]
         facts[f"gap_{stage}"] = float(leaks[["gap_national", "gap_twin"]].min(axis=1).max()) if len(leaks) else 0.0
         facts[f"gap_sources_{stage}"] = "; ".join(sorted({s for i in leaks.indicator_id for s in catalog[i].source_ids}))
+        if len(leaks):   # the indicator that gives the stage's verified gap, with its subgroup and source (review T-1)
+            best = leaks.assign(v=leaks[["gap_national", "gap_twin"]].min(axis=1)).sort_values(
+                ["v", "indicator_id"], ascending=[False, True]).iloc[0]
+            facts[f"gap_indicator_{stage}"] = best.indicator_id
+            facts[f"gap_subgroup_{stage}"] = best.subgroup
+            facts[f"gap_source_{stage}"] = catalog[best.indicator_id].source_ids[0]
     (facts["stage_coverage"], facts["stage_coverage_level"], facts["stage_coverage_source"],
      facts["stage_coverage_locator"]) = _stage_coverage(store, code, unit.coop_area_code)
     periods = store.loc[store.indicator_id.str.startswith("screening_participation"), "period"]

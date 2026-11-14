@@ -13,7 +13,7 @@ Design and acceptance spec: `equal_path_junction_astrazeneca.md` (rev 2).
 | 4. Twins final (F3: + distance to university hospital, stability, better twins) + glidepath (F4); early warning shown infeasible | Step 3 | approved |
 | 5. Interface (F8): map layers with low-visibility hatching, 22/22 clickable map (Helsinki-area inset), funnel with confidence badges and grey-stage reasons, sources drawer | Step 4 | approved |
 | 6. Action engine (F5) + Action Card: 12 rules with machine conditions, top 3 per county, one-page PDF card | Step 5 | approved |
-| 7. AI analyst + number validator (F7) | Step 6 | in progress on branch `step-7-analyst` |
+| 7. AI analyst + number validator (F7): 120-word briefing, validator, template fallback | Step 6 | **built, independently reviewed (28 findings, all fixed), awaiting validation** (branch `step-7-analyst`) |
 | 8. Hardening: offline cold start, trust panel, rehearsal | Steps 6-7 | |
 
 ## Run
@@ -107,3 +107,9 @@ evidence/          test reports, screenshots
 - Action Card: the screen and the one-page PDF show the same lines (tested for all 22 counties); the PDF is built
   in well under 3 seconds by a small built-in writer (no extra package, works offline) and overflow raises instead
   of truncating. A clinical review sheet for the 12 rules is in evidence/step6/clinical_review_sheet.csv.
+- F7 analyst: Claude (claude-opus-5-5) gets only a JSON of computed figures with source ids; data strings are
+  escaped. The number validator accepts a reply only if every number matches a figure (to rounding) and carries
+  that figure's own source tag, it has the five sections in at most 120 words, it mentions the limitation when a
+  stage cannot be judged, uses causal wording only for study-supported actions, and states no access time. Up to
+  2 regenerations, then a deterministic template; with no SDK, credentials or network the template is used
+  directly (offline). The `anthropic` package is optional: install it and set ANTHROPIC_API_KEY to enable Claude.
