@@ -91,7 +91,7 @@
   "equal_path/twins.py": "4502ad02417122e599e1e64b51137378b944000a789e0e7fb5e274c184b293bb",
   "equal_path/visibility.py": "00410f62e49da5831571d14f070410c4714e9d727c71889293efef8054d63cf2",
   "equal_path/viz.py": "db0f1be80fb96a00807bb2101b1892199adeec298bd092e73472c37829994b15",
-  "pyproject.toml": "66b9e8e896e096391a1cb58db59860ed8961464af969206ce675475d3c38b803",
+  "pyproject.toml": "4240ecfc71e94cc0032dd7cc684b3a8fbc75091929a70711c94cbf7038ead98a",
   "scripts/build_observations.py": "69b9df544ba1b053b01247fe450cf0597536c0f73b1a0faf4b1cb62e7f897462",
   "scripts/build_units.py": "510422b0253d94f0138a484fdb9544f06025b717de325fcc434287d25a290921",
   "scripts/cache_briefings.py": "9e0ffba07f46d457d44f8856c5c3cdc8453bad8af0bc6c0e564303d856399cb9",
@@ -112,7 +112,7 @@
   "tests/test_config_loading.py": "6607b03bfb3e7d12bdf7e70e38690b5c547d697903b49a35a43ba2f0c15e09d4",
   "tests/test_coverage.py": "d42c66a0137502fd46078c6e87b393ebbe9a8cdb8a0704af016f47b48469f95a",
   "tests/test_distance.py": "b158aef91095df9e7484ea193643999204e230d09e3b31f70cda1e2d6459ed60",
-  "tests/test_drawer.py": "cf8f4e879260f14bb462d60e5c500551372994550bcba855a345fbb22b348ae1",
+  "tests/test_drawer.py": "58a505ea8188f92b8c6ca25d28f90759b713cac63412b558727f9789735aca17",
   "tests/test_fetch.py": "1b3fb770f2ca38b26c01b39994b086f7056116087d214447720cd96595a1bd04",
   "tests/test_gaps.py": "d5f50f25d7530a2544b42efa775959333ad7e201331aa5ff7fd9c981b46c75be",
   "tests/test_geography.py": "a7b086a854f97bc4a23625942e464e671e83d728ac14352084cfefa57c9c10a0",
@@ -142,5 +142,5 @@
   "tests/test_viz_and_trust.py": "80206efa9411544d672eb9899fd56438d3731195df2b4a0eb967cb796b85cb27"
  },
  "full_run": true,
- "report_sha256": "7fbafa0507ad93155dd0f10a534e156b3517589e8cbfae309e0f00cbb7b16d22"
+ "report_sha256": "76f568f295add2b1ba4e59213596ef06189c6fffb0a515e012511eacab19b75b"
 }

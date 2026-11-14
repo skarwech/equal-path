@@ -185,6 +185,15 @@ def test_leak_rule_row_describes_the_test_actually_used(drawers):
     assert "Bonferroni" in shown and "Wilson" in shown
 
 
+def _page_text_numbers(text: str) -> set[float]:
+    """Count displayed figures, excluding ISO dates used as briefing provenance metadata."""
+    return numbers_in(re.sub(r"(?<!\d)\d{4}-\d{2}-\d{2}(?!\d)", "", text))
+
+
+def test_page_text_numbers_ignore_iso_provenance_dates():
+    assert _page_text_numbers("Cached briefing generated 2026-11-14; observed gap 12.5 %") == {12.5}
+
+
 def _page_numbers(at: AppTest) -> set[float]:
     tab = at.tabs[0]  # "County pathway"
     found: set[float] = set()
@@ -199,9 +208,9 @@ def _page_numbers(at: AppTest) -> set[float]:
                 if isinstance(cell, (int, float)) and not pd.isna(cell):
                     found.add(round(float(cell), 6))
                 elif isinstance(cell, str):
-                    found |= numbers_in(cell)
+                    found |= _page_text_numbers(cell)
     for element in [*tab.markdown, *tab.caption]:
-        found |= numbers_in(str(element.value))
+        found |= _page_text_numbers(str(element.value))
     return found
 
 
