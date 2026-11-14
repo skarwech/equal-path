@@ -21,7 +21,7 @@ CONFIG_TABS = ["Scope & Goal 3", "Threshold register", "Action library", "Source
 EXPECTED_TABS = PATHWAY_TABS + SPINE_TABS + CONFIG_TABS
 # unit table + county indicators + twins + all-counties + coverage + reconciliation + catalog
 # + Goal 3 + related + thresholds + rules + sources + anchors + times
-EXPECTED_DATAFRAMES = 15  # + glidepath table
+EXPECTED_DATAFRAMES = 16  # + glidepath table + sources drawer (F8)
 
 
 def _run():

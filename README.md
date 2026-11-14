@@ -11,7 +11,7 @@ Design and acceptance spec: `equal_path_junction_astrazeneca.md` (rev 2).
 | 2. Data spine (F0): 18 public indicators for 22 units, catalog of all 27 incl. gaps, 9 of 11 anchors reconciled (2 shown as not checked), 10/10 spot-check | Step 2 | approved |
 | 3. Visibility score (F1) + gap locator (F2) + twin core + tipping point (synthetic only: no regional stage data) | Step 3 | approved |
 | 4. Twins final (F3: + distance to university hospital, stability, better twins) + glidepath (F4); early warning shown infeasible | Step 3 | approved |
-| 5. Interface (F8): map layers with low-visibility hatching, clickable map, funnel with confidence badges and grey-stage reasons, sources drawer | Step 4 | in progress on branch `step-5-interface` (not yet approved) |
+| 5. Interface (F8): map layers with low-visibility hatching, 22/22 clickable map (Helsinki-area inset), funnel with confidence badges and grey-stage reasons, sources drawer | Step 4 | **built and verified, awaiting validation** |
 | 6. Action engine (F5) + Action Card | Step 5 | |
 | 7. AI analyst + number validator (F7) | Step 6 | |
 | 8. Hardening: offline cold start, trust panel, rehearsal | Steps 6-7 | |
@@ -48,7 +48,9 @@ data/raw/<family>/ every raw download + manifest.json (URL, time, sha256): the o
 data/processed/    observations.parquet (long format, section 7.2 + geo_level, subgroup, locator, CI)
 data/reference/    sources.csv (registry), units.csv, units.geojson (22 units, Åland excluded)
 equal_path/        library: config, geography, sources, lint, trust, viz, spine, coverage, names,
-                   visibility (F1), gaps (F2), twins (F3), glidepath (F4), tipping, pathway (runs F1-F3)
+                   visibility (F1), gaps (F2), twins (F3), glidepath (F4), tipping, pathway (runs F1-F3),
+                   confidence + grey-stage reasons, map_layers (layers, hatching, clicks), drawer (sources
+                   for every figure), display (shared formatting)
 equal_path/loaders one parser per source family (screening, cr_app, cif_report, lung_report, sotkanet, statfin,
                    distance: population-weighted km to the nearest university hospital)
 scripts/           fetch / build / freeze
@@ -84,3 +86,12 @@ evidence/          test reports, screenshots
   Projections are displayed capped at 100 %. Held-out-year calibration covers 25 / 44 series (57 %), so the
   glidepath is labelled "indicative". Early warning is not built: infeasible under the frozen targets
   (see evidence/step4/early_warning_feasibility.txt).
+- F8 map: tooltip text equals the table beside the map for every layer and all 22 units; each polygon is drawn
+  in its own layer colour; stage layers use status colours with ▲/◆ symbols and words (never colour alone);
+  hatching marks a stage below the visibility gate (the same `low_visibility` test as F2's Leak gate). A click
+  opens the county (22/22 verified in the running app, evidence/step5/map_click_e2e.json); Keski-Uusimaa,
+  Vantaa-Kerava and Helsinki are clicked in a zoomed inset.
+- F8 county page: for all 22 counties the funnel shows the gap locator's stage states, every grey stage says
+  why, and every number on the page (tables, funnel, captions) appears in the sources drawer with a registered
+  source and a locator or derivation. The confidence badge uses only frozen thresholds (visibility gate, published
+  n or CI, good and stable twins).

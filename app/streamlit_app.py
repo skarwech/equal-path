@@ -22,6 +22,7 @@ from equal_path.config import (  # noqa: E402
     thresholds_digest,
 )
 from equal_path.geography import load_unit_geojson, load_units  # noqa: E402
+from equal_path.map_layers import LAYERS, apply_map_pick, layer_frame, layer_table, selected_county  # noqa: E402
 from app.pathway_view import pathway_section  # noqa: E402
 from equal_path.coverage import LEGEND, coverage_matrix  # noqa: E402
 from equal_path.glidepath import calibration, run_glidepaths  # noqa: E402
@@ -62,7 +63,8 @@ def load_everything(stamp: tuple) -> dict:
         "units": units,
         "geojson": load_unit_geojson(),
         "sources": load_sources(),
-        "thresholds": load_thresholds().model_dump(),
+        "thresholds": thresholds.model_dump(),
+        "threshold_model": thresholds,
         "scope": load_scope(),
         "rules": load_rules(),
         "anchors": anchors,
@@ -72,7 +74,7 @@ def load_everything(stamp: tuple) -> dict:
 
 def header(data: dict) -> None:
     st.title("Equal Path")
-    st.caption("Equitable and effective cancer care in Finland · Step 4: twins and screening glidepath")
+    st.caption("Equitable and effective cancer care in Finland · Step 5: interface (map layers, funnel, sources drawer)")
     counts = data["counts"]
     if not counts:
         st.info(
@@ -124,26 +126,30 @@ def map_and_units(data: dict) -> None:
         areas = [NO_AREA, *sorted(units["coop_area_fi"].unique())]
         choice = st.selectbox("Highlight a cooperation area", areas, index=0)
         highlight = None if choice == NO_AREA else choice
-        table = units[["code", "short_fi", "coop_area_fi", "municipality_count", "indicators_loaded"]].rename(
-            columns={
-                "code": "Code",
-                "short_fi": "Unit",
-                "coop_area_fi": "Cooperation area",
-                "municipality_count": "Municipalities",
-                "indicators_loaded": "Indicators loaded",
-            }
-        )
+        layer = st.selectbox("Map layer", LAYERS, index=LAYERS.index("Detection"))
+        frame = layer_frame(data["pathway"], layer, data["threshold_model"].min_stage_visibility)
+        table = layer_table(units, frame, layer)
         if highlight:
             table = table[table["Cooperation area"] == highlight]
         row_height = 35
         st.dataframe(table, hide_index=True, width="stretch", height=row_height * (len(table) + 1) + 3)
+        st.caption(LAYER_LEGEND[layer == "Visibility score"])
         st.caption("Source: Statistics Finland classifications and boundaries 2026 (see Sources tab).")
     with left:
-        st.plotly_chart(
-            unit_map_figure(units, data["geojson"], highlight_area=highlight),
-            width="stretch",
-            config=MAP_CONFIG,
+        event = st.plotly_chart(
+            unit_map_figure(units, data["geojson"], highlight_area=highlight, layer=frame, layer_name=layer),
+            width="stretch", config=MAP_CONFIG, on_select="rerun", selection_mode="points", key="map",
         )
+        labels = {code: f"{code} {name}" for code, name in zip(units["code"], units["short_fi"])}
+        apply_map_pick(st.session_state, selected_county(event, set(labels)), labels)
+        st.caption("Click a county to open its pathway below.")
+
+
+LAYER_LEGEND = {
+    False: "Colours: ▲ Leak (red) · ◆ Watch (amber) · ✓ OK (green) · ○ Unknown (grey); ▲ and ◆ are also marked on "
+           "the map. Hatched: less than half of the stage is observable, so it cannot be judged.",
+    True: "Colour: visibility score, light (low) to dark blue (high). Hatched: score below 50.",
+}
 
 
 STATUS_ICON = {"pass": "✅ pass", "fail": "❌ fail", "incomplete": "⚠️ incomplete",
@@ -219,7 +225,7 @@ def rules_tab(data: dict) -> None:
         }
         for r in data["rules"]
     ]
-    st.caption("Rule triggers become machine-evaluable in Step 5. Hypothesis-graded actions are shown only as 'test'.")
+    st.caption("Rule triggers become machine-evaluable with the action engine (F5). Hypothesis-graded actions are shown only as 'test'.")
     st.dataframe(pd.DataFrame(rows), hide_index=True, width="stretch")
 
 

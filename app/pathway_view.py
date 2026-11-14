@@ -5,29 +5,12 @@ from __future__ import annotations
 import pandas as pd
 import streamlit as st
 
+from equal_path.display import BADGE, interval_text, pct, share_interval, share_pct
 from equal_path.visibility import COMPOSITE_STAGES, SEPARATE_STAGES
 
 STAGES = COMPOSITE_STAGES + SEPARATE_STAGES
-BADGE = {  # status colours always paired with a symbol and a word (never colour alone)
-    "leak": ":red[▲ Leak]",
-    "watch": ":orange[◆ Watch]",
-    "ok": ":green[✓ OK]",
-    "unknown": ":gray[○ Unknown]",
-}
 PERCENT_UNITS = ("share", "ratio")
-
-
-def _pct(value) -> float | None:
-    return None if value is None or pd.isna(value) else round(float(value) * 100, 1)
-
-
-def _share_pct(value) -> float | None:
-    """A projected share for display: capped to 0-100 % (a linear trend can extrapolate past 100 %)."""
-    return None if value is None or pd.isna(value) else _pct(min(max(float(value), 0.0), 1.0))
-
-
-def _share_interval(low, high) -> str:
-    return "" if pd.isna(low) or pd.isna(high) else f"{_share_pct(low):.1f}–{_share_pct(high):.1f}"
+_pct, _share_pct, _share_interval, _interval = pct, share_pct, share_interval, interval_text
 
 
 def _better_label(better, state: str, names: dict) -> str:
@@ -38,24 +21,24 @@ def _better_label(better, state: str, names: dict) -> str:
     return ", ".join(names.get(t, t) for t in better) if better else "leader among peers"
 
 
-def _interval(interval) -> str:
-    if interval is None or (isinstance(interval, float) and pd.isna(interval)):
-        return "not published"
-    low, high = interval
-    return f"{low * 100:.1f}–{high * 100:.1f}"
-
-
 def _county_options(units: pd.DataFrame) -> list[str]:
     return [f"{code} {name}" for code, name in zip(units["code"], units["short_fi"])]
 
 
-def _scorecard(result, code: str) -> None:
+def _funnel(result, code: str, confidence: dict, reasons: dict) -> None:
+    """The pathway as a funnel, left to right: state, how much is observable, how far to trust it."""
     cols = st.columns(len(STAGES))
     for col, stage in zip(cols, STAGES):
-        state = result.stages.loc[code, stage]
-        visibility = result.visibility.loc[code, stage]
-        note = "separate row (not in score)" if stage in SEPARATE_STAGES else f"visibility {visibility:.0%}"
-        col.markdown(f"**{stage.capitalize()}**  \n{BADGE[state]}  \n{note}")
+        state, visibility = result.stages.loc[code, stage], result.visibility.loc[code, stage]
+        arrow = " →" if stage in COMPOSITE_STAGES[:-1] else ""
+        note = "separate row (not in score)" if stage in SEPARATE_STAGES else "in the visibility score"
+        col.markdown(f"**{stage.capitalize()}**{arrow}  \n{BADGE[state]}  \nvisibility {visibility:.0%} · {note}  \n"
+                     f"confidence **{confidence[stage].level}**")
+    for stage in STAGES:
+        if confidence[stage].reasons and not reasons[stage]:
+            st.caption(f"{stage.capitalize()} confidence {confidence[stage].level}: " + "; ".join(confidence[stage].reasons) + ".")
+        if reasons[stage]:
+            st.caption(f"○ {stage.capitalize()}: {reasons[stage]}")
 
 
 def _indicator_table(result, code: str, names: dict) -> pd.DataFrame:
@@ -131,35 +114,47 @@ def _glidepath(data: dict, code: str) -> None:
 
 
 def pathway_section(data: dict) -> None:
-    result, units = data["pathway"], data["units"]
+    from equal_path.confidence import county_confidence, stage_reason
+    from equal_path.display import national_value, typical_twin_distance
+    from equal_path.drawer import county_figures
+
+    result, units, thresholds = data["pathway"], data["units"], data["threshold_model"]
     names = dict(zip(units["code"], units["short_fi"]))
+    catalog = {i.id: i for i in data["catalog"]}
     st.subheader("Pathway: where does it leak?")
     tabs = st.tabs(["County pathway", "All counties"])
     with tabs[0]:
         options = _county_options(units)
-        choice = st.selectbox("County", options, index=options.index("90 Helsinki"))
+        st.session_state.setdefault("county", "90 Helsinki")  # a map click sets this key (see map_and_units)
+        choice = st.selectbox("County", options, key="county")
         code = choice.split(" ", 1)[0]
         twins = result.twins[code]
         st.markdown(f"### {names[code]}")
         st.markdown(f"Visibility **{result.visibility.loc[code, 'score']:.1f}/100** · primary finding: "
                     f"**{result.primary_leak[code]}**")
-        _scorecard(result, code)
+        confidence = county_confidence(result, code, thresholds)
+        reasons = {stage: stage_reason(result, data["store"], catalog, code, stage, thresholds.min_stage_visibility)
+                   for stage in STAGES}
+        _funnel(result, code, confidence, reasons)
         tier = result.coverage_tiers[code]
+        national = national_value(data["store"], "stage_recording_coverage")
         st.caption(f"Stage-recording coverage tier: **{tier}**"
-                   + ("" if tier != "not published" else " by county (national 41.9 %; only Pirkanmaa is stated in the report text)"))
+                   + ("" if tier != "not published" or national is None else
+                      f" by county (national {pct(national)} %; only Pirkanmaa is stated in the report text)"))
         st.dataframe(_indicator_table(result, code, names), hide_index=True, width="stretch")
         st.caption("Leak = significant (Wilson interval or published CI) and ≥ 3 pp worse than the national value and the twin "
                    "median (national only when the county has no good twin; capped at Watch when fewer than 2 twins have data). "
                    "Significance is Bonferroni-adjusted within each stage so a stage's false-alarm rate stays ≤ 5 % "
                    f"(z: detection {result.z_by_stage['detection']:.2f}, treatment {result.z_by_stage['treatment']:.2f}); "
                    "the interval column is the test interval at that level, wider than the published 95 % CI. A stage "
-                   "with visibility below 0.5 can never leak; without a published n or CI a gap can only be Watch.")
-        typical = sorted(t.distances[0] for t in result.twins.values())[len(result.twins) // 2]
-        stable = result.twin_stability[code]
+                   f"with visibility below {thresholds.min_stage_visibility:g} can never leak; without a published n or CI "
+                   "a gap can only be Watch.")
+        typical = typical_twin_distance(result.twins)
+        stable, bar = result.twin_stability[code], thresholds.twin_stability_jaccard
         st.markdown("**Structural twins** · nearest twin distance "
                     f"{twins.distances[0]:.2f} (typical nearest-twin distance {typical:.2f}) · stability (Jaccard under "
                     f"±5 % covariate noise) {stable:.2f} "
-                    + (":green[✓ stable]" if stable >= 0.6 else ":orange[◆ unstable: below 0.6, treat twin gaps with care]")
+                    + (":green[✓ stable]" if stable >= bar else f":orange[◆ unstable: below {bar:g}, treat twin gaps with care]")
                     + ("" if twins.good else " · :orange[no good twin: national reference only]"))
         st.dataframe(_twin_table(result, code, names), hide_index=True, width="stretch")
         st.caption("Twins: 3 nearest on 6 structural covariates (aged 75+, education, income, log density, foreign-language "
@@ -171,5 +166,8 @@ def pathway_section(data: dict) -> None:
         st.caption("Early warning (F4) not built: the frozen targets (≥ 90 % detection of a 1 SD step within 6 months at "
                    "≤ 5 % false alarms a year) cannot both be met; the best one-sided CUSUM reaches 51 % detection at 5 % false "
                    "alarms, and no test can exceed 79 %. See evidence/step4/early_warning_feasibility.txt.")
+        with st.expander("Sources drawer: every figure on this page, with its source and locator", expanded=False):
+            st.dataframe(county_figures(code, result, data["store"], catalog, data["glidepaths"], data["calibration"],
+                                        thresholds), hide_index=True, width="stretch")
     with tabs[1]:
         st.dataframe(_overview(result, names), hide_index=True, width="stretch", height=35 * 23 + 3)

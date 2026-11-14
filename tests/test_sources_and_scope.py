@@ -89,6 +89,7 @@ EXPECTED_SOURCES = {
     "S_CR_APP_2024": "retrieved",
     "S_WIKIDATA_UNIV_HOSPITALS": "retrieved",
     "S_STATFI_KUNTA_BOUNDARIES_2026": "retrieved",
+    "S_EQUAL_PATH_SPEC": "verified",  # Step 5: the frozen threshold register, cited by the sources drawer
 }
 
 

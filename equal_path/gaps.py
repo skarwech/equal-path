@@ -173,9 +173,14 @@ def assess_series(series: SeriesInput, twins: Mapping[str, Iterable[str]], good_
     return out
 
 
+def low_visibility(visibility: float, min_stage_visibility: float) -> bool:
+    """The one 'too little observable' test: F2's Leak gate, map hatching and the confidence badge all use it."""
+    return visibility < min_stage_visibility
+
+
 def stage_state(visibility: float, indicator_states: Iterable[str], min_stage_visibility: float) -> str:
     states = set(indicator_states)
-    if visibility < min_stage_visibility:
+    if low_visibility(visibility, min_stage_visibility):
         return "watch" if states & {"leak", "watch"} else "unknown"
     for state in ("leak", "watch", "ok"):
         if state in states:

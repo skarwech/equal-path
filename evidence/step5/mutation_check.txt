@@ -1,0 +1,28 @@
+Step 5 (F8) mutation check, 2026-11-14 ~19:15 EET. Each mutant was applied to a scratch copy, the named tests run, then reverted.
+
+First pass (18 mutants): 16 killed; 2 survived; 2 of the 16 were false kills (an unrelated badge test fails in any copy without evidence/).
+  SURVIVED stepwise colour off by one (polygon drawn in its neighbour's colour)  -> new test_each_polygon_is_drawn_in_its_own_layer_colour
+  SURVIVED map click never opens the county (AppTest cannot click Plotly)       -> wiring moved into map_layers.apply_map_pick + test_a_map_click_opens_the_county_and_stale_selections_do_not
+  FALSE KILL funnel shows OK everywhere -> really killed by test_pathway_states_are_wired_to_the_results; also now by the 22-county funnel assertion in test_drawer
+  FALSE KILL map pick never applied     -> was a survivor (see above)
+
+Second pass after the new tests: all killed.
+  KILLED low_visibility uses <=                 test_one_low_visibility_predicate_shared_with_the_gap_locator
+  KILLED confidence ignores missing CI          test_confidence_rule[medium, one series without n or CI]
+  KILLED confidence ignores twin stability      test_confidence_rule[medium, stability 0.59]
+  KILLED confidence ignores no good twin        test_confidence_rule[medium, no good twin]
+  KILLED grey reason empty                      test_every_grey_stage_explains_why
+  KILLED grey reason forgets observed           test_pirkanmaa_diagnosis_is_grey_despite_one_observed_indicator
+  KILLED layer never hatched                    test_layer_values_come_from_the_pathway_result[Diagnosis]
+  KILLED layer reads wrong stage                test_layer_values_come_from_the_pathway_result[Referral]
+  KILLED tooltip shows raw value                test_tooltip_values_equal_the_table_values[Visibility score]
+  KILLED stepwise colour off by one             test_each_polygon_is_drawn_in_its_own_layer_colour[Detection]
+  KILLED click accepts foreign code             test_empty_or_foreign_click_selects_nothing
+  KILLED no inset trace                         test_map_has_one_clickable_trace_and_overlays_never_take_hover
+  KILLED symbols fade on click                  test_map_has_one_clickable_trace_and_overlays_never_take_hover
+  KILLED map pick never applied                 test_a_map_click_opens_the_county_and_stale_selections_do_not
+  KILLED map pick applied on every rerun        test_a_map_click_opens_the_county_and_stale_selections_do_not
+  KILLED drawer drops twins                     test_every_displayed_figure_appears_in_the_sources_drawer[08]
+  KILLED drawer rounds values to 0 dp           test_raw_values_match_the_store_with_locator
+  KILLED drawer drops method constants          test_every_displayed_figure_appears_in_the_sources_drawer[90]
+  KILLED funnel shows OK everywhere             test_every_displayed_figure_appears_in_the_sources_drawer[01] (funnel = gap locator)

@@ -1,0 +1,9 @@
+{
+  "what": "F8 gate: 22 of 22 counties clickable. In the running app (Streamlit 1.51, Plotly 6.3, pane 1024x768), each county's polygon was hovered then clicked at an interior point, and the County selector was read back.",
+  "method": "Mouse events dispatched in the page at an interior point of each polygon (SVG isPointInFill); Plotly's own hover hit-test reported the location before the click. Keski-Uusimaa (02), Vantaa-Kerava (04) and Helsinki (90) are clicked in the Helsinki-area inset; the other 19 on the main map. Real mouse clicks (computer tool) were also confirmed for Lappi (21), Varsinais-Suomi (05) and Helsinki (90, inset).",
+  "before_fix": "Without the inset, 20 of 22: clicks on Vantaa-Kerava selected Keski-Uusimaa and clicks on Helsinki selected Vantaa-Kerava (their interior points were 3-9 px apart at full-map scale).",
+  "result": {"ok": 22, "total": 22, "distinct": 22},
+  "log": [["02","02","OK"],["04","04","OK"],["90","90","OK"],["01","01","OK"],["03","03","OK"],["05","05","OK"],["06","06","OK"],["07","07","OK"],["08","08","OK"],["09","09","OK"],["10","10","OK"],["11","11","OK"],["12","12","OK"],["13","13","OK"],["14","14","OK"],["15","15","OK"],["16","16","OK"],["17","17","OK"],["18","18","OK"],["19","19","OK"],["20","20","OK"],["21","21","OK"]],
+  "columns": ["clicked county", "Plotly hover location at the click point", "County selector after the click"],
+  "date": "2026-11-14"
+}
