@@ -50,14 +50,21 @@ def _sentence(text: str) -> str:
     return text if text.endswith((".", ")")) else text + "."
 
 
-def _why(rule, facts: dict) -> str:
+def _why(rule, facts: dict) -> tuple[str, str]:
+    """The figure behind a fired rule, and the data sources that figure comes from (review C-1)."""
     if rule.id == "R-DAT-01":
         return (f"stage-recording coverage {facts['stage_coverage'] * 100:.1f} % ({facts['stage_coverage_level']} "
-                "figure), below the 70 % target")
+                "figure), below the 70 % target", facts.get("stage_coverage_source") or "S_CIF2024_REPORT")
     if rule.id == "R-DET-02":
-        return "screening statistics are published annually"
-    why = f"verified gap in {rule.stage}: {facts[f'gap_{rule.stage}'] * 100:.1f} pp"
-    return why + (" and above-median distance to a university hospital" if rule.id == "R-TRT-01" else "")
+        return "screening statistics are published annually", "S_CR_SCREENING_STATS"
+    gap = facts[f"gap_{rule.stage}"]
+    size = f": {gap * 100:.1f} pp" if rule.stage != "timing" else ""   # timing gaps are not shares (review C-4)
+    why = f"verified gap in {rule.stage}{size}"
+    sources = facts.get(f"gap_sources_{rule.stage}") or SPEC
+    if rule.id == "R-TRT-01":
+        why += " and above-median distance to a university hospital"
+        sources += "; S_WIKIDATA_UNIV_HOSPITALS; S_STATFIN"
+    return why, sources
 
 
 def _stage_list(stages: list[str]) -> str:
@@ -78,12 +85,13 @@ def build_card(code: str, run, date: str) -> Card:
     primary = run.primary[code]
     for indicator in load_indicator_catalog():   # readable label instead of the internal id
         primary = primary.replace(f"{indicator.id} (all)", indicator.label).replace(indicator.id, indicator.label)
-    finding = [CardLine(f"Primary finding: {primary}.", SPEC, "F2 gap locator (sources drawer, Header)"),
+    leak_sources = "; ".join(dict.fromkeys(s for st in STAGES for s in (facts.get(f"gap_sources_{st}") or "").split("; ") if s))
+    finding = [CardLine(f"Primary finding: {primary}.", leak_sources or SPEC, "F2 gap locator (sources drawer, Header)"),
                CardLine(_sentence(plan.message), SPEC, "F5 ranking rule")]
     for o in plan.outcomes:
         rule = rules[o.rule_id]
         if o.status == "needs data" and facts.get(f"stage_{rule.stage}") == "leak":
-            reasons = "; ".join(m.split(" (", 1)[1].rstrip(")") for m in o.missing)
+            reasons = "; ".join(o.missing_reasons)
             finding.append(CardLine(f"Verified gap in {rule.stage}, but {rule.id} cannot be checked yet: {reasons}.",
                                     "; ".join(dict.fromkeys(c.id for c in rule.sources)), "F5: needs data"))
 
@@ -92,12 +100,14 @@ def build_card(code: str, run, date: str) -> Card:
         rule = rules[o.rule_id]
         sources = "; ".join(dict.fromkeys(c.id for c in rule.sources))
         cited = "; ".join(f"{titles[c.id]}, {c.locator}" for c in rule.sources)
+        why, data_sources = _why(rule, facts)
         actions += [
             CardLine(f"{i}. {o.verb}: {_sentence(rule.action)}", sources, rule.id),
             CardLine(f"Owner: {o.owner_label}", sources, f"{rule.id} owner_level {rule.owner_level}"),
             CardLine(f"KPI: {rule.kpi}", sources, rule.id),
             CardLine(f"Cost reference: {rule.cost_ref}", sources, rule.id),
-            CardLine(f"Why: {_why(rule, facts)}; evidence: {rule.evidence_grade}. Source: {cited}.", sources, rule.id),
+            CardLine(f"Why: {why}; evidence: {rule.evidence_grade}. Source: {cited}.",
+                     "; ".join(dict.fromkeys(f"{data_sources}; {sources}".split("; "))), f"{rule.id}; figure from the store"),
         ]
     if not actions:
         actions = [CardLine("No action fires for this county today.", SPEC, "F5")]
@@ -106,23 +116,34 @@ def build_card(code: str, run, date: str) -> Card:
     pilot = [
         CardLine(f"Capture the Pathway Clock time points in {county} for lung cancer and one other cancer, as "
                  "county-level aggregates: the THL access dates (Ohjaus 21/2016) plus the first primary-care contact "
-                 "and the tumour-board date.", "S_THL_OHJAUS_21_2016; S_STRATEGY", "spec 7.5 and 13; strategy 2.5"),
+                 "and the tumour-board date, with the diagnosis date from the Cancer Registry.",
+                 f"S_THL_OHJAUS_21_2016; S_STRATEGY; {SPEC}", "spec 7.5 and 13; strategy 2.5"),
         CardLine(f"Run a monthly equity review with FICAN's regional cancer centre for the {area} cooperation area, "
-                 "attached to the national pilots planned for 2026-2028 (referral criteria, roadmap 2.5.2; digital "
-                 "pathways, 3.5.3; structured recording, 4.1.1).", "S_ROADMAP", "2.5.2, 3.5.3, 4.1.1"),
+                 "attached to the national pilots planned for 2026-2028 (referral criteria in the most common cancers, "
+                 "roadmap 2.5.2; limited digital-pathway pilots, 3.5.3; quality-register work). The pilot supports the "
+                 "structured-recording measure 4.1.1 the county is already committed to.", f"S_ROADMAP; {SPEC}",
+                 "roadmap 2.5.2, 3.5.3, 4.1.1; spec section 13"),
     ]
     if unknown:
         pilot.append(CardLine(f"Day 90: a first monthly figure for {_stage_list(unknown)}, which public data cannot "
                               "show today.", SPEC, "F1 visibility"))
 
-    judged = sum(facts.get(f"stage_{s}") != "unknown" for s in STAGES if s != "timing")
+    from equal_path.visibility import COMPOSITE_STAGES
+
+    grey = [s for s in COMPOSITE_STAGES if facts.get(f"stage_{s}") == "unknown"]
+    visibility = (f"Visibility {facts['visibility_score']:.1f}/100: {len(COMPOSITE_STAGES) - len(grey)} of the "
+                  f"{len(COMPOSITE_STAGES)} pathway stages can be judged from public data"
+                  + (f" ({_stage_list(grey)} cannot)" if grey else "")
+                  + ("; access times (timing) are not published by county." if facts.get("stage_timing") == "unknown" else "."))
+    coverage = (f"Stage-recording coverage is {facts['stage_coverage'] * 100:.1f} % ({facts['stage_coverage_level']} "
+                "figure); stage-level findings stay provisional below 70 %." if facts.get("stage_coverage") is not None
+                else "Stage-recording coverage is not published for this county; stage-level findings stay provisional.")
     limitations = [
-        CardLine(f"Visibility {facts['visibility_score']:.1f}/100: {judged} of the 4 pathway stages can be judged from "
-                 "public data; access times (timing) are not published by county.", SPEC, "F1 visibility score"),
-        CardLine(f"Stage-recording coverage is {facts['stage_coverage'] * 100:.1f} % ({facts['stage_coverage_level']} "
-                 "figure); stage-level findings stay provisional below 70 %.", "S_CIF2024_REPORT", "Table 5.1 and area text"),
+        CardLine(visibility, SPEC, "F1 visibility score"),
+        CardLine(coverage, facts.get("stage_coverage_source") or "S_CIF2024_REPORT",
+                 facts.get("stage_coverage_locator") or "stage-recording coverage"),
         CardLine("Costs are national reference figures from the roadmap, not county budgets; hypothesis-graded actions "
-                 "are marked Test, never Implement.", "S_ROADMAP", "cost annex"),
+                 "are marked Test, never Implement.", "S_ROADMAP", "per-measure cost estimates (each action's cost reference)"),
         CardLine("Every figure is traceable in the app's sources drawer; nothing on this card is synthetic.", SPEC,
                  "sources drawer"),
     ]
@@ -148,11 +169,14 @@ _W.update(dict(zip("ABCDEFGHIJKLMNOPQRSTUVWXYZ", [667, 667, 722, 722, 667, 611, 
                                                    778, 667, 778, 722, 667, 611, 722, 667, 944, 667, 667, 611])))
 _W.update(dict(zip("abcdefghijklmnopqrstuvwxyz", [556, 556, 500, 556, 556, 278, 556, 556, 222, 222, 500, 222, 833, 556,
                                                    556, 556, 556, 333, 500, 278, 556, 500, 722, 500, 500, 500])))
-_W.update({"[": 278, "]": 278, "_": 556, "|": 260, "–": 556, "ä": 556, "ö": 556, "å": 556, "Ä": 667, "Ö": 778, "Å": 667})
+_W.update({"[": 278, "]": 278, "_": 556, "|": 260, "–": 556, "ä": 556, "ö": 556, "å": 556, "Ä": 667, "Ö": 778, "Å": 667,
+           "æ": 889, "ø": 611, "é": 556})
+BOLD_FACTOR = 1.15   # Helvetica-Bold is up to ~13 % wider than regular for these glyphs; rounded up for safety
 
 
 def _width(text: str, size: float, bold: bool = False) -> float:
-    return sum(_W.get(ch, 667) for ch in text) * size / 1000 * (1.08 if bold else 1.0)
+    """Upper-bound width: unknown glyphs count as a full em (review C-5)."""
+    return sum(_W.get(ch, 1000) for ch in text) * size / 1000 * (BOLD_FACTOR if bold else 1.0)
 
 
 def _wrap(text: str, size: float, bold: bool, width: float) -> list[str]:

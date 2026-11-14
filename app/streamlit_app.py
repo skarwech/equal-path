@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import sys
-from datetime import date
 from pathlib import Path
 
 import pandas as pd
@@ -57,7 +56,6 @@ def load_everything(stamp: tuple) -> dict:
     return {
         "pathway": (pathway := run_pathway(store)),
         "actions": run_actions(store, pathway),
-        "today": date.today().isoformat(),
         "glidepaths": run_glidepaths(store),
         "calibration": calibration(store),
         "store": store,

@@ -12,7 +12,7 @@ Design and acceptance spec: `equal_path_junction_astrazeneca.md` (rev 2).
 | 3. Visibility score (F1) + gap locator (F2) + twin core + tipping point (synthetic only: no regional stage data) | Step 3 | approved |
 | 4. Twins final (F3: + distance to university hospital, stability, better twins) + glidepath (F4); early warning shown infeasible | Step 3 | approved |
 | 5. Interface (F8): map layers with low-visibility hatching, 22/22 clickable map (Helsinki-area inset), funnel with confidence badges and grey-stage reasons, sources drawer | Step 4 | approved |
-| 6. Action engine (F5) + Action Card | Step 5 | in progress on branch `step-6-actions` |
+| 6. Action engine (F5) + Action Card: 12 rules with machine conditions, top 3 per county, one-page PDF card | Step 5 | **built, independently reviewed (21 findings: 20 fixed, 1 kept as approved in Stage 1), awaiting validation** (branch `step-6-actions`) |
 | 7. AI analyst + number validator (F7) | Step 6 | |
 | 8. Hardening: offline cold start, trust panel, rehearsal | Steps 6-7 | |
 
@@ -50,7 +50,8 @@ data/reference/    sources.csv (registry), units.csv, units.geojson (22 units, Ã
 equal_path/        library: config, geography, sources, lint, trust, viz, spine, coverage, names,
                    visibility (F1), gaps (F2), twins (F3), glidepath (F4), tipping, pathway (runs F1-F3),
                    confidence + grey-stage reasons, map_layers (layers, hatching, clicks), drawer (sources
-                   for every figure), display (shared formatting)
+                   for every figure), display (shared formatting), actions (F5 rule engine), card (Action Card
+                   and its one-page PDF writer)
 equal_path/loaders one parser per source family (screening, cr_app, cif_report, lung_report, sotkanet, statfin,
                    distance: population-weighted km to the nearest university hospital)
 scripts/           fetch / build / freeze
@@ -95,3 +96,14 @@ evidence/          test reports, screenshots
   why, and every number on the page (tables, funnel, captions) appears in the sources drawer with a registered
   source and a locator or derivation. The confidence badge uses only frozen thresholds (visibility gate, published
   n or CI, good and stable twins).
+- F5 actions: each rule's spec trigger is encoded as machine conditions over named county facts (config/rules.yaml
+  `when` / `when_any`); a fact with no public county data is unknown, so the rule says "needs data" and never fires
+  (three-valued logic: a known False still rules it out). Gap rules need a verified gap (Leak) in their own stage;
+  data-capture rules (R-DAT-01, R-DET-02) fire on their data trigger. Ranking: stage recording first, then gaps by
+  size, then other data capture; top 3; with no verified gap the card says "No verified gap; maintain and improve
+  data". Truth tables cover all 12 rules (fires when satisfied, not when each condition is violated, needs data
+  when a fact is missing, blocked by low visibility). Hypothesis-graded rules print as "Test"; national-lead rules
+  name the national lead. All rule and card text passes the neutrality lint.
+- Action Card: the screen and the one-page PDF show the same lines (tested for all 22 counties); the PDF is built
+  in well under 3 seconds by a small built-in writer (no extra package, works offline) and overflow raises instead
+  of truncating. A clinical review sheet for the 12 rules is in evidence/step6/clinical_review_sheet.csv.

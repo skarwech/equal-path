@@ -345,3 +345,27 @@ def test_action_library_shows_each_rules_machine_condition(app):
 
 def test_county_page_offers_the_action_card_pdf(app):
     assert any(b.label.startswith("Download Action Card") for b in app.get("download_button"))
+
+
+def test_downloaded_pdf_is_the_selected_countys_card(monkeypatch):
+    """Review W-3: the download button carries this county's card, the same lines as on screen."""
+    import streamlit
+
+    from equal_path.card import pdf_text_lines
+
+    seen = {}
+    real = streamlit.download_button
+
+    def spy(label, data=None, file_name=None, **kwargs):
+        if label.startswith("Download Action Card"):
+            seen.update(data=data, file_name=file_name)
+        return real(label, data=data, file_name=file_name, **kwargs)
+
+    monkeypatch.setattr(streamlit, "download_button", spy)
+    at = AppTest.from_file(str(APP), default_timeout=60)
+    at.session_state["county"] = "10 Kymenlaakso"
+    at.run()
+    lines = pdf_text_lines(seen["data"])
+    assert seen["file_name"] == "equal-path-action-card-10.pdf" and lines[0] == "Equal Path Action Card: Kymenlaakso (10)"
+    shown = [str(m.value).removeprefix("#### ") for m in at.markdown]
+    assert lines[0] in shown and any("Hub-and-spoke" in line for line in lines)

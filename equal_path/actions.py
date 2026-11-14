@@ -30,6 +30,7 @@ PRECONDITION_RULES = ("R-DAT-01",)  # spec F5: low stage coverage always gets th
 NO_VERIFIED_GAP = "No verified gap; maintain and improve data"
 DATA_CAPTURE_FIRST = "Stage recording comes first: without it no stage-level equity claim can be verified"
 GAP_ACTIONS = "Actions for the verified gaps, largest gap first"
+GAP_NEEDS_DATA = "Verified gap found, but no gap action can be checked yet (needs data); data actions first"
 STATES = ("leak", "watch", "ok", "unknown")
 
 # Facts with no public county-level data: always unknown, with the reason shown as 'needs data'.
@@ -46,6 +47,7 @@ NO_PUBLIC_DATA = {
 # Facts that can be computed in principle but have no value for some counties: the reason, if known.
 MISSING_REASON = {
     "max_subgroup_gap_pp": "participation by mother tongue and education is published nationally only",
+    "primary_care_trend_worse": "the care-guarantee definition changed in 9/2023 and 1/2025, so there is no comparable trend",
 }
 FACT_NAMES = frozenset(
     {f"stage_{s}" for s in STAGES} | {f"visibility_{s}" for s in STAGES} | {f"gap_{s}" for s in STAGES}
@@ -104,6 +106,7 @@ class RuleOutcome:
     owner_label: str
     missing: tuple[str, ...]    # unknown facts, each with the reason there is no data
     rank: tuple = ()
+    missing_reasons: tuple[str, ...] = ()
 
 
 def evaluate_rule(rule, facts: dict, thresholds) -> RuleOutcome:
@@ -118,11 +121,13 @@ def evaluate_rule(rule, facts: dict, thresholds) -> RuleOutcome:
     else:
         status = "fires" if trigger else "needs data"
     used = [c.split()[0] for c in (*rule.when, *rule.when_any)]
-    missing = tuple(f"{n} ({NO_PUBLIC_DATA.get(n) or MISSING_REASON.get(n, 'no value for this county')})"
-                    for n in dict.fromkeys(used)
-                    if facts.get(n) is None)
+    unknown = [n for n in dict.fromkeys(used) if facts.get(n) is None]
+    reasons = tuple(NO_PUBLIC_DATA.get(n) or MISSING_REASON.get(n, "no value for this county") for n in unknown)
+    needs = status == "needs data"
     return RuleOutcome(rule.id, status, "Test" if rule.mode == "test" else "Implement",
-                       f"{OWNER_LABEL[rule.owner_level]}: {rule.owner}", missing if status == "needs data" else ())
+                       f"{OWNER_LABEL[rule.owner_level]}: {rule.owner}",
+                       tuple(f"{n} ({r})" for n, r in zip(unknown, reasons)) if needs else (),
+                       missing_reasons=reasons if needs else ())
 
 
 @dataclass(frozen=True)
@@ -153,8 +158,10 @@ def county_plan(facts: dict, thresholds, rules=None) -> Plan:
         message = NO_VERIFIED_GAP
     elif any(o.rule_id in PRECONDITION_RULES for o in fired):
         message = DATA_CAPTURE_FIRST
-    else:
+    elif any(not by_id[o.rule_id].data_capture for o in fired[:3]):
         message = GAP_ACTIONS
+    else:
+        message = GAP_NEEDS_DATA
     return Plan(outcomes, tuple(fired[:3]), message)
 
 
@@ -166,15 +173,16 @@ def _latest_unit(store, indicator, code, subgroup="all"):
     return None if rows.empty else float(rows.sort_values("period").value.iloc[-1])
 
 
-def _stage_coverage(store, code, area_code) -> tuple[float | None, str]:
+def _stage_coverage(store, code, area_code) -> tuple[float | None, str, str, str]:
     rows = store[(store.indicator_id == "stage_recording_coverage") & (store.subgroup == "all") & store.value.notna()]
     area_key = str(area_code) if str(area_code).startswith("YTA") else f"YTA{area_code}"   # units.csv: '3'; store: 'YTA3'
     for level, key in (("unit", code), ("cooperation_area", area_key), ("national", "FI")):
         hit = rows[(rows.geo_level == level) & (rows.county_id == key)]
         if len(hit):
             label = {"unit": "county", "cooperation_area": "cooperation area", "national": "national"}[level]
-            return float(hit.sort_values("period").value.iloc[-1]), label
-    return None, "not published"
+            row = hit.sort_values("period").iloc[-1]
+            return float(row.value), label, row.source_id, row.locator
+    return None, "not published", "", ""
 
 
 SUBGROUP_PAIRS = (("lang:domestic", "lang:other_or_missing"), ("edu:tertiary", "edu:primary_or_unknown"))
@@ -203,7 +211,23 @@ def _trend_worse(store, catalog, indicator, code) -> int | None:
     return int(slope > 0) if catalog[indicator].direction == "lower_better" else int(slope < 0)
 
 
-def county_facts(code, result, store, catalog, units) -> dict:
+def _above_median(store, indicator, codes, code) -> int | None:
+    values = {c: _latest_unit(store, indicator, c) for c in codes}
+    known = [v for v in values.values() if v is not None]
+    return None if values.get(code) is None or not known else int(values[code] > statistics.median(known))
+
+
+def _above_national(store, indicator, code) -> int | None:
+    share = _latest_unit(store, indicator, code)
+    national = store[(store.indicator_id == indicator) & (store.geo_level == "national") & (store.subgroup == "all")
+                     & store.value.notna()]
+    return None if share is None or national.empty else int(share > float(national.sort_values("period").value.iloc[-1]))
+
+
+def county_facts(code, result, store, catalog, units, thresholds=None) -> dict:
+    from equal_path.config import load_thresholds
+
+    thresholds = thresholds or load_thresholds()
     a = result.assessments
     unit = units.set_index("code").loc[code]
     facts: dict = {name: None for name in NO_PUBLIC_DATA}
@@ -212,23 +236,22 @@ def county_facts(code, result, store, catalog, units) -> dict:
         facts[f"visibility_{stage}"] = float(result.visibility.loc[code, stage])
         leaks = a[(a.code == code) & (a.stage == stage) & (a.state == "leak")]
         facts[f"gap_{stage}"] = float(leaks[["gap_national", "gap_twin"]].min(axis=1).max()) if len(leaks) else 0.0
-    facts["stage_coverage"], facts["stage_coverage_level"] = _stage_coverage(store, code, unit.coop_area_code)
+        facts[f"gap_sources_{stage}"] = "; ".join(sorted({s for i in leaks.indicator_id for s in catalog[i].source_ids}))
+    (facts["stage_coverage"], facts["stage_coverage_level"], facts["stage_coverage_source"],
+     facts["stage_coverage_locator"]) = _stage_coverage(store, code, unit.coop_area_code)
     periods = store.loc[store.indicator_id.str.startswith("screening_participation"), "period"]
     facts["screening_stats_annual"] = int(len(periods) > 0 and periods.str.fullmatch(r"\d{4}").all())
     facts["leaking_participation_below_target"], facts["max_subgroup_gap_pp"] = _participation_facts(store, a, code)
-    facts["primary_care_trend_worse"] = _trend_worse(store, catalog, "primary_care_access", code)
-    distances = {c: _latest_unit(store, "cov_distance_university_hospital_km", c) for c in result.stages.index}
-    known = [d for d in distances.values() if d is not None]
-    facts["distance_above_median"] = (None if distances[code] is None or not known
-                                      else int(distances[code] > statistics.median(known)))
+    # _trend_worse is ready, but the Sotkanet 6411 series breaks at the 9/2023 and 1/2025 law changes (catalog
+    # limitation), so no comparable trend exists yet (review E-7)
+    facts["primary_care_trend_worse"] = None
+    facts["distance_above_median"] = _above_median(store, "cov_distance_university_hospital_km", result.stages.index, code)
     lung = a[(a.code == code) & (a.indicator_id == "lung_curative_route_share")]
     facts["lung_curative_leak"] = None if lung.empty else int((lung.state == "leak").any())
-    share = _latest_unit(store, "cov_share_aged_75_plus", code)
-    national = store[(store.indicator_id == "cov_share_aged_75_plus") & (store.geo_level == "national") & store.value.notna()]
-    facts["share_75_above_national"] = (None if share is None or national.empty
-                                        else int(share > float(national.sort_values("period").value.iloc[-1])))
+    facts["share_75_above_national"] = _above_national(store, "cov_share_aged_75_plus", code)
     access = a[(a.code == code) & (a.indicator_id == "primary_care_access") & a.gap_national.notna()]
-    facts["primary_care_worse_than_national"] = None if access.empty else int((access.gap_national > 0).any())
+    facts["primary_care_worse_than_national"] = (None if access.empty else
+                                                 int((access.gap_national >= thresholds.min_practical_gap_pp / 100).any()))
     facts["visibility_score"] = float(result.visibility.loc[code, "score"])
     return facts
 
@@ -252,7 +275,7 @@ def run_actions(store: pd.DataFrame | None = None, result=None) -> ActionRun:
     result = run_pathway(store) if result is None else result
     catalog = {i.id: i for i in load_indicator_catalog()}
     units, thresholds, rules = load_units(), load_thresholds(), load_rules()
-    facts = {code: county_facts(code, result, store, catalog, units) for code in result.stages.index}
+    facts = {code: county_facts(code, result, store, catalog, units, thresholds) for code in result.stages.index}
     plans = {code: county_plan(f, thresholds, rules) for code, f in facts.items()}
     return ActionRun(plans, facts, dict(result.primary_leak), dict(zip(units.code, units.short_fi)),
                      dict(zip(units.code, units.coop_area_fi)))

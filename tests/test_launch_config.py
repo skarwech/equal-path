@@ -42,4 +42,6 @@ def test_preview_launch_uses_the_launcher():
 
     launch = json.loads((ROOT / ".claude" / "launch.json").read_text(encoding="utf-8"))
     config = launch["configurations"][0]
-    assert config["runtimeArgs"] == ["scripts/run_app.sh"]
+    # relative, or absolute when the preview tool starts outside the project; either way this repo's launcher
+    (arg,) = config["runtimeArgs"]
+    assert (ROOT / arg).resolve() == (ROOT / "scripts" / "run_app.sh").resolve()

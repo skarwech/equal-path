@@ -209,6 +209,12 @@ def _drawer_numbers(at: AppTest) -> set[float]:
     return out
 
 
+def _walk(node):
+    yield node
+    for child in getattr(node, "children", {}).values():
+        yield from _walk(child)
+
+
 def _element_types(node) -> set[str]:
     found = {getattr(node, "type", type(node).__name__)}
     for child in getattr(node, "children", {}).values():
@@ -249,10 +255,23 @@ def test_county_page_gates(code, inputs, actions):
     # the Action Card on screen shows exactly the PDF's lines (spec F8: sampled text equals on-screen content)
     from equal_path.card import build_card, card_text_lines
 
-    shown = [str(e.value) for e in (*tab.markdown, *tab.caption)]
     card = build_card(code, actions, __import__("datetime").date.today().isoformat())
-    for line in card_text_lines(card):
-        assert any(line in text for text in shown), (code, line)
+    # on screen, in render order, exactly the PDF's lines (review W-6)
+    ordered = [str(e.value) for e in _walk(tab) if getattr(e, "type", "") in ("markdown", "caption")]
+    start = ordered.index(f"#### {card.title}")
+    screen = [t.removeprefix("#### ").removeprefix("**").removesuffix("**") for t in ordered[start:start + len(card_text_lines(card))]]
+    assert screen == card_text_lines(card), code
+    # the drawer carries every card line with the line's own sources and locator, in order (review W-5)
+    drawer = next(d.value for d in tab.dataframe if "Locator or derivation" in d.value.columns)
+    card_rows = drawer[drawer.Section == "Action Card"]
+    expected = [(line.text, line.sources, line.locator) for _, lines in card.sections for line in lines]
+    assert list(zip(card_rows.Shown, card_rows.Sources, card_rows["Locator or derivation"]))[2:] == expected
+
+    rules = next(d.value for d in tab.dataframe if {"Rule", "Status"} <= set(d.value.columns))
+    outcomes = actions.plans[code].outcomes
+    assert list(rules.Rule) == [o.rule_id for o in outcomes]
+    assert [s.split(" (")[0] for s in rules.Status] == [o.status for o in outcomes], code
+    assert list(rules["Needs data"]) == ["; ".join(o.missing) for o in outcomes], code   # review W-4
 
     page = _page_numbers(at)
     assert len(page) >= 50 and len(tab.dataframe) == 5  # non-trivial harvest: 3 page tables + rules + the drawer

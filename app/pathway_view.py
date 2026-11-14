@@ -121,14 +121,17 @@ def _action_card(data: dict, code: str):
     from equal_path.card import build_card, render_pdf
 
     run = data["actions"]
-    card = build_card(code, run, data["today"])
-    st.markdown(f"#### {card.title}")
-    st.caption(card.subtitle)
-    for title, lines in card.sections:
-        st.markdown(f"**{title}**")
-        for line in lines:
-            st.markdown(line.text)
-    st.caption(card.footer)
+    from datetime import date
+
+    card = build_card(code, run, date.today().isoformat())   # per view, not cached at app start (review W-1)
+    with st.container(border=True):   # the same lines, in the same order, as the PDF
+        st.markdown(f"#### {card.title}")
+        st.caption(card.subtitle)
+        for title, lines in card.sections:
+            st.markdown(f"**{title}**")
+            for line in lines:
+                st.markdown(line.text)
+        st.caption(card.footer)
     st.download_button("Download Action Card (PDF, one page)", data=render_pdf(card), mime="application/pdf",
                        file_name=f"equal-path-action-card-{code}.pdf")
     with st.expander("All rules for this county (F5)", expanded=False):

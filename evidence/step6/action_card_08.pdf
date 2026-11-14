@@ -16,7 +16,7 @@ endobj
 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
 endobj
 6 0 obj
-<< /Length 2857 >>
+<< /Length 3073 >>
 stream
 BT /F2 16.0 Tf 20.8 TL 48.00 778.00 Td (Equal Path Action Card: Pirkanmaa \(08\)) Tj ET
 BT /F1 9.0 Tf 11.7 TL 48.00 763.00 Td (Generated 2026-11-14 from public data only. Cooperation area: Sisä-Suomi.) Tj ET
@@ -24,21 +24,21 @@ BT /F2 11.5 Tf 15.0 TL 48.00 741.50 Td (Finding) Tj ET
 BT /F1 9.5 Tf 12.3 TL 48.00 729.00 Td (Primary finding: no verified leak.) Tj ET
 BT /F1 9.5 Tf 12.3 TL 48.00 717.00 Td (No verified gap; maintain and improve data.) Tj ET
 BT /F2 11.5 Tf 15.0 TL 48.00 696.50 Td (Actions) Tj ET
-BT /F1 9.5 Tf 12.3 TL 48.00 684.00 Td (1. Implement: Monthly reporting of screening data to the registers, a near-real-time county situation picture and an) Tj T* (annual screening quality day.) Tj ET
+BT /F2 9.5 Tf 12.3 TL 48.00 684.00 Td (1. Implement: Monthly reporting of screening data to the registers, a near-real-time county situation) Tj T* (picture and an annual screening quality day.) Tj ET
 BT /F1 9.5 Tf 12.3 TL 48.00 659.65 Td (Owner: Joint, national body and county: Cancer Registry; wellbeing counties) Tj ET
 BT /F1 9.5 Tf 12.3 TL 48.00 647.65 Td (KPI: Reporting delay) Tj ET
 BT /F1 9.5 Tf 12.3 TL 48.00 635.65 Td (Cost reference: 300,000 EUR \(roadmap 2.4.5\)) Tj ET
 BT /F1 9.5 Tf 12.3 TL 48.00 623.65 Td (Why: screening statistics are published annually; evidence: strategy-endorsed. Source: National Cancer Strategy) Tj T* (implementation roadmap 2026-2031, 2.4.5.) Tj ET
 BT /F2 11.5 Tf 15.0 TL 48.00 590.80 Td (90-day pilot) Tj ET
-BT /F1 9.5 Tf 12.3 TL 48.00 578.30 Td (Capture the Pathway Clock time points in Pirkanmaa for lung cancer and one other cancer, as county-level) Tj T* (aggregates: the THL access dates \(Ohjaus 21/2016\) plus the first primary-care contact and the tumour-board date.) Tj ET
-BT /F1 9.5 Tf 12.3 TL 48.00 553.95 Td (Run a monthly equity review with FICAN's regional cancer centre for the Sisä-Suomi cooperation area, attached to the) Tj T* (national pilots planned for 2026-2028 \(referral criteria, roadmap 2.5.2; digital pathways, 3.5.3; structured recording,) Tj T* (4.1.1\).) Tj ET
-BT /F1 9.5 Tf 12.3 TL 48.00 517.25 Td (Day 90: a first monthly figure for diagnosis and timing, which public data cannot show today.) Tj ET
-BT /F2 11.5 Tf 15.0 TL 48.00 496.75 Td (Limitations) Tj ET
-BT /F1 9.5 Tf 12.3 TL 48.00 484.25 Td (Visibility 67.3/100: 3 of the 4 pathway stages can be judged from public data; access times \(timing\) are not published) Tj T* (by county.) Tj ET
-BT /F1 9.5 Tf 12.3 TL 48.00 459.90 Td (Stage-recording coverage is 71.9 % \(county figure\); stage-level findings stay provisional below 70 %.) Tj ET
-BT /F1 9.5 Tf 12.3 TL 48.00 447.90 Td (Costs are national reference figures from the roadmap, not county budgets; hypothesis-graded actions are marked) Tj T* (Test, never Implement.) Tj ET
-BT /F1 9.5 Tf 12.3 TL 48.00 423.55 Td (Every figure is traceable in the app's sources drawer; nothing on this card is synthetic.) Tj ET
-BT /F1 8.0 Tf 10.4 TL 48.00 406.55 Td (Equal Path, Junction 2026. Product-neutral: no sponsor, brand or drug names. Public data only.) Tj ET
+BT /F1 9.5 Tf 12.3 TL 48.00 578.30 Td (Capture the Pathway Clock time points in Pirkanmaa for lung cancer and one other cancer, as county-level) Tj T* (aggregates: the THL access dates \(Ohjaus 21/2016\) plus the first primary-care contact and the tumour-board date,) Tj T* (with the diagnosis date from the Cancer Registry.) Tj ET
+BT /F1 9.5 Tf 12.3 TL 48.00 541.60 Td (Run a monthly equity review with FICAN's regional cancer centre for the Sisä-Suomi cooperation area, attached to the) Tj T* (national pilots planned for 2026-2028 \(referral criteria in the most common cancers, roadmap 2.5.2; limited) Tj T* (digital-pathway pilots, 3.5.3; quality-register work\). The pilot supports the structured-recording measure 4.1.1 the) Tj T* (county is already committed to.) Tj ET
+BT /F1 9.5 Tf 12.3 TL 48.00 492.55 Td (Day 90: a first monthly figure for diagnosis and timing, which public data cannot show today.) Tj ET
+BT /F2 11.5 Tf 15.0 TL 48.00 472.05 Td (Limitations) Tj ET
+BT /F1 9.5 Tf 12.3 TL 48.00 459.55 Td (Visibility 67.3/100: 3 of the 4 pathway stages can be judged from public data \(diagnosis cannot\); access times \(timing\)) Tj T* (are not published by county.) Tj ET
+BT /F1 9.5 Tf 12.3 TL 48.00 435.20 Td (Stage-recording coverage is 71.9 % \(county figure\); stage-level findings stay provisional below 70 %.) Tj ET
+BT /F1 9.5 Tf 12.3 TL 48.00 423.20 Td (Costs are national reference figures from the roadmap, not county budgets; hypothesis-graded actions are marked) Tj T* (Test, never Implement.) Tj ET
+BT /F1 9.5 Tf 12.3 TL 48.00 398.85 Td (Every figure is traceable in the app's sources drawer; nothing on this card is synthetic.) Tj ET
+BT /F1 8.0 Tf 10.4 TL 48.00 381.85 Td (Equal Path, Junction 2026. Product-neutral: no sponsor, brand or drug names. Public data only.) Tj ET
 0.75 g 48.00 775.00 499.00 0.6 re f
 endstream
 endobj
@@ -54,5 +54,5 @@ xref
 trailer
 << /Size 7 /Root 1 0 R >>
 startxref
-3365
+3581
 %%EOF

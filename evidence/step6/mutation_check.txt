@@ -1,0 +1,22 @@
+Step 6 (F5 action engine + Action Card) mutation check, 2026-11-14 ~20:00 EET.
+Each mutant applied to a scratch copy (evidence/ included), the named tests run, then reverted.
+
+First pass: 20 of 23 killed. Survivors and the tests added for them:
+  SURVIVED median -> mean (distance fact)       synthetic data had equal median and mean -> fixture with 10, 20, 35, 95
+  SURVIVED needs-data note dropped from card    -> test_card_names_the_gap_whose_action_cannot_be_checked[03, 09, 10, 14]
+  SURVIVED rule table shows wrong statuses      -> test_county_page_gates now compares the on-page rule table with F5
+
+Second pass: all 23 killed.
+  rules.yaml: R-DAT-01 '<' -> '<='; R-TRT-01 drops the distance condition; R-DET-01 drops the subgroup-gap condition
+  engine: unknown counted as true (Kleene); guards ignored; R-DAT-01 not first; gap ranking reversed; top 4; the
+          'no verified gap' message always; area-code lookup bug restored; subgroup gap sign reversed; trend
+          direction ignored; median -> mean; 75+ national row ignores subgroup; hypothesis printed as Implement;
+          national owner label lost
+  card/PDF: Limitations dropped from the PDF; no unescaping in the PDF reader; overflow check removed;
+            needs-data note dropped
+  app: card shows Helsinki for every county; drawer omits the card rows; rule table statuses wrong
+
+Review-fix pass (after the independent review, ~20:30 EET): all 11 killed.
+  E-1 gap message back, E-6 any positive access gap, E-5 diagnosis guard back, E-3 max instead of min gap,
+  C-1 figure cites the rule only, C-2 reason parsing back, C-3 grey stages unnamed, C-4 timing gap as pp,
+  W-3 download offers another county's card, W-5 drawer loses card locators, W-6 card sections reordered on screen.
