@@ -12,8 +12,8 @@ Design and acceptance spec: `equal_path_junction_astrazeneca.md` (rev 2).
 | 3. Visibility score (F1) + gap locator (F2) + twin core + tipping point (synthetic only: no regional stage data) | Step 3 | approved |
 | 4. Twins final (F3: + distance to university hospital, stability, better twins) + glidepath (F4); early warning shown infeasible | Step 3 | approved |
 | 5. Interface (F8): map layers with low-visibility hatching, 22/22 clickable map (Helsinki-area inset), funnel with confidence badges and grey-stage reasons, sources drawer | Step 4 | approved |
-| 6. Action engine (F5) + Action Card: 12 rules with machine conditions, top 3 per county, one-page PDF card | Step 5 | **built, independently reviewed (21 findings: 20 fixed, 1 kept as approved in Stage 1), awaiting validation** (branch `step-6-actions`) |
-| 7. AI analyst + number validator (F7) | Step 6 | |
+| 6. Action engine (F5) + Action Card: 12 rules with machine conditions, top 3 per county, one-page PDF card | Step 5 | approved |
+| 7. AI analyst + number validator (F7) | Step 6 | in progress on branch `step-7-analyst` |
 | 8. Hardening: offline cold start, trust panel, rehearsal | Steps 6-7 | |
 
 ## Run
