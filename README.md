@@ -14,7 +14,7 @@ Design and acceptance spec: `equal_path_junction_astrazeneca.md` (rev 2).
 | 5. Interface (F8): map layers with low-visibility hatching, 22/22 clickable map (Helsinki-area inset), funnel with confidence badges and grey-stage reasons, sources drawer | Step 4 | approved |
 | 6. Action engine (F5) + Action Card: 12 rules with machine conditions, top 3 per county, one-page PDF card | Step 5 | approved |
 | 7. AI analyst + number validator (F7): 120-word briefing, validator, template fallback | Step 6 | approved |
-| 8. Hardening: offline mode (cached analyst text, all 22 counties, cold start under 5 s), trust panel, data-gap and limitations panels, 5 offline rehearsals | Steps 6-7 | **built, independently reviewed (15 findings, all fixed), awaiting validation** (branch `step-8-hardening`) |
+| 8. Hardening: offline mode (cached analyst text, all 22 counties, cold start under 5 s), trust panel, data-gap and limitations panels, 5 offline rehearsals | Steps 6-7 | approved |
 
 ## Run
 
