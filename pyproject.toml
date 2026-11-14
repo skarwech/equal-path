@@ -1,0 +1,25 @@
+[project]
+name = "equal-path"
+version = "0.1.0"
+description = "Equal Path: equitable and effective cancer care monitoring for Finland (Junction 2026, AstraZeneca challenge)"
+requires-python = ">=3.11"
+dependencies = [
+  "streamlit==1.51.0",   # width="stretch" on dataframe/plotly_chart needs a recent Streamlit
+  "plotly==6.3.0",
+  "pandas==2.3.3",
+  "pyarrow==21.0.0",
+  "pydantic==2.12.4",
+  "PyYAML==6.0.3",
+]
+
+[project.optional-dependencies]
+test = ["pytest==8.4.2", "pytest-cov"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = "-q --junitxml=evidence/test_report.xml"
+markers = ["integration: starts a real server (slower)"]
+
+[tool.coverage.run]
+source = ["equal_path"]

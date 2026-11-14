@@ -1,0 +1,15 @@
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/opt/anaconda3/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_thresholds.py:5: in <module>
+    from equal_path.config import load_thresholds, thresholds_digest, read_lock_digest
+E   ModuleNotFoundError: No module named 'equal_path.config'
+=========================== short test summary info ============================
+ERROR tests/test_geography.py
+ERROR tests/test_rules.py
+ERROR tests/test_sources_and_scope.py
+ERROR tests/test_thresholds.py
+!!!!!!!!!!!!!!!!!!! Interrupted: 4 errors during collection !!!!!!!!!!!!!!!!!!!!
+4 errors in 0.24s

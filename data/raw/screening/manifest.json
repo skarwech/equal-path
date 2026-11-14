@@ -1,0 +1,29 @@
+[
+  {
+    "file": "breast.html",
+    "source_id": "S_CR_SCREENING_STATS",
+    "url": "https://stats.cancerregistry.fi/joukkistilastot/breast.html",
+    "method": "GET",
+    "retrieved_at": "2026-11-14T08:31:50+00:00",
+    "bytes": 8825784,
+    "sha256": "53e58eff2cc81fa5fd7e42574941a1e56fbdb260e6f43578d2becf800bcd1d3d"
+  },
+  {
+    "file": "cervix.html",
+    "source_id": "S_CR_SCREENING_STATS",
+    "url": "https://stats.cancerregistry.fi/joukkistilastot/cervix.html",
+    "method": "GET",
+    "retrieved_at": "2026-11-14T08:31:50+00:00",
+    "bytes": 10235041,
+    "sha256": "9dc86a46dd2c9b67041d0a100fc1e198e816aa16aeece8375d5d0091a429ecda"
+  },
+  {
+    "file": "colorectal.html",
+    "source_id": "S_CR_SCREENING_STATS",
+    "url": "https://stats.cancerregistry.fi/joukkistilastot/colorectal.html",
+    "method": "GET",
+    "retrieved_at": "2026-11-14T08:31:50+00:00",
+    "bytes": 7382873,
+    "sha256": "a4a0c0f373594a67fc604745cfd12eb86f3ffa154fee496d1026e2e69ad8342f"
+  }
+]

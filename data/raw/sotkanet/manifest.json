@@ -1,0 +1,47 @@
+[
+  {
+    "file": "regions.json",
+    "source_id": "S_SOTKANET",
+    "url": "https://sotkanet.fi/rest/1.1/regions",
+    "method": "GET",
+    "retrieved_at": "2026-11-14T08:31:53+00:00",
+    "bytes": 120535,
+    "sha256": "1e7cd7121a48b13c90e98cc1d5f668e43b57537330188443e0d4d8105688f173"
+  },
+  {
+    "file": "i3869_hpv_girls.json",
+    "source_id": "S_SOTKANET",
+    "url": "https://sotkanet.fi/rest/1.1/json?indicator=3869&years=2022&years=2023&years=2024&years=2025&years=2026&genders=total",
+    "method": "GET",
+    "retrieved_at": "2026-11-14T08:31:53+00:00",
+    "bytes": 36045,
+    "sha256": "68db4b5cf4797a180b0d752ac3f0f241e1f458641fb68478e9c68cb664301d8d"
+  },
+  {
+    "file": "i171_aged_75_plus.json",
+    "source_id": "S_SOTKANET",
+    "url": "https://sotkanet.fi/rest/1.1/json?indicator=171&years=2025&genders=total",
+    "method": "GET",
+    "retrieved_at": "2026-11-14T08:31:53+00:00",
+    "bytes": 45040,
+    "sha256": "0af2c70a99def81ae41b8dd55c386c3dcb8fbac2b49c5d1603300c470934c8b2"
+  },
+  {
+    "file": "i3195_tertiary_15_plus.json",
+    "source_id": "S_SOTKANET",
+    "url": "https://sotkanet.fi/rest/1.1/json?indicator=3195&years=2025&genders=total",
+    "method": "GET",
+    "retrieved_at": "2026-11-14T08:31:53+00:00",
+    "bytes": 45628,
+    "sha256": "fcb8497b519ea4a5d3d0f296b56df57b1e4115eb9f8c655aeaaa1ce70fff48d0"
+  },
+  {
+    "file": "i6411_pc_wait_over_7d.json",
+    "source_id": "S_SOTKANET",
+    "url": "https://sotkanet.fi/rest/1.1/json?indicator=6411&years=2021&years=2022&years=2023&years=2024&years=2025&genders=total",
+    "method": "GET",
+    "retrieved_at": "2026-11-14T08:31:53+00:00",
+    "bytes": 214022,
+    "sha256": "e037494be6e0658d768e5b3f91de5b0721bf4a2580f570b65e470b9dcee395ad"
+  }
+]

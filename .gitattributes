@@ -1,0 +1,4 @@
+# Keep config bytes stable across platforms (the thresholds lock hashes them).
+config/* text eol=lf
+*.yaml text eol=lf
+*.csv text eol=lf

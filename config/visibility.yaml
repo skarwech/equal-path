@@ -1,0 +1,15 @@
+# F1 visibility method (team-set 2026-11-14, AFTER county data loaded; disclosed at the Step 3 gate).
+# Rules are mechanical so nobody can tune them to a result:
+# - Stage membership = the catalog's `stage` field. Covariate and context indicators never count.
+# - Within a stage every catalogued indicator has equal weight (weights sum to 1 per stage).
+# - The four pathway stages combine into a 0-100 score with the FROZEN stage weights in
+#   thresholds.yaml (visibility_stage_weights). Timing (THL Ohjaus 21/2016 intervals) is shown as
+#   its own fifth row and is not part of the composite.
+# - An indicator is observable for a county when: catalog status is available/partial; a unit row
+#   exists in the indicator's latest period with a value; headline subgroup 'all' if the indicator
+#   has one (else any series); its source is listed for the indicator and registered as
+#   retrieved/verified; and its denominator, if published, is >= min_denominator (thresholds.yaml).
+composite_stages: [detection, referral, diagnosis, treatment]
+separate_stages: [timing]
+within_stage_weighting: equal
+observable_source_statuses: [retrieved, verified]

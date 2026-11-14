@@ -1,0 +1,33 @@
+# Indicative reference times (Equal Path rev 2, Appendix D). NOT binding national
+# targets and not cancer-specific. Configurable; label as indicative everywhere.
+binding: false
+source_id: S_THL_OHJAUS_21_2016
+locator: "p. 13 (restating STM Selvityksiä 6/2010)"
+note: >-
+  Recommended maxima exist only for breast, prostate, colon and rectal cancer
+  pathways (Figures 2-5, pp. 18-19). Read those directly from the source before use.
+intervals:
+  - id: referral_to_first_treatment
+    label: "Referral arrival to first treatment (suspected cancer)"
+    limit_weeks: 6
+    limit_text: "6 weeks"
+  - id: very_urgent_diagnosis_to_treatment
+    label: "Very urgent cancers: diagnosis to treatment start"
+    limit_weeks: 3
+    limit_text: "Within days, at most 2-3 weeks"
+  - id: imaging_report
+    label: "Imaging: radiologist report after the request"
+    limit_weeks: 1
+    limit_text: "1 week"
+  - id: tissue_sample
+    label: "Tissue sample after the request arrives at the unit"
+    limit_weeks: 1
+    limit_text: "1 week"
+  - id: pathology_report
+    label: "Pathologist report after the sample (no special stains)"
+    limit_weeks: 1
+    limit_text: "1 week"
+  - id: adjuvant_after_surgery
+    label: "Adjuvant treatment after surgery"
+    limit_weeks: 4
+    limit_text: "4 weeks, unless a patient-related reason requires longer"

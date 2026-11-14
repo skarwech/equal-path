@@ -1,0 +1,9 @@
+# Versions this build was developed and tested with (Python 3.13).
+streamlit==1.51.0
+plotly==6.3.0
+pandas==2.3.3
+pyarrow==21.0.0
+pydantic==2.12.4
+PyYAML==6.0.3
+pytest==8.4.2
+pytest-cov

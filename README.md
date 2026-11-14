@@ -1,0 +1,86 @@
+# Equal Path
+
+Equitable and effective cancer care in Finland. Junction 2026, AstraZeneca challenge.
+Design and acceptance spec: `equal_path_junction_astrazeneca.md` (rev 2).
+
+## Status
+
+| Stage | Plan step | Status |
+|---|---|---|
+| 1. Foundation: frozen thresholds, scope (second cancer pending), 22-unit geography, source registry, action library as data, skeleton app | Step 1 + the "22 units visible" half of Step 2 | approved (second cancer still to be chosen) |
+| 2. Data spine (F0): 18 public indicators for 22 units, catalog of all 27 incl. gaps, 9 of 11 anchors reconciled (2 shown as not checked), 10/10 spot-check | Step 2 | approved |
+| 3. Visibility score (F1) + gap locator (F2) + twin core + tipping point (synthetic only: no regional stage data) | Step 3 | approved |
+| 4. Twins final (F3: + distance to university hospital, stability, better twins) + glidepath (F4); early warning shown infeasible | Step 3 | approved |
+| 5. Interface (F8): map layers with low-visibility hatching, clickable map, funnel with confidence badges and grey-stage reasons, sources drawer | Step 4 | in progress on branch `step-5-interface` (not yet approved) |
+| 6. Action engine (F5) + Action Card | Step 5 | |
+| 7. AI analyst + number validator (F7) | Step 6 | |
+| 8. Hardening: offline cold start, trust panel, rehearsal | Steps 6-7 | |
+
+## Run
+
+```bash
+python3 -m pytest --cov            # full run; writes evidence/test_report.xml + fingerprint for the app badge
+bash scripts/run_app.sh            # offline-safe launcher: localhost only, no telemetry, local map assets
+```
+
+Rebuild the data (online once, offline after):
+
+```bash
+python3 scripts/fetch_geography.py        # Statistics Finland boundaries -> data/raw/geo/
+python3 scripts/build_units.py            # -> data/reference/units.csv, units.geojson
+python3 scripts/fetch_sources.py          # config/downloads.yaml -> data/raw/<family>/ + manifest.json
+python3 scripts/build_observations.py     # parse + validate -> data/processed/observations.parquet
+python3 scripts/spot_check_sample.py      # seeded 10-cell sample for the F0 spot check
+```
+
+Two Cancer Registry app exports are session-bound and cannot be scripted; they are registered as
+snapshots with `scripts/register_snapshots.py` (config/snapshots.yaml records origin and capture).
+
+Change a threshold only deliberately: edit `config/thresholds.yaml`, then run
+`python3 scripts/freeze_thresholds.py`. It stamps `frozen_at` with the real time and rewrites the
+lock; the lock diff makes the change visible. Files marked `status: draft` are never locked.
+
+## Layout
+
+```
+config/            scope (second cancer pending), frozen thresholds (+ lock), rules, anchors, reference times
+data/raw/<family>/ every raw download + manifest.json (URL, time, sha256): the offline source of truth
+data/processed/    observations.parquet (long format, section 7.2 + geo_level, subgroup, locator, CI)
+data/reference/    sources.csv (registry), units.csv, units.geojson (22 units, Åland excluded)
+equal_path/        library: config, geography, sources, lint, trust, viz, spine, coverage, names,
+                   visibility (F1), gaps (F2), twins (F3), glidepath (F4), tipping, pathway (runs F1-F3)
+equal_path/loaders one parser per source family (screening, cr_app, cif_report, lung_report, sotkanet, statfin,
+                   distance: population-weighted km to the nearest university hospital)
+scripts/           fetch / build / freeze
+app/               Streamlit app; app/static/ serves the Plotly topojson locally (no CDN)
+tests/             pytest suite (unit, build reproducibility, app smoke test)
+evidence/          test reports, screenshots
+```
+
+## Ground rules enforced by tests
+
+- Exactly 22 units (codes 01-21 and 90); Åland (91) excluded explicitly.
+- Every unit, anchor, rule citation and Goal 3 indicator resolves to `sources.csv`.
+- Thresholds: Appendix B values verbatim, plus the section-8 method constants and two labelled team-set
+  parameters (early-warning baseline window, visibility stage weights); all match the frozen SHA-256 lock.
+- The test badge is "current" only for a full default run that wrote `evidence/test_report.xml`, with no
+  watched file changed since; partial runs, `-o addopts=""` runs and edits all show "stale".
+- Actions are product-neutral (no sponsor, brand or drug names); hypothesis-graded actions are "test" only.
+- No synthetic indicator values anywhere in the real view; gaps stay gaps (catalog status kept in sync with the store).
+- Every stored value comes from a saved raw file parsed by code, cites a source and a locator, and passes
+  validation (numerator <= denominator, shares 0-1, value inside its CI, no duplicate keys).
+- Published national figures are recomputed from county rows and never forced to pass.
+- F1 counts only real, current, unit-level data (injected or area-only values stay dark); timing is a separate row.
+- F2: a Leak must be significant (Wilson or published CI, Bonferroni within the stage), >= 3 pp worse than the
+  national value AND the twin median, and in a stage with visibility >= 0.5. Pure-noise false-Leak rate <= 5 %
+  per county and stage, tested on the real denominators, CI widths and twins.
+- F3: twins use six structural covariates only (no outcomes), density as log10 and hospital distance as
+  log10(1 + km), z-scored; ties broken by code. Stability under +/-5 % noise is reported per county (10 of 22
+  fall below the 0.6 gate and unit 01 sits exactly at 0.60; driven by income: disclosed, not hidden). "No twin data" is never shown as
+  "leader among peers".
+- F4: Theil-Sen trend with a seeded bootstrap 80 % interval. "On track" needs both the Theil-Sen line and
+  the bootstrap median to reach 80 % by 2035; on the test series no single outlier year of up to +/-10 pp
+  reverses a verdict (it can soften "off track" to "uncertain").
+  Projections are displayed capped at 100 %. Held-out-year calibration covers 25 / 44 series (57 %), so the
+  glidepath is labelled "indicative". Early warning is not built: infeasible under the frozen targets
+  (see evidence/step4/early_warning_feasibility.txt).

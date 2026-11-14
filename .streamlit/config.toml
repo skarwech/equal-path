@@ -1,0 +1,16 @@
+# Defaults for `streamlit run` from the project root. scripts/run_app.sh passes the
+# offline-critical flags explicitly, so they also hold when launched from elsewhere.
+[browser]
+gatherUsageStats = false     # no telemetry calls
+
+[server]
+headless = true
+address = "127.0.0.1"        # localhost only; also skips Streamlit's public-IP lookup
+enableStaticServing = true   # serves app/static/ (local Plotly topojson for offline maps)
+
+[theme]
+base = "light"
+primaryColor = "#2a78d6"
+backgroundColor = "#fcfcfb"
+secondaryBackgroundColor = "#f1f0ec"
+textColor = "#0b0b0b"

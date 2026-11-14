@@ -1,0 +1,37 @@
+>       assert (summary.total, summary.failed, summary.skipped, summary.passed) == (8, 2, 1, 5)
+E       AssertionError: assert TestSummary(total=0, failed=-1, skipped=0, passed=1, timestamp='') is None
+E        +  where TestSummary(total=0, failed=-1, skipped=0, passed=1, timestamp='') = read_test_summary(PosixPath('/private/var/folders/v3/1jqf6h_n6fs0jfd9s1g2wx2c0000gn/T/pytest-of-skarwech/pytest-14/test_malformed_counts_return_n1/bad_attr.xml'))
+FAILED tests/test_app_smoke.py::test_states_no_indicator_data_loaded
+FAILED tests/test_app_smoke.py::test_unit_table_counts_are_numeric
+FAILED tests/test_geography_build.py::test_duplicate_feature_codes_rejected
+FAILED tests/test_geography_build.py::test_english_name_inconsistent_with_lookup_rejected
+FAILED tests/test_lint.py::test_catches_planted_terms[Astra Zeneca funds the pilot]
+FAILED tests/test_lint.py::test_catches_planted_terms[Astra-Zeneca pilot]
+FAILED tests/test_lint.py::test_catches_planted_terms[AstraZenecan tuki]
+FAILED tests/test_lint.py::test_catches_planted_terms[AstraZenecalle raportoidaan]
+FAILED tests/test_lint.py::test_catches_planted_terms[Tagrissoa k\xe4ytet\xe4\xe4n]
+FAILED tests/test_lint.py::test_catches_planted_terms[Keytrudaa annetaan]
+FAILED tests/test_lint.py::test_catches_planted_terms[Imfinzin saatavuus]
+FAILED tests/test_lint.py::test_catches_planted_terms[Iressa]
+FAILED tests/test_lint.py::test_catches_planted_terms[Zoladex]
+FAILED tests/test_lint.py::test_catches_planted_terms[Faslodex]
+FAILED tests/test_lint.py::test_catches_planted_terms[Datroway]
+FAILED tests/test_lint.py::test_catches_planted_terms[osimertinibi]
+FAILED tests/test_lint.py::test_catches_planted_terms[osimertinibin k\xe4ytt\xf6]
+FAILED tests/test_lint.py::test_catches_planted_terms[pembrolitsumabi ensilinjassa]
+FAILED tests/test_lint.py::test_catches_planted_terms[nivolumabi]
+FAILED tests/test_lint.py::test_catches_planted_terms[sotorasib]
+FAILED tests/test_lint.py::test_catches_planted_terms[adagrasib]
+FAILED tests/test_lint.py::test_catches_planted_terms[capivasertib]
+FAILED tests/test_lint.py::test_catches_planted_terms[camizestrant]
+FAILED tests/test_lint.py::test_catches_planted_terms[abiraterone]
+FAILED tests/test_lint.py::test_catches_planted_terms[abirateroni]
+FAILED tests/test_lint.py::test_reports_every_hit_once
+FAILED tests/test_viz_and_trust.py::test_failures_in_any_suite_are_counted
+FAILED tests/test_viz_and_trust.py::test_malformed_counts_return_none[tests="x"]
+FAILED tests/test_viz_and_trust.py::test_malformed_counts_return_none[failures="-1"]
+FAILED tests/test_viz_and_trust.py::test_malformed_counts_return_none[tests=""]
+FAILED tests/test_viz_and_trust.py::test_report_older_than_watched_files_is_stale
+ERROR tests/test_config_loading.py
+ERROR tests/test_offline_launch.py::test_topojson_served_as_json_from_any_cwd
+ERROR tests/test_offline_launch.py::test_binds_localhost_only_and_no_network_lookups

@@ -1,0 +1,318 @@
+{
+ "twins": {
+  "01": [
+   "02",
+   "05",
+   "17"
+  ],
+  "02": [
+   "01",
+   "08",
+   "05"
+  ],
+  "03": [
+   "90",
+   "02",
+   "01"
+  ],
+  "04": [
+   "90",
+   "03",
+   "02"
+  ],
+  "05": [
+   "17",
+   "08",
+   "07"
+  ],
+  "06": [
+   "10",
+   "09",
+   "11"
+  ],
+  "07": [
+   "06",
+   "09",
+   "13"
+  ],
+  "08": [
+   "05",
+   "17",
+   "15"
+  ],
+  "09": [
+   "11",
+   "10",
+   "06"
+  ],
+  "10": [
+   "06",
+   "09",
+   "11"
+  ],
+  "11": [
+   "09",
+   "10",
+   "06"
+  ],
+  "12": [
+   "10",
+   "06",
+   "20"
+  ],
+  "13": [
+   "15",
+   "18",
+   "16"
+  ],
+  "14": [
+   "16",
+   "20",
+   "13"
+  ],
+  "15": [
+   "13",
+   "19",
+   "18"
+  ],
+  "16": [
+   "18",
+   "13",
+   "06"
+  ],
+  "17": [
+   "05",
+   "08",
+   "07"
+  ],
+  "18": [
+   "16",
+   "13",
+   "06"
+  ],
+  "19": [
+   "15",
+   "13",
+   "08"
+  ],
+  "20": [
+   "14",
+   "16",
+   "21"
+  ],
+  "21": [
+   "20",
+   "18",
+   "13"
+  ],
+  "90": [
+   "03",
+   "04",
+   "02"
+  ]
+ },
+ "good": {
+  "01": true,
+  "02": true,
+  "03": true,
+  "04": true,
+  "05": true,
+  "06": true,
+  "07": true,
+  "08": true,
+  "09": true,
+  "10": true,
+  "11": true,
+  "12": true,
+  "13": true,
+  "14": true,
+  "15": true,
+  "16": true,
+  "17": true,
+  "18": true,
+  "19": true,
+  "20": true,
+  "21": true,
+  "90": true
+ },
+ "stages": {
+  "01": {
+   "detection": "watch",
+   "referral": "ok",
+   "diagnosis": "unknown",
+   "treatment": "watch",
+   "timing": "unknown"
+  },
+  "02": {
+   "detection": "watch",
+   "referral": "ok",
+   "diagnosis": "unknown",
+   "treatment": "ok",
+   "timing": "unknown"
+  },
+  "03": {
+   "detection": "leak",
+   "referral": "ok",
+   "diagnosis": "unknown",
+   "treatment": "watch",
+   "timing": "unknown"
+  },
+  "04": {
+   "detection": "watch",
+   "referral": "watch",
+   "diagnosis": "unknown",
+   "treatment": "ok",
+   "timing": "unknown"
+  },
+  "05": {
+   "detection": "watch",
+   "referral": "watch",
+   "diagnosis": "unknown",
+   "treatment": "watch",
+   "timing": "unknown"
+  },
+  "06": {
+   "detection": "watch",
+   "referral": "ok",
+   "diagnosis": "unknown",
+   "treatment": "watch",
+   "timing": "unknown"
+  },
+  "07": {
+   "detection": "watch",
+   "referral": "watch",
+   "diagnosis": "unknown",
+   "treatment": "watch",
+   "timing": "unknown"
+  },
+  "08": {
+   "detection": "watch",
+   "referral": "ok",
+   "diagnosis": "unknown",
+   "treatment": "watch",
+   "timing": "unknown"
+  },
+  "09": {
+   "detection": "leak",
+   "referral": "ok",
+   "diagnosis": "unknown",
+   "treatment": "watch",
+   "timing": "unknown"
+  },
+  "10": {
+   "detection": "leak",
+   "referral": "watch",
+   "diagnosis": "unknown",
+   "treatment": "leak",
+   "timing": "unknown"
+  },
+  "11": {
+   "detection": "watch",
+   "referral": "watch",
+   "diagnosis": "unknown",
+   "treatment": "watch",
+   "timing": "unknown"
+  },
+  "12": {
+   "detection": "watch",
+   "referral": "watch",
+   "diagnosis": "unknown",
+   "treatment": "watch",
+   "timing": "unknown"
+  },
+  "13": {
+   "detection": "watch",
+   "referral": "watch",
+   "diagnosis": "unknown",
+   "treatment": "watch",
+   "timing": "unknown"
+  },
+  "14": {
+   "detection": "leak",
+   "referral": "watch",
+   "diagnosis": "unknown",
+   "treatment": "watch",
+   "timing": "unknown"
+  },
+  "15": {
+   "detection": "watch",
+   "referral": "watch",
+   "diagnosis": "unknown",
+   "treatment": "ok",
+   "timing": "unknown"
+  },
+  "16": {
+   "detection": "ok",
+   "referral": "watch",
+   "diagnosis": "unknown",
+   "treatment": "watch",
+   "timing": "unknown"
+  },
+  "17": {
+   "detection": "watch",
+   "referral": "ok",
+   "diagnosis": "unknown",
+   "treatment": "ok",
+   "timing": "unknown"
+  },
+  "18": {
+   "detection": "watch",
+   "referral": "ok",
+   "diagnosis": "unknown",
+   "treatment": "watch",
+   "timing": "unknown"
+  },
+  "19": {
+   "detection": "watch",
+   "referral": "watch",
+   "diagnosis": "unknown",
+   "treatment": "watch",
+   "timing": "unknown"
+  },
+  "20": {
+   "detection": "ok",
+   "referral": "ok",
+   "diagnosis": "unknown",
+   "treatment": "watch",
+   "timing": "unknown"
+  },
+  "21": {
+   "detection": "watch",
+   "referral": "ok",
+   "diagnosis": "unknown",
+   "treatment": "watch",
+   "timing": "unknown"
+  },
+  "90": {
+   "detection": "watch",
+   "referral": "watch",
+   "diagnosis": "unknown",
+   "treatment": "watch",
+   "timing": "unknown"
+  }
+ },
+ "primary": {
+  "01": "no verified leak",
+  "02": "no verified leak",
+  "03": "detection: screening_participation_breast (all) 3.7 pp worse",
+  "04": "no verified leak",
+  "05": "no verified leak",
+  "06": "no verified leak",
+  "07": "no verified leak",
+  "08": "no verified leak",
+  "09": "detection: screening_participation_cervical (all) 5.3 pp worse",
+  "10": "treatment: lung_curative_route_share (all) 5.2 pp worse",
+  "11": "no verified leak",
+  "12": "no verified leak",
+  "13": "no verified leak",
+  "14": "detection: screening_participation_cervical (all) 5.7 pp worse",
+  "15": "no verified leak",
+  "16": "no verified leak",
+  "17": "no verified leak",
+  "18": "no verified leak",
+  "19": "no verified leak",
+  "20": "no verified leak",
+  "21": "no verified leak",
+  "90": "no verified leak"
+ }
+}

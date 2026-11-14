@@ -1,0 +1,22 @@
+[
+  {
+    "file": "app_inc_2024_by_area.csv",
+    "source_id": "S_CR_APP_2024",
+    "url": "https://tilastot.syoparekisteri.fi/syovat/?_inputs_&value_theme=%22theme_inc%22&tabu=%22inc_latest1%22&in.subset.sex=%22-1L%22",
+    "method": "SNAPSHOT",
+    "capture": "Shiny app CSV export (#download_csv) in a live session on 2026-11-14; sites all/lung/breast/colorectal; areas national, 5 cooperation areas, 22 units",
+    "registered_at": "2026-11-14T08:32:17+00:00",
+    "bytes": 9581,
+    "sha256": "4bf7aa2c784f31bb6c9bb7899dfd241ac4680339792e23afb03f900a44f66778"
+  },
+  {
+    "file": "app_mort_2024_by_area.csv",
+    "source_id": "S_CR_APP_2024",
+    "url": "https://tilastot.syoparekisteri.fi/syovat/?_inputs_&value_theme=%22theme_mort%22&tabu=%22mort_latest1%22&in.subset.sex=%22-1L%22",
+    "method": "SNAPSHOT",
+    "capture": "Shiny app CSV export (#download_csv) in a live session on 2026-11-14; sites all/lung/breast/colorectal; areas national, 5 cooperation areas, 22 units",
+    "registered_at": "2026-11-14T08:32:17+00:00",
+    "bytes": 9431,
+    "sha256": "e8c6f71836ad605f061037638804734732230b30ece032f914ea5b0b156eaa8d"
+  }
+]

@@ -1,0 +1,47 @@
+Twin sets: before (5 covariates) -> after (+ distance to university hospital)
+  Itä-Uusimaa        Keski-Uusimaa, Varsinais-Suomi, Pohjanmaa        -> Keski-Uusimaa, Pirkanmaa, Varsinais-Suomi  CHANGED
+  Keski-Uusimaa      Itä-Uusimaa, Pirkanmaa, Varsinais-Suomi          -> Itä-Uusimaa, Pirkanmaa, Varsinais-Suomi
+  Länsi-Uusimaa      Helsinki, Keski-Uusimaa, Itä-Uusimaa             -> Helsinki, Keski-Uusimaa, Itä-Uusimaa
+  Vantaa-Kerava      Helsinki, Länsi-Uusimaa, Keski-Uusimaa           -> Länsi-Uusimaa, Helsinki, Keski-Uusimaa
+  Varsinais-Suomi    Pohjanmaa, Pirkanmaa, Kanta-Häme                 -> Pirkanmaa, Pohjois-Savo, Kanta-Häme  CHANGED
+  Satakunta          Kymenlaakso, Päijät-Häme, Etelä-Karjala          -> Päijät-Häme, Kymenlaakso, Kanta-Häme  CHANGED
+  Kanta-Häme         Satakunta, Päijät-Häme, Pohjois-Savo             -> Satakunta, Päijät-Häme, Pohjois-Savo
+  Pirkanmaa          Varsinais-Suomi, Pohjanmaa, Keski-Suomi          -> Varsinais-Suomi, Pohjois-Pohjanmaa, Pohjois-Savo  CHANGED
+  Päijät-Häme        Etelä-Karjala, Kymenlaakso, Satakunta            -> Satakunta, Kymenlaakso, Etelä-Karjala
+  Kymenlaakso        Satakunta, Päijät-Häme, Etelä-Karjala            -> Päijät-Häme, Satakunta, Etelä-Karjala
+  Etelä-Karjala      Päijät-Häme, Kymenlaakso, Satakunta              -> Kymenlaakso, Päijät-Häme, Satakunta
+  Etelä-Savo         Kymenlaakso, Satakunta, Kainuu                   -> Kymenlaakso, Satakunta, Kainuu
+  Pohjois-Savo       Keski-Suomi, Keski-Pohjanmaa, Etelä-Pohjanmaa    -> Kanta-Häme, Keski-Suomi, Pohjois-Pohjanmaa  CHANGED
+  Pohjois-Karjala    Etelä-Pohjanmaa, Kainuu, Pohjois-Savo            -> Etelä-Pohjanmaa, Kainuu, Keski-Pohjanmaa  CHANGED
+  Keski-Suomi        Pohjois-Savo, Pohjois-Pohjanmaa, Keski-Pohjanmaa -> Keski-Pohjanmaa, Etelä-Pohjanmaa, Pohjois-Karjala  CHANGED
+  Etelä-Pohjanmaa    Keski-Pohjanmaa, Pohjois-Savo, Satakunta         -> Keski-Pohjanmaa, Pohjois-Karjala, Satakunta  CHANGED
+  Pohjanmaa          Varsinais-Suomi, Pirkanmaa, Kanta-Häme           -> Keski-Suomi, Etelä-Karjala, Keski-Pohjanmaa  CHANGED
+  Keski-Pohjanmaa    Etelä-Pohjanmaa, Pohjois-Savo, Satakunta         -> Etelä-Pohjanmaa, Pohjois-Karjala, Keski-Suomi  CHANGED
+  Pohjois-Pohjanmaa  Keski-Suomi, Pohjois-Savo, Pirkanmaa             -> Keski-Suomi, Pohjois-Savo, Pirkanmaa
+  Kainuu             Pohjois-Karjala, Etelä-Pohjanmaa, Lappi          -> Pohjois-Karjala, Etelä-Pohjanmaa, Keski-Pohjanmaa  CHANGED
+  Lappi              Kainuu, Keski-Pohjanmaa, Pohjois-Savo            -> Kainuu, Keski-Pohjanmaa, Etelä-Pohjanmaa  CHANGED
+  Helsinki           Länsi-Uusimaa, Vantaa-Kerava, Keski-Uusimaa      -> Länsi-Uusimaa, Vantaa-Kerava, Keski-Uusimaa
+12 of 22 twin sets changed; good twin: 22 of 22
+
+Stage states that changed:
+  Itä-Uusimaa        referral   ok -> watch
+  Varsinais-Suomi    treatment  watch -> ok
+  Pirkanmaa          treatment  watch -> ok
+  Keski-Suomi        treatment  ok -> watch
+  Pohjanmaa          treatment  ok -> watch
+5 stage states changed
+
+Primary findings that changed:
+
+Twin stability (mean Jaccard, +/-5 % noise, 200 draws, seed 20261114); gate >= 0.6:
+  Keski-Suomi 0.40, Etelä-Savo 0.49, Etelä-Karjala 0.51, Pohjois-Karjala 0.51, Kainuu 0.52, Pohjanmaa 0.54, Pohjois-Savo 0.54, Etelä-Pohjanmaa 0.55, Keski-Pohjanmaa 0.58, Päijät-Häme 0.59, Itä-Uusimaa 0.60, Pirkanmaa 0.61, Kanta-Häme 0.63, Satakunta 0.65, Varsinais-Suomi 0.69, Kymenlaakso 0.71, Lappi 0.73, Vantaa-Kerava 0.76, Pohjois-Pohjanmaa 0.76, Länsi-Uusimaa 0.82, Keski-Uusimaa 0.84, Helsinki 0.92
+  below 0.6: 10 of 22 -> Päijät-Häme, Etelä-Karjala, Etelä-Savo, Pohjois-Savo, Pohjois-Karjala, Keski-Suomi, Etelä-Pohjanmaa, Pohjanmaa, Keski-Pohjanmaa, Kainuu
+
+Diagnostic only (no rule changed): +/-5 % noise on ONE covariate at a time, 200 draws
+covariate                          mean Jaccard  counties < 0.6   (5 % of value / between-county SD)
+cov_share_aged_75_plus             0.82           1               0.28
+cov_education                      0.87           0               0.34
+cov_income                         0.70           4               0.79
+cov_population_density             0.98           0               0.02
+cov_foreign_language_share         0.97           0               0.08
+cov_distance_university_hospital_km 0.97           0               0.08

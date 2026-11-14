@@ -1,0 +1,47 @@
+[
+  {
+    "file": "hus_helsinki_Q246315.json",
+    "source_id": "S_WIKIDATA_UNIV_HOSPITALS",
+    "url": "https://www.wikidata.org/wiki/Special:EntityData/Q246315.json",
+    "method": "GET",
+    "retrieved_at": "2026-11-14T12:27:42+00:00",
+    "bytes": 30194,
+    "sha256": "014558f26e17f6c0bd68928531b24fe06a620c19d78f7d5b1390ed56b57ee92a"
+  },
+  {
+    "file": "tyks_turku_Q3736764.json",
+    "source_id": "S_WIKIDATA_UNIV_HOSPITALS",
+    "url": "https://www.wikidata.org/wiki/Special:EntityData/Q3736764.json",
+    "method": "GET",
+    "retrieved_at": "2026-11-14T12:27:42+00:00",
+    "bytes": 35227,
+    "sha256": "eae2c955c78be7fd54663d1de371fcd2de82f67e53aa3f46bf292a50f5ff12fa"
+  },
+  {
+    "file": "tays_tampere_Q11896324.json",
+    "source_id": "S_WIKIDATA_UNIV_HOSPITALS",
+    "url": "https://www.wikidata.org/wiki/Special:EntityData/Q11896324.json",
+    "method": "GET",
+    "retrieved_at": "2026-11-14T12:27:42+00:00",
+    "bytes": 25251,
+    "sha256": "d261f6c36f8412e22e59034635dc8c0065d89ade4512b8299b7faaf6fa1a7f84"
+  },
+  {
+    "file": "kys_kuopio_Q11873596.json",
+    "source_id": "S_WIKIDATA_UNIV_HOSPITALS",
+    "url": "https://www.wikidata.org/wiki/Special:EntityData/Q11873596.json",
+    "method": "GET",
+    "retrieved_at": "2026-11-14T12:27:42+00:00",
+    "bytes": 18511,
+    "sha256": "0fc8ee9094bc1b4839372d17dfd816bac69c4a7cee78e2e29a05d08ae5fcd335"
+  },
+  {
+    "file": "oys_oulu_Q3737020.json",
+    "source_id": "S_WIKIDATA_UNIV_HOSPITALS",
+    "url": "https://www.wikidata.org/wiki/Special:EntityData/Q3737020.json",
+    "method": "GET",
+    "retrieved_at": "2026-11-14T12:27:42+00:00",
+    "bytes": 33723,
+    "sha256": "237972bbdce785e1e4564127032001cb3ebbd62565ebcb96a1783686b54f3086"
+  }
+]

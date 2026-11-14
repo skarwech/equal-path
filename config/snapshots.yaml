@@ -1,0 +1,14 @@
+# Original files that cannot be re-downloaded by a script (session-bound exports).
+# Registered with scripts/register_snapshots.py <folder>; values are still parsed by code.
+- family: cr_app
+  file: app_inc_2024_by_area.csv
+  original_name: app_inc_latest1_2024_by_area.csv
+  source_id: S_CR_APP_2024
+  url: "https://tilastot.syoparekisteri.fi/syovat/?_inputs_&value_theme=%22theme_inc%22&tabu=%22inc_latest1%22&in.subset.sex=%22-1L%22"
+  capture: "Shiny app CSV export (#download_csv) in a live session on 2026-11-14; sites all/lung/breast/colorectal; areas national, 5 cooperation areas, 22 units"
+- family: cr_app
+  file: app_mort_2024_by_area.csv
+  original_name: app_mort_latest1_2024_by_area.csv
+  source_id: S_CR_APP_2024
+  url: "https://tilastot.syoparekisteri.fi/syovat/?_inputs_&value_theme=%22theme_mort%22&tabu=%22mort_latest1%22&in.subset.sex=%22-1L%22"
+  capture: "Shiny app CSV export (#download_csv) in a live session on 2026-11-14; sites all/lung/breast/colorectal; areas national, 5 cooperation areas, 22 units"

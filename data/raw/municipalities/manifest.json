@@ -1,0 +1,20 @@
+[
+  {
+    "file": "kunta_boundaries_4500k_2026.geojson",
+    "source_id": "S_STATFI_KUNTA_BOUNDARIES_2026",
+    "url": "https://geo.stat.fi/geoserver/tilastointialueet/wfs?service=WFS&version=2.0.0&request=GetFeature&typeName=tilastointialueet:kunta4500k_2026&outputFormat=application/json&srsName=EPSG:4326",
+    "method": "GET",
+    "retrieved_at": "2026-11-14T12:27:43+00:00",
+    "bytes": 277221,
+    "sha256": "6e2310c4f6de3eafffb363543487170651577ff66922f0ff6bc54175e9db13d2"
+  },
+  {
+    "file": "11ra_municipality_population_2025.json",
+    "source_id": "S_STATFIN",
+    "url": "https://pxdata.stat.fi/PxWeb/api/v1/fi/StatFin/vaerak/11ra.px",
+    "method": "POST",
+    "retrieved_at": "2026-11-14T12:27:43+00:00",
+    "bytes": 14269,
+    "sha256": "7d8e1f97b40fed26e4b832d6d93a2c54aef21d1e81d75cc68afff00f64b095b7"
+  }
+]

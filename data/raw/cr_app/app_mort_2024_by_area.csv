@@ -1,0 +1,113 @@
+Alue;Syöpätauti;ICD-10;Syöpäkuolemia;Kuolleisuus per 100 000;Kuolleisuus per 100 000, ikävakioitu (Suomi 2014);Kuolleisuus per 100 000, ikävakioitu (maailman vakioväestö)
+Koko maa;Kaikki syövät yhdessä;C00-96,D09.0-1,D32-33,D41-43,D45-47,D76;13490;240,04;203,53;75,33
+Koko maa;Keuhkot, henkitorvi;C33-34;2275;40,48;34,26;13,03
+Koko maa;Rinta;C50;901;16,03;14,01;5,68
+Koko maa;Paksu- ja peräsuoli;C18-20;1414;25,16;21,21;7,56
+Etelä-Suomen yhteistyöalue;Kaikki syövät yhdessä;C00-96,D09.0-1,D32-33,D41-43,D45-47,D76;4893;216,63;204,5;75,4
+Etelä-Suomen yhteistyöalue;Keuhkot, henkitorvi;C33-34;876;38,78;36,62;13,95
+Etelä-Suomen yhteistyöalue;Rinta;C50;356;15,76;15,1;5,9
+Etelä-Suomen yhteistyöalue;Paksu- ja peräsuoli;C18-20;495;21,92;20,58;7,34
+Itä-Uudenmaan hyvinvointialue;Kaikki syövät yhdessä;C00-96,D09.0-1,D32-33,D41-43,D45-47,D76;239;240,92;201,08;72,58
+Itä-Uudenmaan hyvinvointialue;Keuhkot, henkitorvi;C33-34;62;62,5;50,59;18,35
+Itä-Uudenmaan hyvinvointialue;Rinta;C50;15;15,12;13,01;5,5
+Itä-Uudenmaan hyvinvointialue;Paksu- ja peräsuoli;C18-20;22;22,18;18,85;7,19
+Keski-Uudenmaan hyvinvointialue;Kaikki syövät yhdessä;C00-96,D09.0-1,D32-33,D41-43,D45-47,D76;467;226,42;216,93;83,46
+Keski-Uudenmaan hyvinvointialue;Keuhkot, henkitorvi;C33-34;84;40,73;38,22;14,22
+Keski-Uudenmaan hyvinvointialue;Rinta;C50;34;16,48;16,08;6,74
+Keski-Uudenmaan hyvinvointialue;Paksu- ja peräsuoli;C18-20;40;19,39;17,95;6,82
+Länsi-Uudenmaan hyvinvointialue;Kaikki syövät yhdessä;C00-96,D09.0-1,D32-33,D41-43,D45-47,D76;965;193,58;200,54;71,18
+Länsi-Uudenmaan hyvinvointialue;Keuhkot, henkitorvi;C33-34;164;32,9;33,87;12,26
+Länsi-Uudenmaan hyvinvointialue;Rinta;C50;59;11,84;12,35;4,92
+Länsi-Uudenmaan hyvinvointialue;Paksu- ja peräsuoli;C18-20;102;20,46;21,56;7,19
+Vantaan ja Keravan hyvinvointialue;Kaikki syövät yhdessä;C00-96,D09.0-1,D32-33,D41-43,D45-47,D76;502;174,49;204,94;77,23
+Vantaan ja Keravan hyvinvointialue;Keuhkot, henkitorvi;C33-34;74;25,72;30,43;12,86
+Vantaan ja Keravan hyvinvointialue;Rinta;C50;38;13,21;15,5;6,15
+Vantaan ja Keravan hyvinvointialue;Paksu- ja peräsuoli;C18-20;54;18,77;21,27;8,45
+Päijät-Hämeen hyvinvointialue;Kaikki syövät yhdessä;C00-96,D09.0-1,D32-33,D41-43,D45-47,D76;592;289,41;207,44;80,35
+Päijät-Hämeen hyvinvointialue;Keuhkot, henkitorvi;C33-34;101;49,37;35,59;14,39
+Päijät-Hämeen hyvinvointialue;Rinta;C50;58;28,35;20,55;7,93
+Päijät-Hämeen hyvinvointialue;Paksu- ja peräsuoli;C18-20;72;35,2;24,32;8,77
+Kymenlaakson hyvinvointialue;Kaikki syövät yhdessä;C00-96,D09.0-1,D32-33,D41-43,D45-47,D76;549;347,36;232,08;89,08
+Kymenlaakson hyvinvointialue;Keuhkot, henkitorvi;C33-34;95;60,11;39,13;14,35
+Kymenlaakson hyvinvointialue;Rinta;C50;40;25,31;17,78;7,63
+Kymenlaakson hyvinvointialue;Paksu- ja peräsuoli;C18-20;51;32,27;20,7;6,55
+Etelä-Karjalan hyvinvointialue;Kaikki syövät yhdessä;C00-96,D09.0-1,D32-33,D41-43,D45-47,D76;368;294,11;204,21;77,64
+Etelä-Karjalan hyvinvointialue;Keuhkot, henkitorvi;C33-34;67;53,55;39,25;16,24
+Etelä-Karjalan hyvinvointialue;Rinta;C50;22;17,58;12,12;4,11
+Etelä-Karjalan hyvinvointialue;Paksu- ja peräsuoli;C18-20;31;24,78;17,18;6,07
+Helsingin kaupunki;Kaikki syövät yhdessä;C00-96,D09.0-1,D32-33,D41-43,D45-47,D76;1211;178,28;193,69;69,44
+Helsingin kaupunki;Keuhkot, henkitorvi;C33-34;229;33,71;36,74;13,88
+Helsingin kaupunki;Rinta;C50;90;13,25;14,31;5,17
+Helsingin kaupunki;Paksu- ja peräsuoli;C18-20;123;18,11;19,82;7,1
+Itä-Suomen yhteistyöalue;Kaikki syövät yhdessä;C00-96,D09.0-1,D32-33,D41-43,D45-47,D76;2084;256,01;189,21;70,59
+Itä-Suomen yhteistyöalue;Keuhkot, henkitorvi;C33-34;328;40,29;29,11;10,78
+Itä-Suomen yhteistyöalue;Rinta;C50;149;18,3;14,34;6,3
+Itä-Suomen yhteistyöalue;Paksu- ja peräsuoli;C18-20;208;25,55;18,74;6,63
+Etelä-Savon hyvinvointialue;Kaikki syövät yhdessä;C00-96,D09.0-1,D32-33,D41-43,D45-47,D76;418;322,42;199,08;73,74
+Etelä-Savon hyvinvointialue;Keuhkot, henkitorvi;C33-34;73;56,31;35,13;13,2
+Etelä-Savon hyvinvointialue;Rinta;C50;30;23,14;16,03;7,29
+Etelä-Savon hyvinvointialue;Paksu- ja peräsuoli;C18-20;43;33,17;22,03;9,31
+Pohjois-Savon hyvinvointialue;Kaikki syövät yhdessä;C00-96,D09.0-1,D32-33,D41-43,D45-47,D76;583;234,61;175,88;65,7
+Pohjois-Savon hyvinvointialue;Keuhkot, henkitorvi;C33-34;93;37,42;27,06;10,21
+Pohjois-Savon hyvinvointialue;Rinta;C50;33;13,28;10,5;4,08
+Pohjois-Savon hyvinvointialue;Paksu- ja peräsuoli;C18-20;53;21,33;15,85;5,24
+Pohjois-Karjalan hyvinvointialue;Kaikki syövät yhdessä;C00-96,D09.0-1,D32-33,D41-43,D45-47,D76;450;277,43;200,22;73,27
+Pohjois-Karjalan hyvinvointialue;Keuhkot, henkitorvi;C33-34;65;40,07;28,42;9,77
+Pohjois-Karjalan hyvinvointialue;Rinta;C50;31;19,11;14,28;5,77
+Pohjois-Karjalan hyvinvointialue;Paksu- ja peräsuoli;C18-20;53;32,67;22,39;7,04
+Keski-Suomen hyvinvointialue;Kaikki syövät yhdessä;C00-96,D09.0-1,D32-33,D41-43,D45-47,D76;633;231,28;187,68;70,57
+Keski-Suomen hyvinvointialue;Keuhkot, henkitorvi;C33-34;97;35,44;27,77;10,49
+Keski-Suomen hyvinvointialue;Rinta;C50;55;20,1;16,88;7,98
+Keski-Suomen hyvinvointialue;Paksu- ja peräsuoli;C18-20;59;21,56;17,3;6,14
+Sisä-Suomen yhteistyöalue;Kaikki syövät yhdessä;C00-96,D09.0-1,D32-33,D41-43,D45-47,D76;2302;255,18;209,51;77,71
+Sisä-Suomen yhteistyöalue;Keuhkot, henkitorvi;C33-34;337;37,36;30,85;11,75
+Sisä-Suomen yhteistyöalue;Rinta;C50;163;18,07;15,31;6,11
+Sisä-Suomen yhteistyöalue;Paksu- ja peräsuoli;C18-20;240;26,6;21,46;7,62
+Kanta-Hämeen hyvinvointialue;Kaikki syövät yhdessä;C00-96,D09.0-1,D32-33,D41-43,D45-47,D76;496;292,62;214,34;80,49
+Kanta-Hämeen hyvinvointialue;Keuhkot, henkitorvi;C33-34;86;50,74;37,35;14,46
+Kanta-Hämeen hyvinvointialue;Rinta;C50;29;17,11;12,4;4,09
+Kanta-Hämeen hyvinvointialue;Paksu- ja peräsuoli;C18-20;47;27,73;20,5;8,41
+Pirkanmaan hyvinvointialue;Kaikki syövät yhdessä;C00-96,D09.0-1,D32-33,D41-43,D45-47,D76;1290;237,85;210,31;77,2
+Pirkanmaan hyvinvointialue;Keuhkot, henkitorvi;C33-34;179;33;29,63;11,31
+Pirkanmaan hyvinvointialue;Rinta;C50;99;18,25;16,61;6,43
+Pirkanmaan hyvinvointialue;Paksu- ja peräsuoli;C18-20;130;23,97;20,77;7,29
+Etelä-Pohjanmaan hyvinvointialue;Kaikki syövät yhdessä;C00-96,D09.0-1,D32-33,D41-43,D45-47,D76;516;271,24;203,73;76,42
+Etelä-Pohjanmaan hyvinvointialue;Keuhkot, henkitorvi;C33-34;72;37,85;27,86;10,27
+Etelä-Pohjanmaan hyvinvointialue;Rinta;C50;35;18,4;15,42;7,55
+Etelä-Pohjanmaan hyvinvointialue;Paksu- ja peräsuoli;C18-20;63;33,12;23,94;7,58
+Länsi-Suomen yhteistyöalue;Kaikki syövät yhdessä;C00-96,D09.0-1,D32-33,D41-43,D45-47,D76;2354;266,75;208,6;76,61
+Länsi-Suomen yhteistyöalue;Keuhkot, henkitorvi;C33-34;394;44,65;35,18;13,47
+Länsi-Suomen yhteistyöalue;Rinta;C50;125;14,16;11,88;5,04
+Länsi-Suomen yhteistyöalue;Paksu- ja peräsuoli;C18-20;286;32,41;25,33;9,1
+Varsinais-Suomen hyvinvointialue;Kaikki syövät yhdessä;C00-96,D09.0-1,D32-33,D41-43,D45-47,D76;1281;259,94;210,87;77,4
+Varsinais-Suomen hyvinvointialue;Keuhkot, henkitorvi;C33-34;202;40,99;33,13;13,21
+Varsinais-Suomen hyvinvointialue;Rinta;C50;78;15,83;14,06;6,12
+Varsinais-Suomen hyvinvointialue;Paksu- ja peräsuoli;C18-20;154;31,25;25,21;8,6
+Satakunnan hyvinvointialue;Kaikki syövät yhdessä;C00-96,D09.0-1,D32-33,D41-43,D45-47,D76;651;307,8;215,06;80,96
+Satakunnan hyvinvointialue;Keuhkot, henkitorvi;C33-34;119;56,26;40,23;15,53
+Satakunnan hyvinvointialue;Rinta;C50;30;14,18;10,22;4,22
+Satakunnan hyvinvointialue;Paksu- ja peräsuoli;C18-20;79;37,35;25,87;9,53
+Pohjanmaan hyvinvointialue;Kaikki syövät yhdessä;C00-96,D09.0-1,D32-33,D41-43,D45-47,D76;422;236,85;192,04;67,68
+Pohjanmaan hyvinvointialue;Keuhkot, henkitorvi;C33-34;73;40,97;33,43;11,2
+Pohjanmaan hyvinvointialue;Rinta;C50;17;9,54;7,85;3,08
+Pohjanmaan hyvinvointialue;Paksu- ja peräsuoli;C18-20;53;29,75;24,93;9,85
+Pohjois-Suomen yhteistyöalue;Kaikki syövät yhdessä;C00-96,D09.0-1,D32-33,D41-43,D45-47,D76;1754;239,6;202,79;76,24
+Pohjois-Suomen yhteistyöalue;Keuhkot, henkitorvi;C33-34;322;43,99;36,73;14,11
+Pohjois-Suomen yhteistyöalue;Rinta;C50;99;13,52;11,68;4,67
+Pohjois-Suomen yhteistyöalue;Paksu- ja peräsuoli;C18-20;175;23,91;20,39;7,38
+Keski-Pohjanmaan hyvinvointialue;Kaikki syövät yhdessä;C00-96,D09.0-1,D32-33,D41-43,D45-47,D76;159;234,76;194,27;74,61
+Keski-Pohjanmaan hyvinvointialue;Keuhkot, henkitorvi;C33-34;23;33,96;28,93;11,35
+Keski-Pohjanmaan hyvinvointialue;Rinta;C50;8;11,81;9,88;4,57
+Keski-Pohjanmaan hyvinvointialue;Paksu- ja peräsuoli;C18-20;21;31,01;24,94;9,14
+Pohjois-Pohjanmaan hyvinvointialue;Kaikki syövät yhdessä;C00-96,D09.0-1,D32-33,D41-43,D45-47,D76;887;212,06;200,08;75,88
+Pohjois-Pohjanmaan hyvinvointialue;Keuhkot, henkitorvi;C33-34;162;38,73;36,91;14,88
+Pohjois-Pohjanmaan hyvinvointialue;Rinta;C50;45;10,76;10,23;3,48
+Pohjois-Pohjanmaan hyvinvointialue;Paksu- ja peräsuoli;C18-20;93;22,23;21,06;7,73
+Kainuun hyvinvointialue;Kaikki syövät yhdessä;C00-96,D09.0-1,D32-33,D41-43,D45-47,D76;198;283,26;185,05;62,09
+Kainuun hyvinvointialue;Keuhkot, henkitorvi;C33-34;39;55,79;34,46;11,52
+Kainuun hyvinvointialue;Rinta;C50;9;12,88;9,01;4,01
+Kainuun hyvinvointialue;Paksu- ja peräsuoli;C18-20;19;27,18;18,17;6,74
+Lapin hyvinvointialue;Kaikki syövät yhdessä;C00-96,D09.0-1,D32-33,D41-43,D45-47,D76;510;289,53;218,34;83,5
+Lapin hyvinvointialue;Keuhkot, henkitorvi;C33-34;98;55,63;39,64;14,43
+Lapin hyvinvointialue;Rinta;C50;37;21;16,37;7,49
+Lapin hyvinvointialue;Paksu- ja peräsuoli;C18-20;42;23,84;18,31;6,21

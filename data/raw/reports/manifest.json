@@ -1,0 +1,20 @@
+[
+  {
+    "file": "cancer_in_finland_2024.html",
+    "source_id": "S_CIF2024_REPORT",
+    "url": "https://cancerregistry.fi/assets/themes/ssy3/factsheets/cancer_in_finland_2024.html",
+    "method": "GET",
+    "retrieved_at": "2026-11-14T08:31:44+00:00",
+    "bytes": 11011449,
+    "sha256": "4dbde4cf5e2f2fead662f2e3249aace03ce86451d475f3319c605f2479634ed2"
+  },
+  {
+    "file": "keuhkosyoparaportti_2019_2023.html",
+    "source_id": "S_LUNG_REPORT_2019_2023",
+    "url": "https://cancerregistry.fi/assets/themes/ssy3/factsheets/keuhkosyoparaportti.html",
+    "method": "GET",
+    "retrieved_at": "2026-11-14T08:31:44+00:00",
+    "bytes": 8254743,
+    "sha256": "c902835e3d0c508343c65fa318111bbcc38b595feafa4fab2d83b6dd1a123745"
+  }
+]

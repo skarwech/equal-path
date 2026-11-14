@@ -1,0 +1,23 @@
+E       AssertionError: ["Configuration or reference data failed validation: 'digest'"]
+FAILED tests/test_app_smoke.py::test_renders_fully_without_exception_or_error
+FAILED tests/test_app_smoke.py::test_failing_report_shows_red_failing_caption
+FAILED tests/test_app_smoke.py::test_missing_report_shows_not_run
+FAILED tests/test_app_smoke.py::test_highlight_filters_table_to_area
+FAILED tests/test_geography.py::test_unit_master_contract
+FAILED tests/test_geography_build.py::test_manifest_records_volatile_free_content_hash_for_boundaries
+FAILED tests/test_rules.py::test_non_data_capture_rules_guard_their_own_stage
+FAILED tests/test_rules.py::test_geriatric_trigger_is_population_share
+FAILED tests/test_sources_and_scope.py::test_registry_ids_and_statuses_pinned
+FAILED tests/test_sources_and_scope.py::test_retrieved_sources_use_the_exact_fetch_urls
+FAILED tests/test_sources_and_scope.py::test_goal3_and_related_targets_pinned
+FAILED tests/test_sources_and_scope.py::test_anchors_pinned
+FAILED tests/test_sources_and_scope.py::test_anchor_needs_value_or_bound
+FAILED tests/test_thresholds.py::test_value_matches_appendix_b[early_warning_baseline_months-12]
+FAILED tests/test_thresholds.py::test_visibility_stage_weights_fixed_and_sum_to_one
+FAILED tests/test_thresholds.py::test_stage_weights_must_sum_to_one
+FAILED tests/test_thresholds.py::test_every_field_is_pinned
+FAILED tests/test_viz_and_trust.py::test_input_fingerprint_detects_edit_add_delete
+FAILED tests/test_viz_and_trust.py::test_input_fingerprint_ignores_bytecode
+FAILED tests/test_viz_and_trust.py::test_input_stamp_changes_with_files
+ERROR tests/test_lint.py
+20 failed, 172 passed, 1 error in 2.15s

@@ -1,0 +1,43 @@
+[
+  {
+    "file": "hva_classification_2026.json",
+    "source_id": "S_STATFI_HVA_CLASS_2026",
+    "url": "https://data.stat.fi/api/classifications/v2/classifications/hyvinvointialue_1_20260101/classificationItems?content=data&meta=max&lang=fi&format=json",
+    "retrieved_at": "2026-11-13T20:14:15+00:00",
+    "bytes": 18462,
+    "sha256": "63a8be770ad64908466a0a3c6a426d8b215d5521015cfef5b2ba120da04fdf42"
+  },
+  {
+    "file": "yta_classification_2026.json",
+    "source_id": "S_STATFI_YTA_CORR_2026",
+    "url": "https://data.stat.fi/api/classifications/v2/classifications/yhteistyoalue_1_20260101/classificationItems?content=data&meta=max&lang=fi&format=json",
+    "retrieved_at": "2026-11-13T20:14:15+00:00",
+    "bytes": 4853,
+    "sha256": "08d8306234c4a2883cb73767b843fa81918f2aff414415e5a40070b3d8bc22c4"
+  },
+  {
+    "file": "kunta_hva_2026.json",
+    "source_id": "S_STATFI_HVA_CLASS_2026",
+    "url": "https://data.stat.fi/api/classifications/v2/correspondenceTables/kunta_1_20260101%23hyvinvointialue_1_20260101/maps?content=data&meta=max&lang=fi&format=json",
+    "retrieved_at": "2026-11-13T20:14:16+00:00",
+    "bytes": 547485,
+    "sha256": "cb79bfd9f8e0453c0a9d360ebc4a8010d608baae4740a6fa0dbadf4acb512669"
+  },
+  {
+    "file": "kunta_yta_2026.json",
+    "source_id": "S_STATFI_YTA_CORR_2026",
+    "url": "https://data.stat.fi/api/classifications/v2/correspondenceTables/kunta_1_20260101%23yhteistyoalue_1_20260101/maps?content=data&meta=max&lang=fi&format=json",
+    "retrieved_at": "2026-11-13T20:14:17+00:00",
+    "bytes": 556690,
+    "sha256": "740ececf931b2092b3183da66bcee1eedfa2b581768d43208c621b90945e1abe"
+  },
+  {
+    "file": "hva_boundaries_4500k_2026.geojson",
+    "source_id": "S_STATFI_HVA_BOUNDARIES_2026",
+    "url": "https://geo.stat.fi/geoserver/tilastointialueet/wfs?service=WFS&version=2.0.0&request=GetFeature&typeName=tilastointialueet:hyvinvointialue4500k_2026&outputFormat=application/json&srsName=EPSG:4326",
+    "retrieved_at": "2026-11-13T20:14:17+00:00",
+    "bytes": 103235,
+    "sha256": "0b4769e02356e8291ccf4d7fcaebbb986859e5414e5617688cc94f2dbc8f9234",
+    "content_sha256": "57174ea54391432a548679c349a12cd2b3253d6c9598db03e8b5470b6e5d6ddb"
+  }
+]

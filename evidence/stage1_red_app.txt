@@ -1,0 +1,6 @@
+    from equal_path.trust import TestSummary, read_test_summary
+E   ModuleNotFoundError: No module named 'equal_path.trust'
+=========================== short test summary info ============================
+ERROR tests/test_viz_and_trust.py
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 0.73s

@@ -1,0 +1,178 @@
+# Action library (Equal Path rev 2, section 6). Rule-based and transparent.
+# Triggers are prose here; machine-evaluable conditions are added in Step 5 (F5).
+# F5: every rule except the data-capture rules (R-DAT-01, R-DET-02) is guarded on its
+# own stage's visibility. Note: R-AUD-01 (timing) therefore stays dormant until a real
+# THL access series exists (F1) - an open spec question for the team.
+# owner_level: national = a ministry leads (STM); joint = a national body (Cancer Registry,
+# FICAN, Cancer Society) shares ownership with counties; county = the county acts alone or
+# with local partners (NGOs, university hospital). Never ask a county to do the ministry's job.
+# mode: implement | test (hypothesis-graded actions are only ever "test")
+
+- id: R-DET-01
+  stage: detection
+  trigger: "Screening participation below 80% with the largest gap by mother tongue or education (gap >= subgroup_gap_trigger_pp)"
+  action: "Community-based multilingual screening outreach with local NGOs"
+  owner: "Wellbeing county; Cancer Registry; NGOs"
+  owner_level: joint
+  kpi: "Participation parity by mother tongue"
+  cost_ref: "400,000 EUR national budget (roadmap 1.3.1)"
+  evidence_grade: strategy-endorsed
+  mode: implement
+  data_capture: false
+  sources: [{id: S_ROADMAP, locator: "1.3.1"}, {id: S_SCREENING2024_PRESS, locator: "points to the annual screening reports (breakdown by mother tongue)"}]
+  do_not_fire_if: ["visibility_detection < min_stage_visibility"]
+
+- id: R-DET-02
+  stage: detection
+  trigger: "Screening statistics arrive late or only annually"
+  action: "Monthly reporting of screening data to the registers, a near-real-time county situation picture and an annual screening quality day"
+  owner: "Cancer Registry; wellbeing counties"
+  owner_level: joint
+  kpi: "Reporting delay"
+  cost_ref: "300,000 EUR (roadmap 2.4.5)"
+  evidence_grade: strategy-endorsed
+  mode: implement
+  data_capture: true
+  sources: [{id: S_ROADMAP, locator: "2.4.5"}]
+  do_not_fire_if: []
+
+- id: R-DAT-01
+  stage: diagnosis
+  trigger: "Stage-recording coverage below the 70% target"
+  action: "Structured cancer recording template and automated reporting, with part-time recording leads in each county (30% of cancers structured in 2 years, 60% in 5, 100% in 10; clinical notifications 90% automated by 2030)"
+  owner: "Wellbeing county; Cancer Registry"
+  owner_level: joint
+  kpi: "Stage-recording coverage"
+  cost_ref: "1.75 million EUR over 5 years nationally, 350,000 EUR a year (roadmap 4.1.1)"
+  evidence_grade: strategy-endorsed
+  mode: implement
+  data_capture: true
+  sources: [{id: S_ROADMAP, locator: "4.1.1"}, {id: S_STRATEGY, locator: "3.2 and 4.1"}]
+  do_not_fire_if: []
+  note: "Strategy-endorsed; precondition for any equity claim (fires first when stage coverage is low)"
+
+- id: R-REF-01
+  stage: referral
+  trigger: "Stage I-II share below twin median, or a slow symptom route"
+  action: "Standardised referral criteria and symptom-based pathways with direct investigation routes, built on the Nordic models (Danish Kræftpakkeforløb, Swedish SVF, Norwegian Pakkeforløp); at least the five most common cancers 2026-2028 with county pilots, all major cancers 2029-2031"
+  owner: "FICAN with wellbeing counties"
+  owner_level: joint
+  kpi: "Stage I-II share; referral criteria in all national care chains"
+  cost_ref: "Part of the 25 million EUR / 5-year national guideline mechanism (roadmap 3.1.1)"
+  evidence_grade: strategy-endorsed
+  mode: implement
+  data_capture: false
+  sources: [{id: S_ROADMAP, locator: "2.5.2"}, {id: S_ROADMAP, locator: "3.1.1"}]
+  do_not_fire_if: ["visibility_referral < min_stage_visibility", "visibility_diagnosis < min_stage_visibility"]
+
+- id: R-REF-02
+  stage: referral
+  trigger: "Primary-care access deteriorating"
+  action: "Strengthen the own-doctor / own-nurse continuity model and track continuity effects on diagnostic delay"
+  owner: "STM (national lead); wellbeing counties"
+  owner_level: national
+  kpi: "Primary-care access and continuity"
+  cost_ref: "Part of the national own-doctor programme (roadmap 2.5.1)"
+  evidence_grade: strategy-endorsed
+  mode: implement
+  data_capture: false
+  sources: [{id: S_ROADMAP, locator: "2.5.1"}]
+  do_not_fire_if: ["visibility_referral < min_stage_visibility"]
+
+- id: R-REF-03
+  stage: referral
+  trigger: "Named care coordinator not in use"
+  action: "Named coordinator model for cancer care"
+  owner: "Wellbeing county; FICAN"
+  owner_level: joint
+  kpi: "Coordinator model in use"
+  cost_ref: "100,000 EUR for the national guideline (roadmap 1.2.3)"
+  evidence_grade: strategy-endorsed
+  mode: implement
+  data_capture: false
+  sources: [{id: S_ROADMAP, locator: "1.2.3"}]
+  do_not_fire_if: ["visibility_referral < min_stage_visibility"]
+
+- id: R-SYM-01
+  stage: diagnosis
+  trigger: "Late-stage pattern with low symptom awareness"
+  action: "Symptom-awareness communication in groups with known delays, modelled on the UK Be Clear on Cancer campaigns"
+  owner: "FICAN; Cancer Society; wellbeing counties"
+  owner_level: joint
+  kpi: "Stage I-II share"
+  cost_ref: "400,000 EUR national (roadmap 1.3.2)"
+  evidence_grade: strategy-endorsed
+  mode: implement
+  data_capture: false
+  sources: [{id: S_ROADMAP, locator: "1.3.2"}]
+  do_not_fire_if: ["visibility_diagnosis < min_stage_visibility"]
+
+- id: R-TRT-01
+  stage: treatment
+  trigger: "Long distance to treatment and low curative-intent share"
+  action: "Hub-and-spoke remote oncology with university-hospital tumour-board links"
+  owner: "Wellbeing county; university hospital"
+  owner_level: county
+  kpi: "Share receiving curative-intent care"
+  cost_ref: "Not itemised"
+  evidence_grade: study-supported
+  mode: implement
+  data_capture: false
+  sources: [{id: S_ROADMAP, locator: "regional-inequality section (Paakkola et al. 2024; Jääskeläinen et al. 2023)"}]
+  do_not_fire_if: ["visibility_treatment < min_stage_visibility"]
+
+- id: R-TRT-02
+  stage: treatment
+  trigger: "Lung treatment mix or curative-route share deviates from the national pattern"
+  action: "Annual national peer review and a response mechanism for deviations"
+  owner: "FICAN; Cancer Registry; wellbeing county"
+  owner_level: joint
+  kpi: "Treatment-mix convergence"
+  cost_ref: "300,000 EUR (3.2.2) and 3 million EUR (3.2.3) nationally"
+  evidence_grade: strategy-endorsed
+  mode: implement
+  data_capture: false
+  sources: [{id: S_ROADMAP, locator: "3.2.2 and 3.2.3"}, {id: S_LUNG_2019_2023_VU, locator: "county comparison"}]
+  do_not_fire_if: ["visibility_treatment < min_stage_visibility"]
+
+- id: R-GER-01
+  stage: referral
+  trigger: "High share aged 75+ (population)"
+  action: "G8 frailty screening and geriatric-oncology assessment at referral"
+  owner: "Wellbeing county"
+  owner_level: county
+  kpi: "G8 use in cancer units"
+  cost_ref: "About 0.75-1.0 million EUR per measure (roadmap 3.4.1-3.4.3)"
+  evidence_grade: strategy-endorsed
+  mode: implement
+  data_capture: false
+  sources: [{id: S_ROADMAP, locator: "3.4.1-3.4.3"}, {id: S_STRATEGY, locator: "3.4"}]
+  do_not_fire_if: ["visibility_referral < min_stage_visibility"]
+
+- id: R-DIG-01
+  stage: referral
+  trigger: "Low access and no digital pathway in use"
+  action: "Digital care pathways and AI-based tools, starting with limited pilots in some counties for prioritised cancers"
+  owner: "FICAN; wellbeing counties"
+  owner_level: joint
+  kpi: "Digital pathway use rate"
+  cost_ref: "1.14 million EUR (roadmap 3.5.3)"
+  evidence_grade: strategy-endorsed
+  mode: implement
+  data_capture: false
+  sources: [{id: S_ROADMAP, locator: "3.5.3"}]
+  do_not_fire_if: ["visibility_referral < min_stage_visibility"]
+
+- id: R-AUD-01
+  stage: timing
+  trigger: "Suspected public-private diagnostic delay"
+  action: "Timestamp audit of the pathway using the THL access dates extended back to the first primary-care contact; tests an unpublished lymphoma finding (Hilmo covers public providers and only part of private care)"
+  owner: "Wellbeing county"
+  owner_level: county
+  kpi: "Time from first contact to diagnosis"
+  cost_ref: "Not itemised"
+  evidence_grade: hypothesis
+  mode: test
+  data_capture: false
+  sources: [{id: S_THL_OHJAUS_21_2016, locator: "time-point definitions"}, {id: S_ROADMAP, locator: "regional-inequality section"}]
+  do_not_fire_if: ["visibility_timing < min_stage_visibility"]

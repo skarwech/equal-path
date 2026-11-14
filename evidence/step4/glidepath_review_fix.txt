@@ -1,0 +1,15 @@
+Glidepath states after review fix GP-1 ('on track' needs Theil-Sen line AND bootstrap median >= 80 %)
+programme   state            
+breast      off track             1
+            target met           18
+            uncertain             3
+cervical    off track             3
+            on track              9
+            target met            2
+            uncertain             8
+colorectal  insufficient data    22
+
+Changed row: unit 21 cervical latest 0.798, Theil-Sen 2035 0.754, bootstrap median 0.803, 80% interval 0.647-1.036 -> uncertain (was 'on track')
+
+Calibration: 25/44 = 57% -> indicative
+Rows whose projection or upper bound exceeds 100 % (now shown capped): 6

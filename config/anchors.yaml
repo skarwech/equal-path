@@ -1,0 +1,102 @@
+# Reconciliation anchors (Equal Path rev 2, section 8.1): national, cooperation-area and
+# unit-level figures verified during preparation. Counts must sum back to national totals;
+# shares are compared like for like at the stated level, within the frozen tolerances.
+# A point figure uses `value`; a published range or bound uses `low` / `high`.
+- id: new_cancers_2024
+  label: "New cancers in Finland"
+  value: 38853
+  unit: count
+  period: "2024"
+  level: national
+  source_id: S_SYOPA2024_PRESS
+  note: ""
+  reconcile: {indicator_id: cancer_incidence, period: "2024", method: sum}
+- id: cancer_deaths_2024
+  label: "Cancer deaths in Finland"
+  value: 13490
+  unit: count
+  period: "2024"
+  level: national
+  source_id: S_SYOPA2024_PRESS
+  note: ""
+  reconcile: {indicator_id: cancer_deaths, period: "2024", method: sum}
+- id: stage_coverage_national
+  label: "Cases with stage information"
+  value: 0.42
+  unit: share
+  period: "2024"
+  level: national
+  source_id: S_SYOPA2024_VU
+  note: "Registry goal is at least 70%"
+  reconcile: {indicator_id: stage_recording_coverage, period: "2024", method: direct, unit: share}
+- id: stage_coverage_pirkanmaa
+  label: "Cases with stage information, Pirkanmaa"
+  value: 0.72
+  unit: share
+  period: "2024"
+  level: unit
+  source_id: S_SYOPA2024_VU
+  note: "Pirkanmaa lies inside Sisä-Suomi; its value is stated in the report text (71.9 %); other counties only in an unlabelled figure"
+  reconcile: {indicator_id: stage_recording_coverage, period: "2024", method: direct, unit: share, geo_level: unit, county_id: "08"}
+- id: stage_coverage_sisa_suomi
+  label: "Cases with stage information, Sisä-Suomi"
+  value: 0.60
+  unit: share
+  period: "2024"
+  level: cooperation_area
+  source_id: S_SYOPA2024_VU
+  note: "Includes Pirkanmaa: Cancer in Finland 2024 lists Kanta-Häme, Pirkanmaa and South Ostrobothnia under Inland Finland (Sisä-Suomi); value stated in the report text (60.4 %)"
+  reconcile: {indicator_id: stage_recording_coverage, period: "2024", method: direct, unit: share, geo_level: cooperation_area, county_id: "YTA3"}
+- id: stage_coverage_other_areas
+  label: "Cases with stage information, other cooperation areas"
+  low: 0.33
+  high: 0.42
+  unit: share
+  period: "2024"
+  level: cooperation_area
+  source_id: S_SYOPA2024_VU
+  note: "Reported as a range across the remaining areas"
+- id: screening_cancers_found_2024
+  label: "Cancers found by screening programmes"
+  value: 2360
+  unit: count
+  period: "2024"
+  level: national
+  source_id: S_SCREENING2024_PRESS
+  note: ""
+  reconcile: {indicator_id: screening_cancers_detected, period: "2024", method: sum, subgroup: "*", expected_subgroups: ["prog:breast", "prog:cervical_age", "prog:cervical_risk", "prog:colorectal"]}
+- id: screening_precursors_found_2024
+  label: "Precursor lesions found by screening programmes"
+  value: 5272
+  unit: count
+  period: "2024"
+  level: national
+  source_id: S_SCREENING2024_PRESS
+  note: ""
+  reconcile: {indicator_id: screening_precursors_detected, period: "2024", method: sum, subgroup: "*", expected_subgroups: ["prog:cervical_age|lesion:hsil", "prog:cervical_age|lesion:ais", "prog:cervical_risk|lesion:hsil", "prog:cervical_risk|lesion:ais", "prog:colorectal|lesion:advanced_adenoma"]}
+- id: screening_participation_lowest
+  label: "Lowest county screening participation"
+  high: 0.68
+  unit: share
+  period: "2024"
+  level: unit
+  source_id: S_SCREENING2024_PRESS
+  note: "Reported as below 68%; goal is 80%"
+  reconcile: {indicator_id: "screening_participation_*", period: "2024", method: min}
+- id: lung_curative_route_share
+  label: "Lung cancer patients routed to curative treatment"
+  value: 0.27
+  unit: share
+  period: "2019-2023 pooled"
+  level: national
+  source_id: S_LUNG_2019_2023_VU
+  note: "News summary of the quality-register report; tables to verify"
+  reconcile: {indicator_id: lung_curative_route_share, period: "2019-2023", method: weighted_share, unit: share}
+- id: lung_stage_missing_share
+  label: "Lung cancer patients with stage missing"
+  high: 0.50
+  unit: share
+  period: "2019-2023 pooled"
+  level: national
+  source_id: S_LUNG_2019_2023_VU
+  note: "Reported as 'almost half' (news summary): an upper bound only; exact share from the report tables in Step 2"

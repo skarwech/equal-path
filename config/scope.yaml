@@ -1,0 +1,53 @@
+# Scope (Equal Path rev 2, section 9 step 1). Frozen except the second cancer,
+# which is pending a team decision (the Stage 1 gate stays open until it is set).
+anchor_cancer: lung
+# Decision pending with the team: breast or colorectal (both have THL
+# recommended maximum access times, which makes them the best timing cases).
+secondary_cancer: null
+secondary_cancer_candidates: [breast, colorectal]
+
+unit_count: 22            # 21 wellbeing services counties + City of Helsinki
+excluded_units: ["91"]    # Åland: separate health system
+pathway_stages: [detection, referral, diagnosis, treatment]
+cross_stage: timing       # THL Ohjaus 21/2016 access intervals
+data_rule: "Public, aggregate data only. No patient-level or personal data."
+
+goal3_indicators:
+  - id: treatment_within_target_times
+    label: "Patients reach treatment within target times"
+    target: "THL Ohjaus 21/2016 monitoring; cancer-specific times defined 2026-2028 (roadmap 3.1.2)"
+    source_id: S_STRATEGY
+    locator: "Goal 3, Figure 1, p. 5"
+  - id: five_year_survival_nordic_level
+    label: "Five-year survival of poor-prognosis cancers at Nordic level"
+    target: "Lung +14 pp, pancreas +6 pp, liver +14 pp vs NORDCAN 2023 (SE/NO average)"
+    source_id: S_STRATEGY
+    locator: "Goal 3, Figure 1, p. 5"
+  - id: cancer_mortality_minus_10
+    label: "Cancer mortality falls by 10%"
+    target: "From roughly 13,300 deaths a year"
+    source_id: S_STRATEGY
+    locator: "Goal 3, Figure 1, p. 5"
+
+# Related national targets that matter for the pathway (not Goal 3 measures themselves).
+related_targets:
+  - id: screening_participation
+    label: "At least 80% screening participation in every wellbeing county"
+    target: "0.80"
+    source_id: S_STRATEGY
+    locator: "national target (page to verify)"
+  - id: stage_one_two_share
+    label: "At least 70% of cancers diagnosed in stage I-II by 2035"
+    target: "0.70 by 2035"
+    source_id: S_STRATEGY
+    locator: "national target (page to verify)"
+  - id: hpv_vaccination_coverage
+    label: "HPV vaccination coverage of at least 90% among primary-school leavers in every wellbeing county and Helsinki"
+    target: "0.90"
+    source_id: S_STRATEGY
+    locator: "national target (page to verify)"
+  - id: screening_parity_mother_tongue
+    label: "Equal screening participation for people whose mother tongue is not Finnish or Swedish"
+    target: "parity"
+    source_id: S_STRATEGY
+    locator: "national target (page to verify)"
