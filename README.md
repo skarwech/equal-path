@@ -14,7 +14,7 @@ Design and acceptance spec: `equal_path_junction_astrazeneca.md` (rev 2).
 | 5. Interface (F8): map layers with low-visibility hatching, 22/22 clickable map (Helsinki-area inset), funnel with confidence badges and grey-stage reasons, sources drawer | Step 4 | approved |
 | 6. Action engine (F5) + Action Card: 12 rules with machine conditions, top 3 per county, one-page PDF card | Step 5 | approved |
 | 7. AI analyst + number validator (F7): 120-word briefing, validator, template fallback | Step 6 | approved |
-| 8. Hardening: offline cold start, trust panel, rehearsal | Steps 6-7 | in progress on branch `step-8-hardening` |
+| 8. Hardening: offline mode (cached analyst text, all 22 counties, cold start under 5 s), trust panel, data-gap and limitations panels, 5 offline rehearsals | Steps 6-7 | **built, independently reviewed (15 findings, all fixed), awaiting validation** (branch `step-8-hardening`) |
 
 ## Run
 
@@ -113,3 +113,9 @@ evidence/          test reports, screenshots
   stage cannot be judged, uses causal wording only for study-supported actions, and states no access time. Up to
   2 regenerations, then a deterministic template; with no SDK, credentials or network the template is used
   directly (offline). The `anthropic` package is optional: install it and set ANTHROPIC_API_KEY to enable Claude.
+- Offline mode: data/processed/briefings.json caches one validated briefing per county with the hash of its facts;
+  the page shows a cached text only if the hash matches and it passes the validator (rebuild with
+  `python scripts/cache_briefings.py`). All 22 counties load with the network blocked; cold start under 5 s (`python scripts/cold_start.py`).
+- Rehearsal: `python scripts/rehearse.py` renders the demo counties (Kymenlaakso, Pohjois-Karjala, Helsinki) five
+  times with the network blocked and fails on any exception or validator rejection (evidence/step8/rehearsal.json).
+- Trust panel: anchors reconciled, tests passing and briefings validated, all computed live from the actual runs.

@@ -1,5 +1,6 @@
 {
- "cold_start_seconds_offline": 4.07,
+ "cold_start_seconds_offline": 4.68,
+ "limit_seconds": 10.0,
  "exceptions": 0,
- "method": "fresh Python process, network blocked (socket connect/DNS raise), Streamlit AppTest full render incl. data load"
+ "method": "fresh Python process incl. imports; network blocked; Streamlit AppTest full render incl. data load"
 }

@@ -127,29 +127,25 @@ def _cached_claude_briefing(facts_json: str):
 
 
 def _briefing(data: dict, code: str) -> None:
-    """F7: a validated briefing of at most 120 words; every number carries its source tag."""
+    """F7: a validated briefing of at most 120 words; every number carries its source tag. Same selection as
+    the trust panel: a current cache entry first (offline mode), else live Claude, else the template."""
     import json
 
     from equal_path.analyst import Briefing, answer_access_time, briefing_facts, make_client, template_briefing, validate
+    from equal_path.hardening import CACHE_NOTE, select_briefing
 
-    from equal_path.hardening import cached_briefing, load_cache
-
-    facts = briefing_facts(code, data["actions"])
-    briefing = Briefing(template_briefing(facts), "template", 0, note="no Claude client (SDK or credentials missing)")
-    cached = cached_briefing(facts, load_cache(), code)   # offline mode: current, validated cache entry first
-    if cached is not None and (cached.source == "claude" or make_client() is None):
-        briefing = cached
-    elif make_client() is not None:
+    facts, briefing = select_briefing(code, data["actions"])
+    if CACHE_NOTE not in briefing.note and make_client() is not None:   # no current cache entry: try live Claude
         try:
             briefing = _cached_claude_briefing(json.dumps(facts, sort_keys=True))
         except RuntimeError as exc:
-            briefing = Briefing(template_briefing(facts), "template", 0, note=str(exc))
+            briefing = Briefing(template_briefing(briefing_facts(code, data["actions"])), "template", 0, note=str(exc))
     st.markdown("#### Analyst briefing")
     for line in briefing.text.splitlines():
         st.markdown(line)
     checked = validate(briefing.text, facts)
-    origin = (f"Claude ({briefing.model})" if briefing.source == "claude"
-              else f"the deterministic template ({briefing.note or 'fallback'})")
+    origin = (f"Claude ({briefing.model or 'unknown model'})" if briefing.source == "claude" else "the deterministic template")
+    origin += f" ({briefing.note})" if briefing.note else ""
     status = ("passed the number validator: every number matches a computed figure and carries its source id"
               if checked.ok else "FAILED the number validator: " + "; ".join(checked.problems))
     st.caption(f"Written by {origin}; {status}.")

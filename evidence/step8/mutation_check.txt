@@ -1,0 +1,8 @@
+Step 8 (hardening) mutation check, 2026-11-14 ~20:50 EET. Scratch copy, named tests, reverted.
+Killed: cache ignores the facts hash; cache text not validated; network not blocked; trust anchors hard-coded;
+trust tests hard-coded; data-gap panel drops timing; page ignores the cache.
+Survived first, then killed after test_rehearsal_counts_rejections_when_the_validator_fails: rehearsal never
+counts validator rejections.
+
+Review-fix pass (~21:15 EET): 10 mutants of the fixes, all killed (the last after two tests were narrowed to the
+briefing's own caption: the header's trust caption also says 'from the offline cache', which had let a test pass).

@@ -7,22 +7,25 @@
  ],
  "validator_rejections": 0,
  "exceptions": 0,
- "network_blocked": true,
+ "not_from_cache": 0,
+ "cache_entries_missing": 0,
+ "network_refusals": 0,
  "seconds": [
-  3.56,
+  3.79,
   1.04,
+  1.25,
+  3.64,
+  1.05,
   1.03,
-  1.0,
-  1.0,
-  1.01,
+  3.53,
   1.04,
-  1.01,
-  1.02,
-  1.0,
+  1.05,
+  3.89,
+  1.13,
+  1.06,
+  3.63,
   1.04,
-  1.01,
-  1.01,
-  1.04,
-  1.01
- ]
+  1.08
+ ],
+ "gate_met": true
 }

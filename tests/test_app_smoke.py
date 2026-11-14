@@ -404,6 +404,9 @@ def test_claude_written_briefing_on_the_page_passes_the_drawer_gate(monkeypatch)
     reply = _Response(text)
     reply.model = "claude-opus-5-5"
     monkeypatch.setattr(analyst, "make_client", lambda: FakeClient([reply] * 3))
+    import equal_path.hardening as hardening
+
+    monkeypatch.setattr(hardening, "load_cache", lambda path=None: {})   # a current cache entry would win (Step 8)
     _fresh_cache(monkeypatch)
     at = AppTest.from_file(str(APP), default_timeout=60)
     at.session_state["county"] = "10 Kymenlaakso"

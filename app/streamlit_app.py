@@ -77,7 +77,7 @@ def load_everything(stamp: tuple) -> dict:
 
 def header(data: dict) -> None:
     st.title("Equal Path")
-    st.caption("Equitable and effective cancer care in Finland · Step 5: interface (map layers, funnel, sources drawer)")
+    st.caption("Equitable and effective cancer care in Finland · Step 8: hardened, offline-ready (all features through F8)")
     counts = data["counts"]
     if not counts:
         st.info(
@@ -122,9 +122,11 @@ def metrics_row(data: dict) -> None:
         cols[4].caption(f"{status} · run {summary.timestamp[:16].replace('T', ' ')}{stale}")
     trust = trust_figures(data["reconciliation"], data["actions"], summary)
     cols[5].metric("Trust", f"{trust['briefings_passed']}/{trust['briefings']} briefings")
-    cols[5].caption(f"anchors reconciled {trust['anchors_passed']}/{trust['anchors_checked']} · tests "
-                    f"{trust['tests_passed']}/{trust['tests_total']} · unsupported numbers shown "
-                    f"{trust['unsupported_numbers_shown']} (all computed live)")
+    cols[5].caption(f"anchors: {trust['anchors_passed']} pass, {trust['anchors_failed']} fail, "
+                    f"{trust['anchors_not_checked']} not checked of {trust['anchors_total']} · tests "
+                    f"{trust['tests_passed']}/{trust['tests_total']} · briefings validated {trust['briefings_passed']}/"
+                    f"{trust['briefings']} ({trust['briefings_from_cache']} from the offline cache) · unsupported "
+                    f"numbers shown {trust['unsupported_numbers_shown']} (all computed live)")
 
 
 def map_and_units(data: dict) -> None:
@@ -250,7 +252,8 @@ def gaps_and_limitations(data: dict) -> None:
     st.subheader("Data gaps and limitations")
     tabs = st.tabs(["Data gaps", "Limitations"])
     with tabs[0]:
-        st.caption("Every catalogued indicator that is not available for all 22 units, and why. Gaps are shown, never filled.")
+        st.caption("Every catalogued indicator without a value for all 22 units (counted in the store), and why. "
+                   "Gaps are shown, never filled.")
         st.dataframe(data_gaps(data["catalog"], data["store"]), hide_index=True, width="stretch")
     with tabs[1]:
         for text, source in limitations(data["actions"], data["pathway"]):
