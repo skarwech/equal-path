@@ -39,8 +39,8 @@ def test_map_topojson_is_served_locally():
     from equal_path.paths import ROOT
 
     url = MAP_CONFIG["topojsonURL"]
-    assert url.startswith("/app/static/") and "://" not in url
-    local = ROOT / "app" / "static" / url.removeprefix("/app/static/") / "world_110m.json"
+    assert url.startswith("app/static/") and not url.startswith("/") and "://" not in url
+    local = ROOT / url / "world_110m.json"
     assert local.is_file() and local.stat().st_size > 100_000
 
 

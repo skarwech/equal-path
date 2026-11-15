@@ -10,9 +10,9 @@ HIGHLIGHT = "#2a78d6"   # categorical slot 1 (reference palette)
 BORDER = "#fcfcfb"      # surface-coloured 2px gap between fills
 TEXT_PRIMARY = "#0b0b0b"
 
-# Plotly geo always loads a world topojson, by default from cdn.plot.ly. Point it at
-# the copy in app/static/topojson/ (served by Streamlit static serving) so maps work offline.
-MAP_CONFIG: dict = {"displayModeBar": False, "scrollZoom": False, "topojsonURL": "/app/static/topojson/"}
+# Plotly geo always loads a world topojson. Keep this URL app-relative so Streamlit
+# Community Cloud resolves it inside the app route instead of at the domain root.
+MAP_CONFIG: dict = {"displayModeBar": False, "scrollZoom": False, "topojsonURL": "app/static/topojson/"}
 
 
 HATCH_INK = "#2c2c2a"

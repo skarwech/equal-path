@@ -100,7 +100,7 @@ def test_missing_report_shows_not_run(monkeypatch, tmp_path):
 
 def test_map_is_configured_for_offline_and_no_zoom(app):
     config = json.loads(app.get("plotly_chart")[0].proto.config)
-    assert config["topojsonURL"] == "/app/static/topojson/"
+    assert config["topojsonURL"] == "app/static/topojson/"
     assert config["scrollZoom"] is False
 
 
